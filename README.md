@@ -1,1 +1,1 @@
-# cosc-40943-team-06-Monnig-Gallery
+# Monnig Meteorite Gallery App
