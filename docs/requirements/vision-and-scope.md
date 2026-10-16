@@ -1,9 +1,9 @@
 # Vision and Scope
 
-**Project:** _[Your project name]_
-**Team:** _[Team NN]_
-**Client:** _[Client name and organization]_
-**Version:** 0.1
+**Project:** Monnig Meteorite Gallery Tour App<br>
+**Team:** 06<br>
+**Client:** Monnig Meteorite Gallery<br>
+**Version:** 0.1<br>
 
 ---
 
@@ -33,7 +33,8 @@ _Why this matters more with an agent than it used to: ask an agent to insert a n
 
 | Date | Version | Description | Author |
 |---|---|---|---|
-| _[YYYY-MM-DD]_ | 0.1 | Initial draft from the client brief and first client meeting | _[Name]_ |
+| 10/1/2021 | Alpha 1.0 | Starting Documents | Asa Tuten |
+| 11/17/2021 | Alpha 2.0 | Updating Documents | Aparajita Biswas |
 
 ---
 
@@ -41,15 +42,17 @@ _Why this matters more with an agent than it used to: ask an agent to insert a n
 
 _[This document defines the goals, purpose, and boundaries of the project. It gives every stakeholder a shared understanding of what the software is for and the context it operates in: the business problem being solved, how the software fits into the client's world, and where the line falls between what is in scope and what is not.]_
 
+The purpose of this document is to discuss the vision, scope, requirements, and implementations of the Monnig Meteorite Gallery Visually Impaired Assisting Application Project briefly. It focuses on the capabilities and education equality needed by the end users while reasoning for them to be present in the first place. The details of how Increasing Accessibility In The Monnig Meteorite Gallery fulfills these needs are detailed in the use-case and supplementary specifications.
+
 ### 1.1 Background
 
 _[Summarize the rationale and context for the new product, or for the changes to an existing one. Describe the situation that led to the decision to build it.]_
 
 _**Step 1: Describe the business.** Introduce the organization. Cover what it does (industry, products, services), its size (employees, locations), and the goals that relate to the problem you are solving._
 
-_Example: "The client, XYZ Logistics, is a mid-sized shipping company that specializes in last-mile delivery services for e-commerce businesses. The company operates in five major cities, employs 200 delivery staff, and handles over 10,000 deliveries per day. The goal is to optimize delivery efficiency and customer satisfaction."_
+_**Checklist:** Would a reader who has never heard of this organization understand what it does and why this project exists?_
 
-_**Checklist:** Would a reader who has never heard of this organization understand what it does and why this project exists?]_
+With over 10,000 visitors per year presently, TCU’s non-profit Monnig Meteorite Gallery all started when it opened on February 1, 2003. Although the museum’s design has a natural flow to the gallery, the current design in terms of the content being displayed is not inclusive towards some audiences. In order to encompass this, the exhibit's paradigm should append the following, visual accessibility, content for more languages, and for all ages. This is to make content more accessible and user-friendly.
 
 ### 1.2 Current Process Flows (As-Is Process Flows)
 
@@ -76,13 +79,7 @@ _**Step 2: Write the prose.** Not every reader reads diagrams. Explain the flow 
 
 _**Step 3: List the current tools.** Enumerate what the process runs on today (spreadsheets, paper schedules, email, a legacy system) and give the limitation of each._
 
-_Example: "XYZ Logistics relies heavily on Excel spreadsheets for order management. Printed delivery schedules are distributed to drivers daily. These tools lack automation, making the process prone to human error and delays."_
-
 _**Step 4: Name the pain points.** Highlight the inefficient, slow, or error-prone steps, using one or two specific examples rather than a general complaint._
-
-_Inefficiency example: "Manual entry of order details into Excel causes delays and transcription errors. During peak season, order entries pile up, delaying processing and delivery."_
-
-_Time example: "Printing and distributing delivery schedules to drivers takes 2 hours daily, cutting into time available for deliveries."_
 
 _**Step 5: Write for an outsider.** Assume your reader knows nothing about this domain. Define every domain term on first use and add it to the [project glossary](project-glossary.md)._
 
@@ -91,6 +88,9 @@ _**Checklist:** Is the business context clear to someone unfamiliar with it? Doe
 ### 1.3 References
 
 _[List every document referenced elsewhere in this one: the client's project brief, existing forms and reports, regulations, standards, competing products. Identify each by title, date, and where it can be obtained. The spreadsheet or screenshot your client showed you belongs here.]_
+
+The TCU Monnig Meteorite Gallery has a website. You can look at this website.
+https://monnigmuseum.tcu.edu/
 
 ---
 
@@ -102,19 +102,32 @@ _[Projects are launched in the belief that creating or changing a product will p
 
 _[State the problem being solved or the opportunity being exploited, in the client's own terms. One or two paragraphs. This is the answer to "why is anyone paying for this?"]_
 
+This project will mediate the process of educational equity in TCU’s Monnig Meteorite Gallery allowing access for educational growth in an encompassing environment.
+
+Unfortunately, there is no current method of doing so, as the exhibit is notably inaccessible. However, with this opportunity, the deliverable of this product directly addresses this issue with intentions to ease learning environ
+
+| | |
+|---|---|
+| **The problem of** | Lack of visual accessibility and educational equity in TCU’s Monnig Meteorite Gallery. |
+| **affects** | The number of visitors that tour the gallery annually. |
+| **the impact of which is** | Limiting a subset of students who would like to educationally participate in the gallery. |
+| **a successful solution would be** | creating a supplemental application for ease of accessibility in the gallery |
+
 ### 2.2 Business Objectives
 
 _[Summarize the business benefits the product will provide, **quantitatively and measurably**. Platitudes ("become recognized as a world-class provider") and vague improvements ("provide a more rewarding customer experience") are neither helpful nor verifiable.]_
 
-_Examples:_
-
-- _`BO-grading-time`: Reduce the instructor's time to grade peer evaluations by 50%._
-- _`BO-submission-rate`: Increase the weekly activity report and peer evaluation submission rate by 20%._
-- _`BO-student-effort`: Reduce the time a student spends completing a weekly activity report and peer evaluation by 25%._
-
 _**How to elicit these.** Clients rarely volunteer numbers. Ask: What business problem are you trying to solve? What is the motivation for solving it now? What would a highly successful solution do for you? What is a successful solution worth? If the answer contains no number, ask what the number is today._
 
 _**Checklist:** A year from now, could someone tell whether each objective was met? Does each one contain a quantity?]_
+
+Creating a supplemental application for ease of access
+
+- `BO-display-collection`: Display all the meteorite collection at the Monnig Meteorite Gallery at TCU
+- `BO-text-brightness`: Ease of selecting the text size and adjusting the brightness of the app
+- `BO-language-options`: Offer different language options: English, Spanish, French, and Vietnamese
+- `BO-location-display`: Bluetooth implementation to display meteorites on the application based on your location in the gallery
+- `BO-qr-scanning`: Have QR Code Scanners to scan a meteorite display
 
 ### 2.3 Success Metrics
 
@@ -126,16 +139,17 @@ _A success metric is sometimes the same statement as a business objective, when 
 
 _For each metric give the indicator, where the number comes from, what it is today (the baseline), and what counts as success by when. A metric with no baseline is not measurable, and "we do not track that today" is a finding worth recording rather than a gap to paper over._
 
-_Examples:_
-
-- _`SM-cafeteria-adoption`: 75% of employees who used the cafeteria at least 3 times per week during Q3 2013 use the Cafeteria Ordering System at least once a week, within 6 months following initial release._
-- _`SM-satisfaction`: The average rating on the quarterly cafeteria satisfaction survey increases by 0.5 on a scale of 1 to 6 from the Q3 2013 rating within 3 months following initial release, and by 1.0 within 12 months._
-
 _**How to elicit these.** Ask "how will you know this worked?", then ask what that number is today. If your client cannot say, ask who would know and whether the number is recorded anywhere. Clients often propose a metric the software cannot influence (revenue, headcount); trace it back to something your system actually changes._
 
 _**Choose your success metrics wisely. Make sure they measure what is important to the business, not just what is easy to measure.** "Reduce product development costs by 20 percent" is easy to measure, and also easy to achieve by laying off employees or investing less in innovation, neither of which is the intended outcome. Prefer a metric that gets worse if you build the wrong thing._
 
 _**Checklist:** Does each metric name its source, its baseline, and its deadline? Can this software actually move it? Can it be measured during testing or shortly after release, rather than a year later? Does every business objective have at least one metric behind it, and does every metric trace back to an objective?]_
+
+- `SM-collection-displayed`: The app displays all the meteorite collections at the TCU Monnig Meteorite Gallery
+- `SM-language-translation`: The user is able to choose their language preference and the translation is correct
+- `SM-text-brightness-ease`: It is easy to change the text size and brightness level
+- `SM-qr-accuracy`: The QR Code scans and provides the correct meteorite information
+- `SM-location-accuracy`: The correct meteorites are displayed on the app based on your location in the gallery
 
 ### 2.4 Vision Statement
 
@@ -143,23 +157,12 @@ _[One statement summarizing, at the highest level, the position this product int
 
 | | |
 |---|---|
-| **For** | _[target customer]_ |
-| **Who** | _[the need or opportunity]_ |
-| **The** _[product name]_ | _[is a ...]_ |
-| **That** | _[major capabilities, key benefit, compelling reason to use it]_ |
-| **Unlike** | _[the current process, or the competing alternative]_ |
-| **Our product** | _[primary differentiation and advantage]_ |
-
-_Worked example:_
-
-| | |
-|---|---|
-| **For** | _students in the TCU senior design course_ |
-| **Who** | _need an easier way to submit and update weekly activity reports and peer evaluations_ |
-| **The** _Project Pulse_ | _is a web application_ |
-| **That** | _lets students submit reports and evaluations in one place, and lets instructors view and grade them without downloading anything_ |
-| **Unlike** | _the current process of spreadsheets and manual uploads to the learning management system_ |
-| **Our product** | _keeps the whole cycle in one system, so nothing is transcribed by hand_ |
+| **For** | Museum Visitors |
+| **Who** | Visitors having visual impairments preventing them full access to museum displays |
+| **The** (product name) | Monnig Meteorite Gallery Application |
+| **That** | Accommodates for impairments to provide full access to museum information and displays. |
+| **Unlike** | The previous antiquated museum displays, which were not originally built to accommodate impairments, and were only available in English language. |
+| **Our product** | Accommodates for more accessibility to allow visitors with impairments to fully experience the exhibit without limits. |
 
 _**Use this in the meeting.** Read the filled-in table back to your client out loud and watch what they correct. It is the fastest way to discover you misunderstood the project, and it costs ninety seconds. Corrections go straight into [OPEN-ISSUES.md](OPEN-ISSUES.md)._
 
@@ -173,23 +176,11 @@ _The point of drawing both is the comparison. If the two diagrams look alike, ei
 
 _[Summarize the major business risks of building this product, and of not building it. Categories include competition, timing, user acceptance, implementation, and negative impact on the business. Business risks are not project risks: "a teammate might drop the course" is a project risk and does not belong here. Give probability and impact for each, and a mitigation where you have one.]_
 
-_Examples:_
-
-- _`RI-union-contract`: The Cafeteria Employees Union might require its contract be renegotiated to reflect the new employee roles and operating hours. (Probability 0.6, Impact 3)_
-- _`RI-low-adoption`: Too few employees might use the system, reducing the return on the development investment and on the changes to cafeteria operating procedures. (Probability 0.3, Impact 9)_
-- _`RI-no-delivery-partners`: Local restaurants might not agree to offer delivery, reducing employee satisfaction with the system and their use of it. (Probability 0.3, Impact 3)_
-
 _**State risks as mechanisms, not categories.** "Security risk" names a category and tells nobody anything. "The peer evaluation database holds student grades, is reachable from the public internet, and has no rate limiting" names a mechanism someone can act on._
 
 ### 2.7 Business Assumptions and Dependencies
 
 _[An assumption is something you believe without proof, which would force this document to change if it turned out false. A dependency is something outside your control that the project relies on. Both live here under `AS-*`.]_
-
-_Examples:_
-
-- _`AS-ui-capacity`: Systems with appropriate user interfaces will be available for cafeteria employees to process the expected volume of meals ordered._
-- _`AS-delivery-staffing`: Cafeteria staff and vehicles will be available to deliver all meals within 15 minutes of the requested delivery time._
-- _`AS-restaurant-integration`: If a restaurant has its own online ordering system, the Cafeteria Ordering System must be able to communicate with it bi-directionally._
 
 _**Checklist:** For each assumption, what happens to this project if it is false? If the answer is "nothing", it is not worth recording. If the answer is "we start over", raise it with your client this week._
 
@@ -205,7 +196,9 @@ _A stakeholder is not always a user. The person paying for the software, the per
 
 | Stakeholder | Major value or benefit from this product | Attitude | Major features of interest | Constraints | End user? |
 |---|---|---|---|---|---|
-| _[Role]_ | _[What they get out of it]_ | _[Supportive, skeptical, unaware, opposed]_ | _[What they care about]_ | _[What limits them]_ | _[Yes or no]_ |
+| Museum Staff | Easier to assist Museum Visitors | Willing to assist visitors in navigating the application | | | |
+| Museum Visitors | Ability to gain full experience of TCU’s Monnig Meteorite Gallery regardless of visual impairments. | Willing to get the assistance feature of our application | MMG Virtual Assistant, Contrast, Font Style and size preference. | | End user |
+| Developers | Product building experience | Enthusiastic to contribute | MMG Virtual Assistant, Contrast, Font Style and size preference. | | No |
 
 _**Attitude is the column students leave blank, and the one that predicts trouble.** A stakeholder whose workload increases because of your software is not automatically supportive, and finding that out in December is too late._
 
@@ -218,6 +211,8 @@ _[Describe the working environment of the target users:_
 - _Any environmental constraints: mobile, outdoors, noisy, gloved hands, poor connectivity?_
 - _Which platforms are in use today, and which are planned?_
 - _What other applications are in use, and does yours have to integrate with them?]_
+
+- The user will be given a tablet to use or can download the application before starting the tour of the gallery. Only one person is required unless a helper is needed. The tour typically takes anywhere from 30 minutes to an hour depending on the group.
 
 ### 3.3 Alternatives and Competition
 
@@ -235,6 +230,8 @@ _Always include the status quo as a row. It is the alternative that wins most of
 
 _[The section you will cite most often. Scope is what keeps a friendly client's good ideas from consuming your semester. When a new request arrives in October, this is what you point at.]_
 
+This project aims to leverage and integrate relevant technologies with the application to better assist users in the application. Modern technologies like BLE, Translation APIs, and cross platform development have been utilized. Furthermore, this project has set a framework and is willing to use state of the art technologies like Virtual Reality and AR.
+
 ### 4.1 Product Perspective
 
 _[Put the product in context relative to other systems and the user's environment. If it is independent and self-contained, say so. If it is one component of something larger, describe how they interact and identify the interfaces between them. A context diagram shows this most clearly: your system as one box, every external actor and system around it, and a labeled arrow for each thing that crosses the boundary.]_
@@ -248,6 +245,8 @@ _[Put the product in context relative to other systems and the user's environmen
     ```
 
 _Draw the first version here. When your team writes its architecture-of-record, the context diagram moves to section 3 of [architectural-design.md](../design/architectural-design.md) in C4 form, and this section keeps a link to it instead of its own drawing._
+
+This is product totally independent and self-contained, operating by it’s own to assist the visitors of the gallery. The only point of relation with other existing this system had was with the old meteorite collection database. However, the meteorite collection database has now been expanded to better suit the software’s data needs and faster integrations.
 
 ### 4.2 Major Features and Scope
 
@@ -264,12 +263,6 @@ _Guidelines:_
 - _Focus on what capability is needed and why, not how._
 - _Understandable by a non-technical stakeholder, including your client._
 
-_Examples:_
-
-- _`FEAT-administration`: Manage senior design sections, teams, and student rosters._
-- _`FEAT-performance-tracking`: Submit and review weekly activity reports and peer evaluations._
-- _`FEAT-grade-generation`: Generate weekly activity report and peer evaluation grades for an entire section._
-
 ### 4.3 MVP Scope
 
 _[Of the features above, which ones ship in the release you actually deliver in December? Name them by identifier. Then name what is explicitly **out**, also by identifier, so it is on the record.]_
@@ -285,3 +278,5 @@ _Ask your client the question directly: "If we can deliver only one of these in 
 _[Summarize what it takes to get this into its operating environment. How will users reach it? Are they spread across locations or time zones? What infrastructure has to change for capacity, network access, data storage, or data migration? Who trains the users? Who maintains it after this team graduates, and what does that person already know how to run?]_
 
 _That last question shapes your architecture, so ask it in the first client meeting rather than the last._
+
+The developers of this project plan to make the source code opensource for a bigger impact. This application will be available in Google play store to be downloaded by anyone, and will stay installed on the Gallery guest tablets. Since the database is large in size leverage cloud solution will definitely be beneficial for this project to also better handle services including but not limited to Google Translation and Text-To-Speech.
