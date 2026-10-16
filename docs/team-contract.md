@@ -57,6 +57,7 @@ Still unresolved: we escalate to our TA, then to the instructor. We escalate ear
 ## Signatures
 
 Each member adds their own line, in their own commit.
+
 Bradley Helmholz
 
 
