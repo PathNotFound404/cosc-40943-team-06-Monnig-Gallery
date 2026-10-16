@@ -58,6 +58,7 @@ Still unresolved: we escalate to our TA, then to the instructor. We escalate ear
 
 Each member adds their own line, in their own commit.
 
+- Cody Pinkston, 10/15/2026
 Bradley Helmholz
 
 
