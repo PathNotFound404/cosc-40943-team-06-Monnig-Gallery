@@ -1,6 +1,6 @@
 # Project Glossary
 
-**Project:** _[Your project name]_
+**Project:** Monnig Meteorite Gallery Tour App
 **Team:** _[Team NN]_
 **Client:** _[Client name and organization]_
 **Version:** 0.1
@@ -52,34 +52,120 @@ _Rules:_
 
 | Date | Version | Description | Author |
 |---|---|---|---|
-| _[YYYY-MM-DD]_ | 0.1 | Initial terms from the client brief and first client meeting | _[Name]_ |
+| 10/10/21 | Alpha 1.0 | Initial Definition of Terms | Alex Matthews |
 
 ---
+
+## Introduction
+
+The Monnig Meteorite Gallery Tour Assistance Application is an application run on the Android tablets within the gallery, to allow users to navigate more easily
+
+### Purpose
+
+This Glossary displays the terminology used in conjunction with the project and associated database
+
+### Scope
+
+This glossary covers the technology required for the implementation of the application/
 
 ## Definitions
 
 _[One `###` heading per term, alphabetical. Follow the heading with a definition of one to three sentences. Add **Synonyms**, **Not to be confused with**, or **Source** lines where they help. Where a term only makes sense with an example, give one._
 
-_Worked examples of the format:_
+### Accessibility Feature
 
-### Active Week
+“A feature or quality of the application offering a benefit to a user with a visual impairment to aid in their visual experience”
 
-_A week in which the course is in session and submissions are open. A student can submit a weekly activity report only during an active week, which makes this term the subject of a business rule rather than a piece of trivia._
+### Achondrite
 
-_**Not to be confused with:** the current calendar week, which continues during breaks when no week is active._
+A stony meteorite that does not contain chondrules.
 
-### City-Pair
+### Blindness
 
-_The origin and destination airports of a passenger journey, treated as an unordered pair. Used in International Civil Aviation Organization statistics._
+“The state or condition of being unable to see because of injury, disease, or a congenital condition. Specifically, a complete lack of detail vision”
 
-_**Synonyms:** O and D (the International Air Transport Association's term for the same concept). Both appear in source data, so any report that combines the two sources has to normalize them first._
+### Blurred Vision
 
-### Weekly Activity Report
+“Decreased clarity or sharpness in vision.”
 
-_A record of what one student did for their team during one week, submitted once per week by that student._
+### Chondrite
 
-_**Synonyms:** WAR, used conversationally by the client and in the existing spreadsheets. Spell it out on first use in any document._
+A stony meteorite that has not been modified, by either melting or differentiation of the parent body.
 
-_**Source:** the client's existing Google Sheets process, described in [vision-and-scope.md](vision-and-scope.md) section 1.2._
+### Chondrule
 
-_[End of worked examples. Delete them and write your own terms below.]_
+Forms as molten or partially molten droplets in space and are found within chondrites.
+
+### Class
+
+The make up of what the meteorite is made of. Can either be iron, stone, or stony-irons.
+
+### Contrast
+
+“the degree of difference between tones in a television picture, photograph, or other image”
+
+### Country
+
+The country the meteorite was found in
+
+### Display
+
+“A case in a museum room containing one or more samples”
+
+### Exhibit
+
+“A display, interactive sample, or interactive audiovisual learning aid”
+
+### Fall
+
+Whether or not a fall was observed
+
+### Font
+
+“A set of type of one particular face and size”
+
+### Group
+
+A classification a meteorite can fall into. Can either be a chondrite, primitive achondrite, or achondrite.
+
+### Light Sensitivity
+
+“Extreme sensitivity to environmental brightness and resulting discomfort”
+
+### Loss of central vision
+
+“The loss of detail vision, resulting in having only side vision remaining”
+
+### Meteorite Name
+
+### Monnig #
+
+The catalog number of the specific meteorite
+
+### Outreach Partner
+
+“An individual or group, such as a school, which interacts with museum staff in order to provide an educational experience to its members”
+
+### Remote Visitor
+
+“A visitor accessing the application without being physically present in the museum”
+
+### Room
+
+“One of three large rooms composing the Monnig
+
+### Sample
+
+“An individual meteorite, either on display or in the collection”
+
+### Staff
+
+“An individual involved in managing the operations of the museum”
+
+### Visitor
+
+“An individual present in the museum as a guest”
+
+### Visual Impairment
+
+“A decreased ability to see to a degree that causes problems not fixable by usual means, such as glasses”
