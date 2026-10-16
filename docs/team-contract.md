@@ -60,5 +60,5 @@ Each member adds their own line, in their own commit.
 
 - Cody Pinkston, 10/15/2026
 - Bradley Helmholz, 10/15/2026
-
+- Tanner Temple, 10/15/2026
 
