@@ -3,7 +3,7 @@
 **Project:** Monnig Meteorite Gallery App
 **Members:** Tanner Temple, Bradley Helmholz, Turner DeMott, Koen Dolezar, Edwin Rodriguez, Cody Pinkston
 **Repository:** https://github.com/PathNotFound404/cosc-40943-team-06-Monnig-Gallery, owned by Cody Pinkston
-**Signed:** 16 October 2026
+**Signed:** 21 October 2026
 
 ## 1. Meeting time
 
@@ -56,6 +56,8 @@ Still unresolved: we escalate to our TA, then to the instructor. We escalate ear
 ## Signatures
 
 Each member adds their own line, in their own commit.
+
+- Cody Pinkston, 10/21/2026
 
 
 
