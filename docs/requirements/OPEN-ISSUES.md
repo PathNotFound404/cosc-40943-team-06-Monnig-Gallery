@@ -1,7 +1,7 @@
 # Open Issues
 
-**Project:** _[Your project name]_
-**Team:** _[Team NN]_
+**Project:** Monning Meteorite and Gallery App
+**Team:** Team 6
 
 ---
 
@@ -30,6 +30,11 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | ID | Question | Why it matters | Who can answer | Raised |
 |---|---|---|---|---|
 | OI-1 | _[The question, phrased so it has a definite answer. Not "tell us about reporting" but "who is allowed to see another student's evaluation scores?"]_ | _[What we get wrong if we guess. Name the artifact or decision it blocks.]_ | _[Client, instructor, a specific user, or the team itself]_ | _[YYYY-MM-DD]_ |
+
+| ID | Question | Why it matters | Who can answer | Raised |
+|---|---|---|---|---|
+| OI-1 | What is the main use of this app if only one thing could be done and then is there a list of priorities you have for features? (e.g. Visually impaired aid, interactivity for children, etc.)  | If we build based on one feature that isn't important, we miss the whole point. | Heather, Dr. Mayne | 2026-10-21 |
+
 
 ## Resolved
 
