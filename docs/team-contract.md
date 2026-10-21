@@ -61,5 +61,6 @@ Each member adds their own line, in their own commit.
 - Tanner Temple, 10/21/2026
 - Bradley Helmholz, 10/21/2026
 - Edwin Rodriguez, 10/21/2026
+- Koen Dolezar 10/21/2026
 
 
