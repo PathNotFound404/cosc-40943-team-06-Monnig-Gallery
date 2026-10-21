@@ -35,6 +35,15 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 |---|---|---|---|---|
 | OI-1 | What is the main use of this app if only one thing could be done and then is there a list of priorities you have for features? (e.g. Visually impaired aid, interactivity for children, etc.)  | If we build based on one feature that isn't important, we miss the whole point. | Heather, Dr. Mayne | 2026-10-21 |
 
+| ID | Question | Why it matters | Who can answer | Raised |
+|---|---|---|---|---|
+| OI-2 | If we have time to re-create the meteorite crashing into earth interactive activity, what platform would this be made for so that it can run efficiently without crashing. | Vital requirement. | Dr. Mayne, Asa, Heather | 2026-10-21 |
+
+| ID | Question | Why it matters | Who can answer | Raised |
+|---|---|---|---|---|
+| OI-3 | If we are building to ADA standards, which one specifically? If not, should we do some research or outsource to ADA consultant? | If we get this wrong, we miss one of the major uses of the app. |Heather, Dr. Mayne | 2026-10-21 |
+
+
 
 ## Resolved
 
