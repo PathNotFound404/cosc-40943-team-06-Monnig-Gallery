@@ -7,9 +7,9 @@
 
 ## 1. Meeting time
 
-We meet every Monday at 1 pm in library, for 1.5 hours.<br>
-We meet every Wednesday, Friday at 1:30 pm in library, for 1 hour.<br>
-We meet every Thursday at 7 pm in library, for 1 hour.<br>
+We meet every Monday, Friday at 8am in library, for 1 hours.<br>
+We meet every Wednesday at 1:30 pm in library, for 1 hour.<br>
+We meet every Thursday as needed(decided at the latest in Wednesday's meeting) at 7 pm in library, for 1 hour.<br>
 A member who cannot attend tells the team 24 hours in advance and reads the minutes.<br>
 
 ## 2. Communication
@@ -57,6 +57,5 @@ Still unresolved: we escalate to our TA, then to the instructor. We escalate ear
 
 Each member adds their own line, in their own commit.
 
-- Cody Pinkston, 10/16/2026
-- Bradley Helmholz, 10/18/2026
+
 
