@@ -35,14 +35,14 @@ _Why this matters more with an agent than it used to: ask an agent to insert a n
 |---|---|---|---|
 | 10/1/2021 | Alpha 1.0 | Starting Documents | Asa Tuten |
 | 11/17/2021 | Alpha 2.0 | Updating Documents | Aparajita Biswas |
-
+| 10/22/2026 | 1.0 | Updating Documents | Cody Pinkston |
 ---
 
 ## 1. Introduction
 
 _[This document defines the goals, purpose, and boundaries of the project. It gives every stakeholder a shared understanding of what the software is for and the context it operates in: the business problem being solved, how the software fits into the client's world, and where the line falls between what is in scope and what is not.]_
 
-The purpose of this document is to discuss the vision, scope, requirements, and implementations of the Monnig Meteorite Gallery Visually Impaired Assisting Application Project briefly. It focuses on the capabilities and education equality needed by the end users while reasoning for them to be present in the first place. The details of how Increasing Accessibility In The Monnig Meteorite Gallery fulfills these needs are detailed in the use-case and supplementary specifications.
+This document defines the vision, scope, and business context for the TCU Monnig Museum Guide, a mobile app for all gallery visitors with accessibility built in. Note that it replaces the earlier version, which was built around visually impaired users and indoor location, and that detailed behavior lives in the use cases and supplementary specification.
 
 ### 1.1 Background
 
@@ -52,7 +52,8 @@ _**Step 1: Describe the business.** Introduce the organization. Cover what it do
 
 _**Checklist:** Would a reader who has never heard of this organization understand what it does and why this project exists?_
 
-With over 10,000 visitors per year presently, TCU’s non-profit Monnig Meteorite Gallery all started when it opened on February 1, 2003. Although the museum’s design has a natural flow to the gallery, the current design in terms of the content being displayed is not inclusive towards some audiences. In order to encompass this, the exhibit's paradigm should append the following, visual accessibility, content for more languages, and for all ages. This is to make content more accessible and user-friendly.
+
+The Monnig Meteorite Gallery is a museum on TCU campus in the Sid Richardson Building. The gallery opened on February 1, 2003, Since then the Gallery has not had a large digital footprint and is not accessible in the digital space. The gallery has over 10,000 visitors of all ages per year. The Gallery itself is contained in 3 large rooms and is mainly supported by the staff ar TCU(Dr. Rhiannon Mayne and Dr. Heather Stepp). The goal of the project is to make the gallery more digitally accessible to everyone. This included having al of the information on the gallery in the app in a easy to access way, featuring content that is not included in the gallery, and still having accessible/ADA features for people who need it. This is building on top of an app that was built in 2021.  
 
 ### 1.2 Current Process Flows (As-Is Process Flows)
 
@@ -83,14 +84,16 @@ _**Step 4: Name the pain points.** Highlight the inefficient, slow, or error-pro
 
 _**Step 5: Write for an outsider.** Assume your reader knows nothing about this domain. Define every domain term on first use and add it to the [project glossary](project-glossary.md)._
 
-_**Checklist:** Is the business context clear to someone unfamiliar with it? Does the flow give step-by-step detail? Are all actors and tools described? Are the inefficiencies illustrated with specific examples? Is there a mermaid diagram with one subgraph per actor?]_
+_**Checklist:** Is the business context clear to someone unfamiliar with it? Does the flow give step-by-step detail? Are all actors and tools described? Are the inefficiencies illustrated with specific examples? Is there a mermaid diagram with one subgraph per actor?_
 
 ### 1.3 References
 
 _[List every document referenced elsewhere in this one: the client's project brief, existing forms and reports, regulations, standards, competing products. Identify each by title, date, and where it can be obtained. The spreadsheet or screenshot your client showed you belongs here.]_
 
 The TCU Monnig Meteorite Gallery has a website. You can look at this website.
-https://monnigmuseum.tcu.edu/
+https://monnigmuseum.tcu.edu/<br>
+
+The database exists at https://monnigcatalog.tcu.edu
 
 ---
 
@@ -102,16 +105,7 @@ _[Projects are launched in the belief that creating or changing a product will p
 
 _[State the problem being solved or the opportunity being exploited, in the client's own terms. One or two paragraphs. This is the answer to "why is anyone paying for this?"]_
 
-This project will mediate the process of educational equity in TCU’s Monnig Meteorite Gallery allowing access for educational growth in an encompassing environment.
-
-Unfortunately, there is no current method of doing so, as the exhibit is notably inaccessible. However, with this opportunity, the deliverable of this product directly addresses this issue with intentions to ease learning environ
-
-| | |
-|---|---|
-| **The problem of** | Lack of visual accessibility and educational equity in TCU’s Monnig Meteorite Gallery. |
-| **affects** | The number of visitors that tour the gallery annually. |
-| **the impact of which is** | Limiting a subset of students who would like to educationally participate in the gallery. |
-| **a successful solution would be** | creating a supplemental application for ease of accessibility in the gallery |
+The problem is that the gallery has no digital footprint visitors can’t easily plan visits, explore the 3,000-item collection, or engage with exhibits on their own terms. The only way currently is through the website or by visiting the gallery in person. Having an app makes the gallery more engaging and more accessible to everyone wether they are at the exhibit or not. 
 
 ### 2.2 Business Objectives
 
@@ -119,15 +113,16 @@ _[Summarize the business benefits the product will provide, **quantitatively and
 
 _**How to elicit these.** Clients rarely volunteer numbers. Ask: What business problem are you trying to solve? What is the motivation for solving it now? What would a highly successful solution do for you? What is a successful solution worth? If the answer contains no number, ask what the number is today._
 
-_**Checklist:** A year from now, could someone tell whether each objective was met? Does each one contain a quantity?]_
+_**Checklist:** A year from now, could someone tell whether each objective was met? Does each one contain a quantity?_
 
 Creating a supplemental application for ease of access
 
 - `BO-display-collection`: Display all the meteorite collection at the Monnig Meteorite Gallery at TCU
-- `BO-text-brightness`: Ease of selecting the text size and adjusting the brightness of the app
+- `BO-accessability`: ADA compliant features to help anyone with a disability navigate the app
 - `BO-language-options`: Offer different language options: English, Spanish, French, and Vietnamese
-- `BO-location-display`: Bluetooth implementation to display meteorites on the application based on your location in the gallery
-- `BO-qr-scanning`: Have QR Code Scanners to scan a meteorite display
+- `BO-interactive-components`: App features interactive learning components
+- `BO-store-release`: Published on the iOS and Android stores
+
 
 ### 2.3 Success Metrics
 
@@ -143,13 +138,14 @@ _**How to elicit these.** Ask "how will you know this worked?", then ask what th
 
 _**Choose your success metrics wisely. Make sure they measure what is important to the business, not just what is easy to measure.** "Reduce product development costs by 20 percent" is easy to measure, and also easy to achieve by laying off employees or investing less in innovation, neither of which is the intended outcome. Prefer a metric that gets worse if you build the wrong thing._
 
-_**Checklist:** Does each metric name its source, its baseline, and its deadline? Can this software actually move it? Can it be measured during testing or shortly after release, rather than a year later? Does every business objective have at least one metric behind it, and does every metric trace back to an objective?]_
+_**Checklist:** Does each metric name its source, its baseline, and its deadline? Can this software actually move it? Can it be measured during testing or shortly after release, rather than a year later? Does every business objective have at least one metric behind it, and does every metric trace back to an objective?_
 
 - `SM-collection-displayed`: The app displays all the meteorite collections at the TCU Monnig Meteorite Gallery
 - `SM-language-translation`: The user is able to choose their language preference and the translation is correct
-- `SM-text-brightness-ease`: It is easy to change the text size and brightness level
-- `SM-qr-accuracy`: The QR Code scans and provides the correct meteorite information
-- `SM-location-accuracy`: The correct meteorites are displayed on the app based on your location in the gallery
+- `SM-accessability`: The app is ADA Compliant 
+- `SM-interactive`: The app has interactive learning components that are easily to understand and use 
+- `SM-android-IOS-availability`: The app can be downloaded from both the Google Play Store and IOS App store. 
+- `SM-downloads`: The app achieves X downloads in total 6 months after launch. 
 
 ### 2.4 Vision Statement
 
@@ -157,12 +153,12 @@ _[One statement summarizing, at the highest level, the position this product int
 
 | | |
 |---|---|
-| **For** | Museum Visitors |
-| **Who** | Visitors having visual impairments preventing them full access to museum displays |
-| **The** (product name) | Monnig Meteorite Gallery Application |
-| **That** | Accommodates for impairments to provide full access to museum information and displays. |
-| **Unlike** | The previous antiquated museum displays, which were not originally built to accommodate impairments, and were only available in English language. |
-| **Our product** | Accommodates for more accessibility to allow visitors with impairments to fully experience the exhibit without limits. |
+| **For** | All visitors to the Monnig Meteorite Gallery |
+| **Who** | Want an easy way to plan a visit, explore the collection, and engage with exhibits, including visitors with disabilities and children |
+| **The** (product name) | Monnig Meteorite Gallery Tour App |
+| **That** | Provides trip planning, collection browsing, audio and text-to-speech, adjustable text and color schemes, translation, and interactive activities |
+| **Unlike** | The current website and the previous app, which served only visually impaired users and relied on Bluetooth location |
+| **Our product** | Makes accessibility a built-in default for everyone and gives the gallery a digital presence connected to the physical visit. |
 
 _**Use this in the meeting.** Read the filled-in table back to your client out loud and watch what they correct. It is the fastest way to discover you misunderstood the project, and it costs ninety seconds. Corrections go straight into [OPEN-ISSUES.md](OPEN-ISSUES.md)._
 
@@ -178,11 +174,19 @@ _[Summarize the major business risks of building this product, and of not buildi
 
 _**State risks as mechanisms, not categories.** "Security risk" names a category and tells nobody anything. "The peer evaluation database holds student grades, is reachable from the public internet, and has no rate limiting" names a mechanism someone can act on._
 
+- `RI-prior-assets-unavailable`: Asa’s code, data, or documentation is incomplete or outdated, so content must be rebuilt from scratch. Mitigation: request materials early and plan time for rebuilding.
+- `RI-translation-accuracy`: Machine translation may garble scientific terms. Mitigation: reviewer pass on key content.
+- `RI-connectivity`: Weak gallery Wi-Fi breaks anything that needs the network. Mitigation: bundle core content, since it rarely changes.
+- `RI-low-adoption`: Visitors don’t install the app. Mitigation: [gallery tablets, QR signage; confirm with client].
+
 ### 2.7 Business Assumptions and Dependencies
 
 _[An assumption is something you believe without proof, which would force this document to change if it turned out false. A dependency is something outside your control that the project relies on. Both live here under `AS-*`.]_
 
 _**Checklist:** For each assumption, what happens to this project if it is false? If the answer is "nothing", it is not worth recording. If the answer is "we start over", raise it with your client this week._
+
+- `AS-prior-assets-from-asa`: Asa provides the old code, data, and documentation. If false: more rebuild work.
+- `AS-collection-db-access`: We get the full collection database and location data.
 
 ---
 
@@ -196,9 +200,13 @@ _A stakeholder is not always a user. The person paying for the software, the per
 
 | Stakeholder | Major value or benefit from this product | Attitude | Major features of interest | Constraints | End user? |
 |---|---|---|---|---|---|
-| Museum Staff | Easier to assist Museum Visitors | Willing to assist visitors in navigating the application | | | |
-| Museum Visitors | Ability to gain full experience of TCU’s Monnig Meteorite Gallery regardless of visual impairments. | Willing to get the assistance feature of our application | MMG Virtual Assistant, Contrast, Font Style and size preference. | | End user |
-| Developers | Product building experience | Enthusiastic to contribute | MMG Virtual Assistant, Contrast, Font Style and size preference. | | No |
+| Visitors (General) | Easy Planning, Exploration, learning | [TBD] | Planing, Search, Audio | Own Device | Yes |
+| Visitors with disabilities | Full access to content | [TBD] | TTS, text size, color schemes | Already use assistive tools | Yes |
+| Children and families | Engaging activities | [TBD] | Hunts, quizzes, games, videos | | Yes |
+| Heather and Dr. Mayne (Monnig) | Digital presence, easier updates | Supportive, open to creative ideas | Full scope; may expand | Funding, may involve Primary Point | Maybe |
+| Asa (TCU IT) | Continuity from earlier version, App Maintenance | [TBD] | Data and code reuse | Availability | No |
+
+
 
 _**Attitude is the column students leave blank, and the one that predicts trouble.** A stakeholder whose workload increases because of your software is not automatically supportive, and finding that out in December is too late._
 
@@ -212,7 +220,7 @@ _[Describe the working environment of the target users:_
 - _Which platforms are in use today, and which are planned?_
 - _What other applications are in use, and does yours have to integrate with them?]_
 
-- The user will be given a tablet to use or can download the application before starting the tour of the gallery. Only one person is required unless a helper is needed. The tour typically takes anywhere from 30 minutes to an hour depending on the group.
+Visitors use the app in the gallery on their own device. Tours run roughly 30 to 60 minutes, usually one person or a family or group. Consider connectivity and noise, since audio matters. Platforms planned: iOS and Android. The app must integrate with the collection database. Translation was previously via Google Translate.
 
 ### 3.3 Alternatives and Competition
 
@@ -220,7 +228,9 @@ _[Identify the alternatives your stakeholders see as available: buying a competi
 
 | Alternative | Strengths | Weaknesses for this client |
 |---|---|---|
-| _[Tool, or "the current manual process"]_ | | |
+| Status quo (website and physical labels) | No cost, nothing to maintain | Hard to use on device, English only, no audio, no interactivity |
+| Previous app | Already built, has some content | Narrow focus, Bluetooth dependent, outdated |
+
 
 _Always include the status quo as a row. It is the alternative that wins most often, and the one your product actually has to beat._
 
@@ -230,23 +240,23 @@ _Always include the status quo as a row. It is the alternative that wins most of
 
 _[The section you will cite most often. Scope is what keeps a friendly client's good ideas from consuming your semester. When a new request arrives in October, this is what you point at.]_
 
-This project aims to leverage and integrate relevant technologies with the application to better assist users in the application. Modern technologies like BLE, Translation APIs, and cross platform development have been utilized. Furthermore, this project has set a framework and is willing to use state of the art technologies like Virtual Reality and AR.
+The TCU Monnig Museum Guide is a mobile app for all gallery visitors, with accessibility built in from the start. The first release focuses on visitor and ADA information, audio and text-to-speech, adjustable language, text size, and light/dark mode, and interactivity across the full collection of about 3,000 meteorites. Interactive features such as scavenger hunts, quizzes, and a map of where meteorites were found come second, once the base app works. Because exhibits are mostly permanent, the app is mostly read-only and its content will not need frequent updates.
+
+
 
 ### 4.1 Product Perspective
 
 _[Put the product in context relative to other systems and the user's environment. If it is independent and self-contained, say so. If it is one component of something larger, describe how they interact and identify the interfaces between them. A context diagram shows this most clearly: your system as one box, every external actor and system around it, and a labeled arrow for each thing that crosses the boundary.]_
 
-    ```mermaid
-    flowchart LR
-      Student[Student] --> PP[Project Pulse]
-      Instructor[Instructor] --> PP
-      PP --> Gmail[(Gmail)]
-      PP --> LMS[(Learning management system)]
-    ```
+```mermaid
+flowchart LR
+  Visitor[Visitor] --> App[TCU Monnig Museum Guide]
+  Staff[Gallery Staff] --> App
+  App --> DB[(Collection database)]
+```
 
 _Draw the first version here. When your team writes its architecture-of-record, the context diagram moves to section 3 of [architectural-design.md](../design/architectural-design.md) in C4 form, and this section keeps a link to it instead of its own drawing._
 
-This is product totally independent and self-contained, operating by it’s own to assist the visitors of the gallery. The only point of relation with other existing this system had was with the old meteorite collection database. However, the meteorite collection database has now been expanded to better suit the software’s data needs and faster integrations.
 
 ### 4.2 Major Features and Scope
 
@@ -263,13 +273,30 @@ _Guidelines:_
 - _Focus on what capability is needed and why, not how._
 - _Understandable by a non-technical stakeholder, including your client._
 
+#### Core
+
+- `FEAT-accessibility-settings`: Language, text size, and light/dark mode, set once with sensible defaults.
+- `FEAT-audio-tts`: Audio and text-to-speech for content.
+- `FEAT-exhibit-content`: Information on exhibits currently on display.
+- `FEAT-collection-search`: Search and filter across the full collection.
+- `FEAT-translation`: Content in multiple languages.
+
+#### Interactive:
+
+- `FEAT-scavenger-hunt`: Activities tied to physical items, such as scanning at stations.
+- `FEAT-quizzes`: Quizzes for visitors, especially kids.
+- `FEAT-find-map`: Interactive map of where meteorites were found, with a heat map if data allows.
+- `FEAT-section-screens`: Detail screens for each gallery section.
+- `FEAT-videos-games`: Gallery videos and games.
+
+
 ### 4.3 MVP Scope
 
 _[Of the features above, which ones ship in the release you actually deliver in December? Name them by identifier. Then name what is explicitly **out**, also by identifier, so it is on the record.]_
 
-_**In scope for the MVP:** `FEAT-...`, `FEAT-...`_
+_**In scope for the MVP:** `FEAT-accessibility-settings`, `FEAT-audio-tts`, `FEAT-exhibit-content`, `FEAT-collection-search`, `FEAT-translation`
 
-_**Explicitly out of scope:** `FEAT-...` (reason), `FEAT-...` (reason)_
+_**Explicitly out of scope:** the interactive features (`FEAT-scavenger-hunt`, `FEAT-quizzes`, `FEAT-find-map`, `FEAT-section-screens`, `FEAT-videos-games`) as second priority, to be set after the brainstorm
 
 _Ask your client the question directly: "If we can deliver only one of these in December, which one is it?" The answer is worth more than the rest of the meeting. A client who cannot choose has not thought about it yet, which is itself something you need to know now rather than in November._
 
@@ -279,4 +306,4 @@ _[Summarize what it takes to get this into its operating environment. How will u
 
 _That last question shapes your architecture, so ask it in the first client meeting rather than the last._
 
-The developers of this project plan to make the source code opensource for a bigger impact. This application will be available in Google play store to be downloaded by anyone, and will stay installed on the Gallery guest tablets. Since the database is large in size leverage cloud solution will definitely be beneficial for this project to also better handle services including but not limited to Google Translation and Text-To-Speech.
+This app wil be available for download on both the Google Play store and the IOS App Store. The app should be should use familiar UI/UX design so that user can use it with ease. The database already exists and is assumed to be maintained so it is not an immediate consideration.
