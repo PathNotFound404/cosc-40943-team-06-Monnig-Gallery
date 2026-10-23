@@ -143,7 +143,7 @@ _**Checklist:** Does each metric name its source, its baseline, and its deadline
 - `SM-collection-displayed`: The app displays all the meteorite collections at the TCU Monnig Meteorite Gallery
 - `SM-language-translation`: The user is able to choose their language preference and the translation is correct
 - `SM-accessability`: The app is ADA Compliant 
-- `SM-interactive`: The app has interactive learning components that are easily to understand and use 
+- `SM-interactive`: The app has interactive learning components that are easy to understand and use. 80% of users can use the interactive features without needing help  
 - `SM-android-IOS-availability`: The app can be downloaded from both the Google Play Store and IOS App store. 
 - `SM-downloads`: The app achieves X downloads in total 6 months after launch. 
 
