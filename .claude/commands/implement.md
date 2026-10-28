@@ -1,5 +1,5 @@
 ---
-description: Build one use case from its merged design-of-record: plan, a refactor proposed first if one is needed, trunk then leaves, the design's test list, and a pull request. Run /design first.
+description: Build one use case from its merged design-of-record, plan, a refactor proposed first if one is needed, trunk then leaves, the design's test list, and a pull request. Run /design first.
 argument-hint: <UC-ID>  (for example /implement UC-ORD-place-order)
 ---
 
