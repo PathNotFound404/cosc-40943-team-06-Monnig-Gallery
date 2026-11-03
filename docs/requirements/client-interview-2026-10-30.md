@@ -48,11 +48,11 @@ These are the questions that are most expensive to get wrong, so the client can 
 | | |
 |---|---|
 | **Date** | 2026-10-30 |
-| **Time and location** | _[Where, and in person or remote]_ |
-| **Client participants** | _[Name, role. Everyone, including whoever only listened.]_ Expected: Heather (Monnig); confirm whether Dr. Rhiannon Mayne, Asa (TCU IT) and Wei are attending. |
-| **Team participants** | _[Name (lead), Name (scribe), Name (observer), ...]_ |
-| **Recording** | _[Asked? Granted or declined]_ |
-| **Photos of screens or forms** | _[Asked? Granted or declined]_ |
+| **Time and location** | Location not noted. Scribe hand-offs were logged at 8:15, 8:30 and 8:45 (AM/PM not stated). In person or remote not noted. |
+| **Client participants** | Heather (Monnig), outreach educator, referred to as "Mrs. Heather". Dr. Mayne is discussed throughout ("great if available") but the notes do not show her attending. Asa and Wei: not mentioned. |
+| **Team participants** | Tanner (scribe until 8:15), Bradley (scribe until 8:30), Edwin (scribe until 8:45). Lead and observer not noted. |
+| **Recording** | _[Not noted]_ |
+| **Photos of screens or forms** | _[Not noted]_ |
 
 _Ask to record, and say why: so nobody is transcribing instead of listening. If they decline, the scribe matters more. Ask separately about photographing screens, forms, and reports. A photo of the spreadsheet they actually use beats a page of notes about it._
 
@@ -94,6 +94,14 @@ _Adapt:_
 
 **What they said:**
 
+- **Role:** Outreach educator. Over 20 years in education; formerly taught middle school science; a traveling teacher. Does tours and groups, public education, and tries to bring people into the gallery. Also gives class lessons (planetarium too).
+- **Split with Dr. Mayne:** Skipped, not answered.
+- **How the app fits this year:**
+  - The app should be "accessible to all" (visually and hearing impaired included), with a guided tour for those who need it. "Main is guided tour."
+  - The gallery is "not very child friendly" right now. "Make it interactive": scavenger hunt, escape room ideas, and different ones for different age ranges.
+  - Follow-up raised: will the kids have iPads provided, or will they need their own device? (not answered)
+- **Time between meetings / who makes the call:** Not answered. See section 13 for office hours.
+
 ---
 
 # The business
@@ -116,7 +124,30 @@ _Adapt:_
 
 **What they said:**
 
-**Terms for the glossary, in their words:** _[Term: what they said it means. Flag any term two people used differently.]_ Listen for: *station*, *exhibit* vs. *display*, *on display* vs. *in the collection*, *ADA info*, *trip planning*, *Primary Point*.
+- **Layout, in the order she walked it:**
+  - People "need to know about the asteroid belt." About 90% of meteorites come from asteroids, so the gallery starts with the asteroid belt, then the theater area. Behind the theater is the history of meteorites, then how meteorites enter through the atmosphere.
+  - Types of meteorites:
+    - Stones: chondrites (about 80%) and achondrites.
+    - Lunar and Martian meteorites. These "landed here" and were found on the ground. How do we know they are from the Moon or Mars? She covers that in tours.
+    - Irons: iron and nickel, "same as core of Earth."
+    - Stony irons: a mix of iron and minerals.
+  - The next room is all about collisions.
+  - The next wall is all terrestrial rocks and the transformation of rocks: what causes rocks to change (heat and pressure).
+  - New acquisition area: a silver piece with "crazy stories" that kids love. (A handwritten note beside this reads "Arizona meteorite!!!"; likely the same piece, not confirmed.)
+  - The final room is all Texas, only Texas: why Texas finds the most meteorites.
+- **Display vs. exhibit vs. sample vs. catalog entry:** Skipped (struck through in the notes; typed notes say N/A).
+- **ADA expectations:** "Accessible to all people": visually and hearing impaired. She is "not sure, will look into it."
+- **Specific standard:** "No set standard right now for accessibility." She will look into it.
+
+**Terms for the glossary, in their words:**
+
+- Chondrite (about 80% of stones) and achondrite. Heard in the same breath: stones, lunar meteorites, Martian meteorites.
+- Iron: iron and nickel, "same as core of Earth."
+- Stony iron: iron plus minerals.
+- Terrestrial rocks: the wall on what changes rocks (heat and pressure).
+- Theater area, new acquisition area.
+- Scavenger hunt vs. tour (self-guided or guided), mini lesson, outreach.
+- Not heard: *station*, *ADA info*, *Primary Point*. Display vs. exhibit was skipped, so no usage difference to flag.
 
 ## 3. Business drivers and objectives
 
@@ -136,7 +167,36 @@ _Adapt:_
 
 **What they said:**
 
-**Candidate objectives (`BO-<slug>`), with baselines where you got them:** _[Or "baseline unknown, `OI-*` raised".]_ Baselines to get for the existing objectives: `BO-display-collection` (how many items on display vs. in the catalog), `BO-accessability` (which standard counts as "compliant"), `BO-language-options` (which languages), `BO-store-release` (by what date). Also the target for `SM-downloads` (the "X" in "X downloads within 6 months").
+- **Why restart now / major failures of the last project:** Not answered. In section 6 she said she "wasn't here when the app launched" and that the graphics are "sad."
+- **Which goal matters most:**
+  - Heather: **kids** ("kids very important"), with a guided audio tour.
+  - Dr. Mayne (as relayed by Heather): **ADA**.
+  - Context: tours bring a lot of adults but mostly kids, and many have learning disabilities, so she wants a guided part.
+- **How we'll know it worked in a year:**
+  - A survey at the end asking how things were and whether they had a good time. Surveys are already positive.
+  - People enjoy being in the space.
+  - Hands-on experiences, interactivity, and the scavenger hunt.
+  - Visitors love the part where meteorites are taken out of the case, touching the meteorites, and the interactive meteorite.
+  - Kids find the hands-on experience fun.
+- **What visitors want to see more of:**
+  - Expansion into geology.
+  - Info on space and meteorites, including how meteorites move through the atmosphere.
+  - More interactivity.
+  - "I wish it was easier to find on campus."
+- **Numbers today:**
+  - Over 600 people in tours since May (May 26).
+  - Only tour groups, not people on their own.
+  - 2,100 students reached through outreach (time period not stated).
+
+**Candidate objectives (`BO-<slug>`), with baselines where you got them:**
+
+- `BO-kids-engagement` (kids are very important; interactive, age-targeted activities): baseline unknown. Only the 600+ tour visitors since May and 2,100 outreach students were given.
+- `BO-guided-audio-tour` (guided audio tour, especially for visitors with learning disabilities): baseline unknown.
+- `BO-accessability`: no accessibility standard is set today. Heather will look into it, so "compliant" is still undefined.
+- `BO-display-collection`: baseline unknown, not discussed.
+- `BO-language-options`: not discussed.
+- `BO-store-release`: no release date given. The only date was grant-related (see section 9).
+- `SM-downloads`: no "X" given. Success was described through end-of-visit surveys, with survey results that are already positive. `OI-*` raised.
 
 ---
 
@@ -158,9 +218,27 @@ _Adapt:_
 
 **Already known:** Today the only ways to explore the gallery are the website (monnigmuseum.tcu.edu), the catalog (monnigcatalog.tcu.edu) and an in-person visit. A tour takes roughly 30 to 60 minutes.
 
-**What they said:** _[Numbered steps, in their order, not yours.]_
+**What they said:**
 
-**Artifacts they showed us:** _[Spreadsheets, forms, reports, current tools, screenshots taken. Ask for copies of everything.]_
+*Planning a visit (how a group books):*
+
+1. The group fills out an interest form on the website.
+2. Heather contacts them and works out days and times. Tours are usually between 9 AM and 12 PM; the gallery is closed to outsiders then and used for those groups.
+3. She asks the number of people, gives parking instructions ("parking instruction!!!"), and asks whether they want a guided tour or a scavenger hunt. (A note here reads "Wave 'em down," which is unclear. It may refer to waving groups in at parking.)
+
+*The visit itself (last visit / how a group visit runs):*
+
+1. Greet the group.
+2. Two options: the scavenger hunt, or the actual tour (walk them through; self-guided is also an option).
+3. Scavenger hunt: set expectations, watch a video, then go search.
+4. Once everyone is done, everyone gathers for a short hands-on mini lesson and she pulls out meteorites at the end.
+5. People on their own can ask for a tour or a scavenger hunt on request.
+6. She stays with guests, answering questions.
+
+- **Last visually impaired visitor and what staff did:** Not answered.
+- **School group visit:** No separate answer; the visit flow above is how groups run.
+
+**Artifacts they showed us:** _[None noted. Ask for copies of everything.]_
 
 ## 5. What is hard about it
 
@@ -176,7 +254,30 @@ _Adapt:_
 
 **What they said:**
 
-**Rules heard (candidate `BR-*` for week 4):** _[Write each as their policy, not as software behavior.]_
+- **What visitors ask that the gallery can't answer:**
+  - "Wild crazy questions," including "what is this?" about certain rocks.
+  - Heather's background is not meteorites, so she has gaps in her knowledge. She either googles or asks Dr. Mayne, who knows a lot more ("great if available").
+  - The rest of the staff isn't in the gallery; they staff outside.
+- **Hardest about serving visitors with disabilities:** Not answered.
+- **Where kids lose interest:**
+  - "Pretty quickly," right after the video.
+  - Kids really like interactivity and touching things (including the Mars meteorite). They stay more engaged in the scavenger hunt.
+  - From 3rd grade up it locks in; the "itty bitty" ones don't.
+  - Pre-K through 12th grade is hard to work with all at once. She would potentially like more age-targeted activities.
+  - Age groups she described:
+    - Pre-K: find the big rock (pictures).
+    - Kinder to 2nd: pre-readers, draw your favorite (draw pictures).
+    - 3rd to 5th: start to read; the scavenger hunt is effective from here.
+    - 6th to 8th.
+    - 9th to 12th: "these guys also exist."
+- **Rules about what we can show:** Not answered (struck through in the notes). Only related item: "inside says no photography" (see section 9).
+- **Scientist review before publishing:** Not answered.
+
+**Rules heard (candidate `BR-*` for week 4):**
+
+- Groups are given the gallery during their tour slot (usually 9 AM to 12 PM); the gallery is closed to outsiders then.
+- Today only tour groups are served; people on their own get a tour or scavenger hunt only on request.
+- No photography is allowed inside the gallery (reason unknown).
 
 ## 6. What already works
 
@@ -190,7 +291,16 @@ _Adapt:_
 
 **Already known:** The previous version had location awareness (sensors or NFC tags), Google Translate for translation, and an existing list of items on display.
 
-**What they said:** _[Explicitly: what must not change.]_
+**What they said:**
+
+- **Keep exactly as is:**
+  - The hands-on experience (if a tour).
+  - The flow of the tour ("current flow is good").
+  - The hands-on mini lesson at the end.
+- **Anything from the 2021–22 app worth keeping:** N/A. She wasn't here when the app launched. Her one comment was "graphics are sad."
+- **What was tried before, and why:** N/A (same reason).
+
+**Explicitly: what must not change:** the hands-on tour experience, the tour flow, and the hands-on mini lesson at the end.
 
 ## 7. Volumes and scale
 
@@ -208,7 +318,20 @@ _Adapt:_
 
 **Already known:** Over 10,000 visitors a year. The collection is roughly 3,000 items. Exhibits are mostly permanent, so content won't need frequent updates.
 
-**What they said:** _[Get a number, or record that you did not.]_
+**What they said:**
+
+- **Visitors per week / busiest week / when:** No weekly figure. Only the total: over 600 people in tours since May 26 (see section 3).
+- **Biggest group:**
+  - Space is limiting. About 30 is the max, and she is "pushing it" at 30.
+  - Groups of 30 are typically split into 2 groups; 15 is best.
+  - Personally she can handle a lot.
+- **Items on display vs. full catalog:** Not answered.
+- **Text, photos and audio per item:** Not answered.
+- **How often the display changes:** Not answered.
+- **Wi-Fi and cell:**
+  - No problems. Wi-Fi is good, cell service is good, and the education room works well.
+  - No guest Wi-Fi network.
+  - If the gallery gets tablets, they will connect to the network.
 
 ## 8. Who the users are
 
@@ -227,7 +350,16 @@ _Adapt:_
 
 **What they said:**
 
-**Can we reach real users? If not, why, and what is the risk:**
+- **Who uses it most:** "Can't say, but probably the groups." Individuals want to learn; they are seeking information to be given to them. Tour visitors want someone to give them the information, and groups usually come in to get the information.
+- **Visually impaired visitors / the specialist:** Not answered.
+- **Testing before release:**
+  - The whole team can test the app, and Dr. Mayne and grad students can too. Heather's own children could also test.
+  - She can ask a group that is going in to test the app and give feedback.
+  - Starpoint School could be the "guinea pigs"; some of its students have dyslexia.
+  - Testing with staff and kids was named as the plan.
+- **Tablets:** "Possibility of gallery tabs." No firm answer; whether visitors use their own devices is still open (see the follow-up in section 1).
+
+**Can we reach real users? If not, why, and what is the risk:** Not for visually impaired visitors. That question was not answered, so no access to them was offered. Starpoint School (including students with dyslexia), school groups and Heather's children were offered for testing. Risk: the stated top accessibility goal has no real users yet. Record as `RI-no-visually-impaired-users`.
 
 ---
 
@@ -251,6 +383,22 @@ _Adapt:_
 
 **What they said:**
 
+- **TCU developer account:** Not answered. One handwritten note says it "might not go through Monnig for deployment"; no other note confirms this, so who deploys is unclear.
+- **Approvals and branding:**
+  - Only brand with Monnig, not TCU (for now). Maybe don't brand TCU in the app, just Monnig.
+  - Ask TCU Marketing about TCU branding.
+  - Monnig has a logo; the color scheme is white and purple, as on the website ("spacey").
+  - How long approval takes: not answered.
+- **Visitor data, accounts, analytics:**
+  - Yes, "very useful if it can be done," especially with the grant. Survey.
+  - Kids' age range, grade range and adult age range.
+- **Image rights:** "Don't know of any." Inside the gallery signs say no photography; she doesn't know why.
+- **Hard dates:**
+  - There are 2 grants right now.
+  - The first one ends "next December" (year not stated; it was said on 2026-10-30).
+  - The new grant runs for 4 years.
+- **Who pays:** Monnig pays for everything. Who signs off on spending: not stated.
+
 ## 10. External dependencies
 
 _**Must ask. 3 min.** What your system has to talk to. Access credentials take weeks to obtain, so the ask has to happen now._
@@ -266,7 +414,7 @@ _Adapt:_
 
 **Already known:** The collection database exists and is assumed to be maintained. Asa likely has the prior materials and the secondary list.
 
-**What they said:**
+**What they said:** None of these questions were answered. One related remark came up in section 13: the meteorite database is in the vault, and that is a question for Dr. Mayne.
 
 ## 11. Lifetime and who maintains it
 
@@ -280,7 +428,7 @@ _Adapt:_
 - Should staff be able to edit content without a developer?
 - Who owns the App Store and Google Play accounts, and who pays the renewals next year?
 
-**What they said:**
+**What they said:** Not asked or no answer recorded. (The only related fact: the new grant runs 4 years; see section 9.)
 
 ## 12. Other stakeholders
 
@@ -294,6 +442,9 @@ _Adapt:_
 **Already known:** The brief's next steps say documents go to Heather and Wei for approval.
 
 **What they said:**
+
+- **Who signs off:** It comes down to Dr. Mayne for final sign-off; Heather has input.
+- **Anyone who would rather this didn't happen:** "No." They don't answer to anyone.
 
 ---
 
@@ -309,6 +460,14 @@ _Adapt:_
 - What worries you most about restarting this app?
 
 **What they said:**
+
+- **Anything we should have asked:**
+  - Whatever we need, just let Mrs. Heather know.
+  - Office hours: Mon to Thu, 7 AM to 2 PM.
+- **What worries her about restarting:**
+  - "Looking into getting access into the software." (Unclear which software; needs a follow-up.)
+  - "Core app done this semester. Next semester just build fun stuff." (The notes do not say who said this; confirm it was the client.)
+  - The meteorite database is in the vault. That is a question for Dr. Mayne.
 
 ## 14. The read-back
 
@@ -326,24 +485,24 @@ _Fill in the [vision-and-scope.md](vision-and-scope.md) vision statement table d
 4. **Out of scope for the first release:** The interactive features (scavenger hunts, quizzes, the find map, section screens, videos and games) come after the core app works.
 5. **Vision table:** Read the six rows of vision-and-scope §2.4 aloud. Confirm the product name: is it "TCU Monnig Museum Guide" from the brief, or "Monnig Meteorite Gallery Tour App" from the vision doc?
 
-**What we read back, and what they corrected:** _[Corrections first. They matter more than the agreements.]_
+**What we read back, and what they corrected:** _[No read-back is recorded in any of the notes.]_
 
 ## 15. Before you leave the room
 
 _**Never skip. 4 min.** Unglamorous, and where teams lose two weeks._
 
-- [ ] **Next meeting on the calendar** before anyone stands up. Not "we will be in touch". _[Date, time, place:]_
-- [ ] **Cadence agreed:** how often, roughly how long, and in person or remote. This course expects meetings **in person, on campus** where your client can travel; if they are outside DFW, agree the tool and who sends the link. _[Cadence:]_
-- [ ] **Contact channel and how fast they reply.** _[Channel, turnaround:]_
-- [ ] **Who to contact between meetings**, including when this person is away. _[Name, contact:]_
-- [ ] **Copies requested** of every artifact you were shown. _[What, and who is sending it:]_ At minimum, request:
+- [ ] **Next meeting on the calendar** before anyone stands up. Not "we will be in touch". _[Date, time, place: not noted]_
+- [ ] **Cadence agreed:** how often, roughly how long, and in person or remote. This course expects meetings **in person, on campus** where your client can travel; if they are outside DFW, agree the tool and who sends the link. _[Cadence: not noted]_
+- [ ] **Contact channel and how fast they reply.** _[Heather: email is the best way. Office hours Mon to Thu, 7 AM to 2 PM. Phone number written in the handwritten notes: 817-723-6018 (confirm it is hers). Turnaround: not noted.]_
+- [ ] **Who to contact between meetings**, including when this person is away. _[Heather ("let Mrs. Heather know"). Backup contact: not noted. Dr. Mayne is the content expert.]_
+- [ ] **Copies requested** of every artifact you were shown. _[What, and who is sending it: not noted]_ At minimum, request:
     - the 2021–22 code, data and documentation (Asa)
     - access to or an export of monnigcatalog.tcu.edu
     - the list of items currently on display
     - the display label text
     - a floor plan of the three rooms
     - information on the Alan Bean paintings
-- [ ] **Introductions requested** to anyone named in sections 8 and 12. _[Who:]_ Likely candidates: Asa, Wei, Primary Point, the TCU Student Support Services contact, and the visual-impairment specialist.
+- [ ] **Introductions requested** to anyone named in sections 8 and 12. _[Who: not noted. Names that came up: Dr. Mayne, Starpoint School (test group). Likely candidates still: Asa, Wei, Primary Point, the TCU Student Support Services contact, and the visual-impairment specialist.]_
 - [ ] **Say what happens next**, in one sentence, so they know what to expect and when.
 
 ---
@@ -379,9 +538,32 @@ These ideas were already floated before this meeting. Ask why until you reach th
 - Light/dark mode, adjustable text size, and text-to-speech.
 - Bundling content in the app so it works on weak gallery Wi-Fi.
 
+Floated in this meeting (Heather's ideas, in her words):
+
+- A guided audio tour, for those who need it (especially visitors with learning disabilities).
+- Scavenger hunt in the app, with different versions for different age ranges. Her examples: Pre-K "find the big rock" (pictures); Kinder to 2nd "draw your favorite" (pre-readers); 3rd to 5th and up a reading-based scavenger hunt.
+- Escape room ideas.
+- Asking questions inside the app (handwritten idea note; the notes don't say who floated it).
+- Expansion into geology content, and info on how meteorites move through the atmosphere.
+- Help finding the gallery on campus ("I wish it was easier to find").
+- Survey and analytics in the app, by age range, grade range and adult age range, tied to the grant.
+- Gallery tablets ("possibility of gallery tabs").
+- Keep the hands-on mini lesson at the end of the tour.
+
 ## Disagreements and hesitations
 
 _[The observer's section, and the one that evaporates fastest. Two participants using the same word differently. A question answered by the wrong person. A topic they returned to three times. An answer that changed between the start and the end. A visible pause before "yes". None of it is evidence on its own; all of it tells you where to look next.]_
+
+- **First priority differs between the two stakeholders.** Heather said kids; she relayed that Dr. Mayne's priority is ADA. Nobody settled which comes first in release 1.
+- **ADA answers were hesitant.** "Not sure, will look into it," and "no set standard right now."
+- **Kids and interactivity came up repeatedly.** The kids theme (not child friendly, scavenger hunt, interactivity, hands-on) came up in sections 1, 3, 5 and 6. Visually impaired visitors came up only in the general "accessible to all" answer.
+- **Wi-Fi.** Several notes say Wi-Fi is good, and also that there is no guest Wi-Fi network. Cell service is good.
+- **Number of meteorite types.** One set of notes says "2 types of meteorites"; another lists stones, irons and stony irons.
+- **Who deploys and brands.** "Only brand with Monnig, not TCU (for now)" and Monnig pays for everything, but one handwritten note says it "might not go through Monnig for deployment." Unresolved.
+- **Sign-off.** The handwritten notes show a second name (looks like Dr. Stepp) crossed out after Dr. Mayne. Other notes say Dr. Mayne signs off and Heather has input.
+- **Heather leans on Dr. Mayne** for content knowledge ("her background is not meteorites"). Dr. Mayne was not in the room, and several content and data questions went to her.
+- **Skipped questions.** The split with Dr. Mayne, and display vs. exhibit vs. sample vs. catalog entry.
+- **Dates.** The "next December" grant end could mean December 2026 or 2027.
 
 ## Open questions
 
@@ -389,19 +571,31 @@ _[Everything you could not answer, and everything they answered with "I would ha
 
 Going in, these are the open questions, sorted by what it costs to stay wrong. Cross off what gets answered:
 
-1. Access to the catalog data and its format, and to the list of items on display. Without these there is no content (section 10).
-2. Who maintains the app after graduation, and who owns the store accounts. This shapes the technology choice (section 11).
-3. Whether Asa's prior code, data and docs are available, and when (section 10).
-4. First-release priority: accessibility for visually impaired visitors, or the general visitor guide (section 3).
-5. Whether we can reach visually impaired users or the specialist (section 8).
-6. Which accessibility standard to meet (section 9).
-7. Primary Point's role, and how the work is split (sections 10 and 12).
-8. Who approves the app: Wei, TCU IT, TCU Marketing (sections 9 and 12).
-9. Whether location awareness is wanted in the first release (NFC, beacons, QR or none) (section 6).
-10. Wi-Fi and cell coverage in the gallery (section 7).
-11. Which languages, and whether machine translation is acceptable for scientific terms (sections 3 and 5).
-12. The app's name (section 14).
-13. Success targets: the download number, and any usage numbers in the gallery (section 3).
+1. Access to the catalog data and its format, and to the list of items on display. Without these there is no content (section 10). **Still open.** Heather says the meteorite database is in the vault; this is a question for Dr. Mayne.
+2. Who maintains the app after graduation, and who owns the store accounts. This shapes the technology choice (section 11). **Not asked, still open.**
+3. Whether Asa's prior code, data and docs are available, and when (section 10). **Not asked, still open.**
+4. First-release priority: accessibility for visually impaired visitors, or the general visitor guide (section 3). **Partly answered, still open:** Heather says kids, Dr. Mayne says ADA. One note says core app this semester and "fun stuff" next semester (confirm who said it).
+5. Whether we can reach visually impaired users or the specialist (section 8). **Not answered, still open.** Starpoint School (some students have dyslexia) was offered for testing.
+6. Which accessibility standard to meet (section 9). **Still open:** none is set; Heather will look into it.
+7. Primary Point's role, and how the work is split (sections 10 and 12). **Not discussed, still open.** (Heather mentioned Starpoint School as a test group; not the same as Primary Point as far as the notes show.)
+8. Who approves the app: Wei, TCU IT, TCU Marketing (sections 9 and 12). **Partly answered:** Dr. Mayne gives final sign-off, Heather has input. TCU IT, Wei and Marketing not covered; ask Marketing about TCU branding.
+9. Whether location awareness is wanted in the first release (NFC, beacons, QR or none) (section 6). **Not discussed, still open.**
+10. ~~Wi-Fi and cell coverage in the gallery (section 7).~~ **Answered:** no problems, cell good, no guest Wi-Fi, education room works well.
+11. Which languages, and whether machine translation is acceptable for scientific terms (sections 3 and 5). **Not discussed, still open.**
+12. The app's name (section 14). **Not discussed, still open.**
+13. Success targets: the download number, and any usage numbers in the gallery (section 3). **Partly answered:** success is judged by end-of-visit surveys (already positive); baseline is 600+ tour visitors since May 26 and 2,100 outreach students; no download target.
+
+New questions raised by this meeting:
+
+14. Will kids use gallery-provided tablets/iPads or their own devices? With no guest Wi-Fi, how will visitors' phones reach content (cell service is good)? (sections 1, 7, 8)
+15. Who publishes and deploys the app: Monnig or TCU? And what branding can the app use (TCU Marketing)? (section 9)
+16. Which grant ends "next December" (2026 or 2027), what does the new 4-year grant require us to report (surveys, age ranges), and who pays for the grant-related data collection? (section 9)
+17. What did Heather mean by "looking into getting access into the software"? And confirm who said "core app done this semester, fun stuff next semester." (section 13)
+18. Why is there no photography inside the gallery, and does it affect collection photos in the app? (section 9)
+19. How should content differ by age range (Pre-K to 12th grade) and for visitors with learning disabilities? (sections 1, 3, 5)
+20. Does a scientist (Dr. Mayne) have to review content before it is published? Not answered (section 5).
+
+Not asked or no answer recorded: why restart now and the last app's major failures (sec 3); the last visually impaired visit and what is hardest about serving visitors with disabilities (secs 4, 5); rules on what we can show (sec 5); items on display vs. catalog, text/photo/audio per item, and how often the display changes (sec 7); visitors in a typical or busiest week (sec 7); TCU developer account and how long approvals take (sec 9); all of sections 10 and 11; time between meetings and who makes the call (sec 1); the split with Dr. Mayne (sec 1).
 
 ---
 
