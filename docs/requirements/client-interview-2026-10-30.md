@@ -48,11 +48,11 @@ These are the questions that are most expensive to get wrong, so the client can 
 | | |
 |---|---|
 | **Date** | 2026-10-30 |
-| **Time and location** | Location not noted. Scribe hand-offs were logged at 8:15, 8:30 and 8:45 (AM/PM not stated). In person or remote not noted. |
-| **Client participants** | Heather (Monnig), outreach educator, referred to as "Mrs. Heather". Dr. Mayne is discussed throughout ("great if available") but the notes do not show her attending. Asa and Wei: not mentioned. |
-| **Team participants** | Tanner (scribe until 8:15), Bradley (scribe until 8:30), Edwin (scribe until 8:45). Lead and observer not noted. |
-| **Recording** | _[Not noted]_ |
-| **Photos of screens or forms** | _[Not noted]_ |
+| **Time and location** | LIB 2122 |
+| **Client participants** | Heather Stepp (Monnig) |
+| **Team participants** | Tanner (scribe until 8:15), Bradley (scribe until 8:30), Edwin (scribe until 8:45), Turner(scribe), Cody (Lead) |
+| **Recording** | Not Recorded |
+| **Photos of screens or forms** | Given scavenger hunt sheets |
 
 _Ask to record, and say why: so nobody is transcribing instead of listening. If they decline, the scribe matters more. Ask separately about photographing screens, forms, and reports. A photo of the spreadsheet they actually use beats a page of notes about it._
 
