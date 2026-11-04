@@ -122,6 +122,7 @@ Creating a supplemental application for ease of access
 - `BO-language-options`: Offer different language options: English, Spanish, French, and Vietnamese
 - `BO-interactive-components`: App features interactive learning components
 - `BO-store-release`: Published on the iOS and Android stores
+- `BO-tour`: Display the gallery that allows for self guided tours
 
 
 ### 2.3 Success Metrics
