@@ -31,6 +31,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 |---|---|---|---|
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
+| 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
 
 ---
 
@@ -101,10 +102,9 @@ _[Your area codes, then a table of every use case by area. Write this list first
 
 | Area code | Feature area | Use cases |
 |---|---|---|
-| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-measure-visual-preferences`: Measures Visual Preferences Through Survey<br>`UC-PREF-reset-user-preferences`: Reset User Preferences in Settings<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
-| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display<br>`UC-TTS-speak-by-location`: Text-To-Speech Based on User’s Location In The Museum |
-| TOUR | Gallery tour and navigation | `UC-TOUR-scan-display-code`: Scans a QR/Barcode to Pull Up a Page of Display<br>`UC-TOUR-display-gallery-section`: Display Information Regarding Sections of the Gallery<br>`UC-TOUR-illustrate-areas-of-importance`: Illustrate Areas of Importance In the Gallery |
-| CAT | Meteorite catalog | `UC-CAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-CAT-filter-catalog`: Organize Meteorite Catalog Based on Specific Filters<br>`UC-CAT-display-catalog-meteorites`: Display Meteorites in Catalog |
+| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br><br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
+| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-databse`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
 ---
 
@@ -117,12 +117,19 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 ### UC-PREF-identify-language-preference: Identifies User Language Preference
 
 **UC ID and Name:** `UC-PREF-identify-language-preference`: Identifies User Language Preference
-**Created By:** Kendric D’Spain
+
+**Created By:** Kendric D’Spain, Bradley Helmholz
+
 **Date Created:** October 16, 2021
+
 **Primary Actor:** Monnig Gallery Visitor
+
 **Secondary Actors:** Museum volunteers
+
 **Trigger:** A user starts an app for the first time the user tours the Monnig Meteorite Gallery.
-**Description:** The user starts up the TCU MMG mobile app for the first time and prompts the user for their preferred language. The user is able to select their preferred language out of the four currently supported, English, Spanish, French and Vietnamesse.
+
+**Description:** The user starts up the TCU MMG mobile app for the first time and prompts the user for their preferred language. The user is able to select their preferred language out of the two currently supported, English and Spanish
+
 
 **Preconditions:**
 
@@ -132,17 +139,21 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Main Success Scenario:**
 
-1. The system requests the user to choose their preferred language.
-2. The user inputs their preferred language.
+1. The system requests the user to choose their preferred language, displayed to user with language name and appropriate country flag.
+2. The user selects their preferred language.
 3. The system applies the preference to the current session.
+4. Use case ends.
 
 **Extensions:**
 
 - **1a. The User does not provide a language preference and tries to proceed**
     - 1a1. The system defaults language to English.
+    - 1a2. Use case ends.
 
 **Priority:** High
+
 **Frequency of Use:** Everytime the MMG application is opened, and the user is ready to tour the Gallery.
+
 **Business Rules:**
 
 **Associated Information:**
@@ -150,367 +161,309 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 1. The user is able to change their preferred language anytime throughout the gallery as well.
 
 **Related Use Cases:**
-**Assumptions:** Assume that the user must complete the language Preference survey prior to starting his/her tour at TCU’s Monnig Meteorite Gallery.
+
+**Assumptions:** Assume that the user must complete the language preference selection prior to starting his/her tour at TCU’s Monnig Meteorite Gallery.
+
 **Open Issues:**
 
-### UC-PREF-measure-visual-preferences: Measures Visual Preferences Through Survey
 
-**UC ID and Name:** `UC-PREF-measure-visual-preferences`: Measures Visual Preferences Through Survey
-**Created By:** Kendric D’Spain and Aparajita Biswas
-**Date Created:** October 8, 2021
-**Primary Actor:** Visually Impaired User
-**Secondary Actors:** Museum volunteers
-**Trigger:** A user starts an app for the first time to tour the Monnig Meteorite Gallery.
-**Description:** A user starts up the TCU MMG mobile app for the first time and is prompted by a survey. The survey identifies the user’s preferences based on a multitude of different questions presented.
+### UC-PREF-customize-visual-preferences ###
 
-1. Virtual Assistance Preference
-2. Font Size Preference
-3. Font Style Preference
-4. Color blind prompt/test
+**UC ID and Name:** `UC-PREF-customize-visual-preferences`: Customize Visual Preferences
 
-**Preconditions:**
+**Created By:** Bradley Helmholz
+
+**Date Created:** November 3, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** Museum Volunteers, Museum Staff
+
+**Trigger:** User selects a UI element on the screen to edit their visual preferences
+
+**Description:** The user presses a UI element on the app screen, which directs them to a page to set their visual preferences for the application, including previews for their selections
+
+1. Font Size
+2. Font Style
+3. Change Language (with language name and country flag)
+4. Dark mode vs Light mode
+
+
+**Preconditions:** 
+
+- PRE-1. The user has already opened the application and passed the home screen.
 
 **Postconditions:**
 
-- POST-1. The user’s Visual Preferences are temporarily stored and the remaining session should reflect the user’s visual preferences to the current instance of the application running.
+- POST-1. The user's visual preference changes are previewed to them before they confirm changes.
+- POST-2. The user's visual preferences are stored and persists for the remainder of the current instance of the application running.
 
 **Main Success Scenario:**
 
-1. The system requests the user for enabling virtual assistance.
-2. The user responds to the system declining the feature by User Interface.
-3. The system requests the user to select his/her preferred font size.
-4. The user responds to the system choosing his/her preferred font size.
-5. The system requests the user to select his/her preferred font style
-6. The user responds to the system choosing his/her preferred font style.
-7. The system prompts the user for the color blind test.
-8. The user responds by inputting values for the test.
-9. The system then applies the changes from all preferences and the colorblind examination to the current session.
+1. The user interacts with a UI element to change their current visual preferences.
+2. The system responds by opening a popup page centered on the screen listing the visual preference options, all of which can be selected and changed in any order.
+3. The system requests the user to select their preferred font style, from a choice of four.
+4. The system requests the user to select their prefrerred font size, from a choice of four.
+5. The system requests the user to select their preferred language, with both language name and appropriate country flag presented to the user
+6. The system presents a toggle between light mode and dark mode, which applies to the entire application
+7. The user can select from any available options the system presents to the user for visual preferences.
+8. All selections the user makes before confirming their choices are shown immediately througout the application
+9. The user confirms their selections.
+10. The system applies the selected changes from all preferences across the application to the current instance.
+11. Use case ends.
 
 **Extensions:**
 
-- **1a. The User does not provide a response for enabling virtual assistance.**
-    - 1a. The system proceeds after 30 seconds of auto enabling the feature.
-- **2a. The user responds by accepting the virtual assistance feature via UI.**
-    - 2a. The system proceeds ignoring all remaining preferences fields and proceeds to 9 in Main Success Scenario.
+- **7a. The user does not make any selections.**
+    - 7a1. No changes are made to the applications UI.
+    - 7a2. Use case ends.
+- **9a. The user does not confirm their selections**
+    - 9a1. No selected changes take hold in the current application's session.
+    - 9a2. The UI returns to its settings prior to the user interacting with the visual preferences setting.
+    - 9a3. Use case ends.
 
-**Priority:** High
-**Frequency of Use:** Every time the MMG application is opened, and the user is ready to tour the Gallery.
+**Priority:** Medium
+
+**Frequency of Use:** User can access settings to change visual preferences at any point in the application. The UI element is never hidden or hard to find.
+
 **Business Rules:**
 
 **Associated Information:**
 
-2. The user is able to access the Visual Preference survey anytime throughout the Gallery.
+**Related Use Cases:** `UC-PREF-identify-language-preference`
 
-**Related Use Cases:**
-**Assumptions:** Assume that the user needs are listed and that the user selects all the options they need assistance with. Volunteers will help in case the user can not navigate this stage of the application.
+**Assumptions:** The UI element to open the visual preferences popup is always visible on the application.
+
 **Open Issues:**
 
 ## TTS: Text-to-speech
 
-### UC-TTS-read-display-contents: Text-to-speech Reads Contents of Each Display
 
-**UC ID and Name:** `UC-TTS-read-display-contents`: Text-to-speech reads contents of each display
-**Created By:** Kendric D’Spain
-**Date Created:** October 8, 2021
-**Primary Actor:** Visually Impaired User
-**Secondary Actors:** Museum volunteers
-**Trigger:** User approaches a specific display.
-**Description:** Upon completion of the preference survey, the user navigates to a display and would like to use the integrated Text-To-Speech feature throughout the exhibit.
 
-**Preconditions:**
+## DAT: Meteorite database
 
-**Postconditions:**
+### UC-DAT-display-databse: Displays Meteorites in Catalog
 
-**Main Success Scenario:**
+**UC ID and Name:** `UC-DAT-display-database`: Displays Meteorites in Catalog
 
-1. The system confirms the user is at a specific display.
-2. The system vocally presents the specified material to the user.
-3. The system indicates to the user the display is over and to visit the next display.
-4. The system polls the user’s location for the next display.
+**Created By:** Aparajita Biswas, Bradley Helmholz
 
-**Extensions:**
-
-- **3a. User Wants to Revisit Same Display**
-    - 3a1. The user indicates to the system verbally to continue at the same display.
-- **3b. User Wants to Exit the Gallery**
-    - 3b1. The user indicates to the system verbally to exit at the exhibit.
-
-**Priority:** High
-**Frequency of Use:** Approximately 10 times per individual touring the Gallery.
-**Business Rules:**
-
-**Associated Information:**
-
-1. The user is able to take a break from the Gallery by simply not interacting with the voice assistant at the end of a given display.
-
-**Related Use Cases:**
-**Assumptions:** Assume that the user preference text-to-speak functionality is enabled.
-**Open Issues:**
-
-### UC-TTS-speak-by-location: Text-To-Speech based on User’s Location In The Museum
-
-**UC ID and Name:** `UC-TTS-speak-by-location`: Text-To-Speech based on User’s Location In The Museum
-**Created By:** Amanuel Taddesse
-**Date Created:** October 8, 2021
-**Primary Actor:** Visually Impaired User
-**Secondary Actors:** Museum volunteers
-**Trigger:** User approaches a specific display.
-**Description:** Upon completion of the preference survey, the user approaches a display and system will know that the user is close to a specific display via bluetooth beacons
-
-**Preconditions:**
-
-**Postconditions:**
-
-**Main Success Scenario:**
-
-1. The system confirms the user is at a specific display.
-2. The system plays Text-To-Speech of Meteorites in a humanly sequence.
-3. The user is able to interrupt/pause the Text-To-Speech audio if needed
-
-**Extensions:**
-
-- **4a. User Wants to Replay the Text-To-Speech Audio**
-    - 4a1. The user passes this command via a button or a voice command.
-- **4b. User Wants to Choose the Meteorite they want to learn more about**
-    - 4a1. Visually impaired user makes a choice via voice command to explore one of the meteorites available on the shelf they are close to
-
-**Priority:** Medium
-**Frequency of Use:** At least as many as the number of displays in the museum
-**Business Rules:**
-
-**Associated Information:**
-
-**Related Use Cases:**
-**Assumptions:** The system will be getting a good approximate location of the user using the Bluetooth beacons
-**Open Issues:**
-
-## TOUR: Gallery tour and navigation
-
-### UC-TOUR-scan-display-code: Scan QR/Barcode to access a page on a specific display
-
-**UC ID and Name:** `UC-TOUR-scan-display-code`: User should scan a QR/Barcode in App to access a page to see information regarding display.
-**Created By:** Asa Tuten
-**Date Created:** October 11, 2021
-**Primary Actor:** Visually Impaired User
-**Secondary Actors:** Gallery Visitors
-**Trigger:** The user walks up to the display and uses a camera within the App to scan a QR/Barcode.
-**Description:** When a user scans the QR/barcode, the app will pull up a page regarding the display that was scanned and follow along the path the gallery takes.
-
-**Preconditions:**
-
-**Postconditions:**
-
-**Main Success Scenario:**
-
-1. The user presses a button to pull up the camera in the app
-2. The app pulls up the QR/Barcode scanner
-3. The user holds up the device’s camera to the QR/barcode
-4. The app validates the QR/barcode
-5. The app opens up the page associated with that QR/barcode
-
-**Extensions:**
-
-- 1a. The user’s device does not have a camera.
-    - 1a1. The user manually enters the display number on the camera screen.
-
-**Priority:** Medium
-**Frequency of Use:** Number of visitors within the gallery
-**Business Rules:**
-
-**Associated Information:**
-
-**Related Use Cases:**
-**Assumptions:** The user has a camera and can operate their phone to access their camera on the app.
-**Open Issues:**
-
-### UC-TOUR-display-gallery-section: Display Information Regarding Sections of the Gallery
-
-**UC ID and Name:** `UC-TOUR-display-gallery-section`: Display information regarding sections of the gallery
-**Created By:** Asa Tuten
-**Date Created:** November 3, 2021
-**Primary Actor:** Monnig Visitor
-**Secondary Actors:**
-**Trigger:** Selection of the section of the gallery on the app or tour assistant reaches that part of the tour in the app.
-**Description:** The app will populate the UI with the text of the specific section that is in the gallery on the wall. It will also have meteorites listed in the UI that are specific to the topic the section is covering.
-
-**Preconditions:**
-
-**Postconditions:**
-
-**Main Success Scenario:**
-
-1. The user selects the start button for the tour of the gallery.
-2. The system will call the backend to gather section data.
-3. The backend returns information regarding the section selected.
-4. The system populates the UI with information regarding the section selected.
-5. The system displays the information of the section of the gallery.
-6. The user will then choose to continue the tour.
-
-**Extensions:**
-
-- 1a. The user selects a specific section they want to be displayed on the app.
-- 6a. The user decides to end the tour.
-- 6b. The user selects a specific section they want to be displayed on the app.
-
-**Priority:** High
-**Frequency of Use:** Every tour of the gallery
-**Business Rules:**
-
-**Associated Information:**
-
-The database will have this information populated in JSON format and will be called using REST API calls for the UI to then format the JSON text into usable data for the UI to display.
-
-**Related Use Cases:**
-**Assumptions:** The database has all text of the gallery and the flow of the app has been created.
-**Open Issues:**
-
-### UC-TOUR-illustrate-areas-of-importance: Illustrate areas of importance in the gallery
-
-**UC ID and Name:** `UC-TOUR-illustrate-areas-of-importance`: Illustrate areas of importance in the gallery
-**Created By:** Asa Tuten
-**Date Created:** 5/4/2022
-**Primary Actor:** Monnig Visitor
-**Secondary Actors:**
-**Trigger:** Reaching the tour assistance screen after initial user flow. Can also occur was a user enters a different region of the gallery.
-**Description:** The app will populate the UI with an image of the gallery with a highlighted area based on where the user is currently in the gallery. It will also change depending on where the user stands based on bluetooth beacon signals.
-
-**Preconditions:**
-
-**Postconditions:**
-
-**Main Success Scenario:**
-
-1. User enters the gallery and goes through the initial survey and lands on the Tour Assistance screen.
-2. Tour assistance screen updates relevant information about the area the visitor is currently in based on bluetooth beacons.
-3. As the visitor moves around the gallery, the map will update based on the user’s new location and position in the gallery.
-
-**Extensions:**
-
-- 2a. The user accesses the app outside the gallery and the image will not update.
-
-**Priority:** Medium
-**Frequency of Use:** Everytime the app is used.
-**Business Rules:**
-
-**Associated Information:**
-
-Uses the iBeacon technology.
-
-**Related Use Cases:**
-**Assumptions:** Assumes user is using one of the provided tablets in the gallery.
-**Open Issues:**
-
-## CAT: Meteorite catalog
-
-### UC-CAT-display-meteorite: Display Information Regarding a Single Meteorite
-
-**UC ID and Name:** `UC-CAT-display-meteorite`: Display Information Regarding a Single Meteorite
-**Created By:** Kendric D’Spain
-**Date Created:** November 3, 2021
-**Primary Actor:** Monnig Gallery Visitor
-**Secondary Actors:**
-**Trigger:** The user selects a meteorite he/she wants to view in detail.
-**Description:** A user visiting the Gallery wants to be able to view a specific meteorite.
-
-**Preconditions:**
-
-**Postconditions:**
-
-**Main Success Scenario:**
-
-1. The user selects a meteorite to view.
-2. The system will call the backend to collect the meteorites data.
-3. The system reflects the data to the user displaying the meteorites stored contents.
-
-**Extensions:**
-
-- 2a. The system cannot retrieve any data on the selected meteorite.
-- 3a. The system cannot display the data on the selected meteorite.
-
-**Priority:** High
-**Frequency of Use:** Every time the gallery is toured.
-**Business Rules:**
-
-**Associated Information:**
-
-**Related Use Cases:**
-**Assumptions:** The meteorites are inputted into the database correctly in the appropriate format.
-**Open Issues:**
-
-### UC-CAT-filter-catalog: Organize Meteorite Catalog Based on Filters
-
-**UC ID and Name:** `UC-CAT-filter-catalog`: Organize Meteorite Catalog Based on Filters
-**Created By:** Asa Tuten
-**Date Created:** 5/4/2022
-**Primary Actor:** Monnig Visitor
-**Secondary Actors:**
-**Trigger:** User selects the Meteorite Catalog screen tab on the app once through the survey.
-**Description:** The app is equipped with being able to query meteorites for visitors to look at, whether the meteorite is on display in the gallery or not. The user can also filter out meteorites based a variety of categories.
-
-**Preconditions:**
-
-**Postconditions:**
-
-**Main Success Scenario:**
-
-1. User accesses the Catalog screen by hitting the catalog screen button.
-2. Meteorites pop up based on users location in the gallery.
-3. User will click the search bar and type in letters based on what they want to query.
-4. Meteorites will update based on user’s query
-
-**Extensions:**
-
-- 4a. Query can be based on selected filter, like country, size, weight, etc.
-
-**Priority:** Low
-**Frequency of Use:** Any time a user wants to view more meteorites.
-**Business Rules:**
-
-**Associated Information:**
-
-**Related Use Cases:**
-**Assumptions:** Assumes user has internet access.
-**Open Issues:**
-
-### UC-CAT-display-catalog-meteorites: Displays Meteorites in Catalog
-
-**UC ID and Name:** `UC-CAT-display-catalog-meteorites`: Displays Meteorites in Catalog
-**Created By:** Aparajita Biswas
 **Date Created:** November 03, 2021
+
 **Primary Actor:** Monnig Gallery Visitor
-**Secondary Actors:** Museum visitors
-**Trigger:** A user selects to view the meteorite from the catalog in the Monnig Meteorite Gallery.
-**Description:** After the user selects the meteorite to view, it is displayed on the screen
+
+**Secondary Actors:** Museum Volunteers, Museum Staff
+
+**Trigger:** The user selects "Meteorite Database" in the application.
+
+**Description:** The user navigates to the section of the application that displays a list of all of the meteorites present in Monnig's meteorite collection database.
 
 **Preconditions:**
 
+- PRE-1. The user has already opened the application and passed the home screen.
+- PRE-2. The application can query the database with all needed information regarding all available meteorites.
+
 **Postconditions:**
 
-- POST-1. The meteorite information is stored in the database.
-- POST-2. The system displays the catalog
+- POST-1. The system displays a list of all meteorites in the Monnig database.
+- POST-2. The user can scroll down the list of meteorites to select them (`UC-DAT-display-meteorite`), or further refine their search (`UC-DAT-filter-database`).
 
 **Main Success Scenario:**
 
-1. The system waits for the input from user
-2. The user selects the meteorite from the catalog to view
-3. The system displays the selected meteorite with the stored information
+1. The user indicates to view the full meteorite catalog.
+2. The system moves the user to a new page to display the list of meteorites.
+3. The system queries the database to retrieve all meteorites according to active filters.
+4. The database returns all queried meteorites.
+5. The system displays all meteorites in small card form in a list that can be scrolled down to the user.
+6. The card shows only the name/label of the meteorite as well as the picture of the meteorite if applicable.
+6. User can select a meteorite (`UC-DAT-display-meteorite`) or further filter (`UC-DAT-filter-database`).
+7. Use case ends.
 
 **Extensions:**
 
-- **1a. The User does not select a meteorite from the catalog**
-    - 1a1. The system requests user input before proceeding.
+- **3a. The system is unable to query the database.**
+    - 3a1. The system reports the failure to retrieve all information from the database to the user.
+    - 3a2. The page remains blank with an error message, prompting the user to try again later.
+    - 3a3. User can try refreshing the page or leave.
+    - 3a3. Use case ends.
+- **4a. The database fails to return one or more queried meteorites.**
+    - 4a1. The system reports the failture to retrieve all information from the database to the user.
+    - 4a2. The page remains blank with an error message, prompting the user to try again later.
+    - 4a3. User can try refreshing the page or leave.
+    - 4a3. Use case ends.
 
 **Priority:** High
-**Frequency of Use:** Everytime the MMG application is opened, and the user is ready to tour the Gallery.
+
+**Frequency of Use:** For all times that the application is running, as the user can view the catalog at any time.
+
+**Business Rules:**
+
+**Associated Information:** The database for all relevant information is located at monnigcatalog.tcu.edu
+
+**Related Use Cases:** `UC-DAT-filter-database`, `UC-DAT-display-meteorite`
+
+**Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
+
+**Open Issues:**
+
+
+### UC-DAT-filter-database: Organize Meteorite Catalog Based on Filters
+
+**UC ID and Name:** `UC-DAT-filter-database`: Organize Meteorite Database Based on Filters
+
+**Created By:** Asa Tuten, Bradley Helmholz
+
+**Date Created:** 5/4/2022
+
+**Primary Actor:** Monnig Visitor
+
+**Secondary Actors:** Museum Volunteer, Museum Staff
+
+**Trigger:** User selects the Filter button button at the top of the screen.
+
+**Description:** The app is equipped with being able to query meteorites for visitors to look at, whether the meteorite is on display in the gallery or not. The user can filter out meteorites based a variety of categories. Prior to user selections all filters are defaultly set to ALL.
+
+1. Type of meteorite
+2. Composition of meteorite
+2. Location of find
+3. Time range of find
+3. Whether or not the meteorite is on display
+
+**Preconditions:**
+
+- PRE-1. The user is in the "Meteorite Database" page of the application.
+- PRE-2. The application is currently able to query information from the database.
+
+**Postconditions:**
+
+- POST-1. The selected filters become active
+- POST-2. The page is automatically refreshed showing meteorites with updated filters.
+
+**Main Success Scenario:**
+
+1. User selects the "Filter" button located at the top of the Meteorite Database page.
+2. System reveals the filter bar dropdown.
+3. Filter bar lists filter options and categories.
+4. User can select and change the filters
+5. For the category pertaining to location, user can either select from an additional dropdown, or begin to type in their location, which will be automatically be text-matched from options present in the location dropdown.
+6. The time range filter has both a two node sliding time range line, as well as manual numerical input.
+7. The user indicates to apply current filters.
+8. System queries Monnig database with new filters.
+9. Database returns all meteorites that fit all filters.
+10. System displays selected meteorites to user.
+11. Use case ends.
+
+**Extensions:**
+
+- **2a. User wishes to collapse the filter bar.**
+    - 2a1. The user indicates to collapse the filter bar through a UI button.
+    - 2a2. The filter bar collapses back to how it was before it was opened.
+    - 2a2. Use case ends.
+- **7a. User does not indicate to apply current filters and collapses the filter bar.**
+    - 7a1. No filters are applied, and all filter settings are reset to default.
+    - 7a2. Use case ends.
+- **8a. The system is unable to query the database.**
+    - 8a1. The system reports the failure to retrieve all information from the database to the user.
+    - 8a2. The page remains blank with an error message, prompting the user to try again later.
+    - 8a3. User can try refreshing the page or leave.
+    - 8a4. Use case ends.
+- **9a. The database fails to return one or more queried meteorites.**
+    - 9a1. The system reports the failture to retrieve all information from the database to the user.
+    - 9a2. The page remains blank with an error message, prompting the user to try again later.
+    - 9a3. User can try refreshing the page or leave.
+    - 9a4. Use case ends.
+- **9b. There are no meteorites that fit all applied filters**
+    - 9b1. The database indicates to the system that there are no meteorites that fit the current filters.
+    - 9b2. The system does not display a list of meteorites, instead showing a message stating "No meteorites match current filters."
+    - 9b3. User is prompted to change their filters.
+    - 9b4. Use case ends.
+
+**Priority:** Medium
+
+**Frequency of Use:** Any time a user wants to view a specific selection meteorites.
+
 **Business Rules:**
 
 **Associated Information:**
 
-3. The user is able to view the meteorite anytime throughout the gallery as well.
+**Related Use Cases:** `UC-DAT-display-database`
 
-**Related Use Cases:**
-**Assumptions:** Assume that the user must select the meteorite before being able to view it.
+**Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
+
 **Open Issues:**
+
+
+### UC-DAT-display-meteorite: Display Information Regarding a Single Meteorite
+
+**UC ID and Name:** `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite
+
+**Created By:** Kendric D’Spain, Bradley Helmholz
+
+**Date Created:** November 3, 2021
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** Museum Volunteers, Museum Staff
+
+**Trigger:** The user selects a meteorite he/she wants to view in detail.
+
+**Description:** A user visiting the Gallery wants to be able to view a specific meteorite on the application. In the Meteorite Database page they select a meteorite information card from the list, creating a large centered popup showing them information regarding the meteorite.
+
+
+**Preconditions:** 
+
+- PRE-1. The user has already opened the application and passed the home screen.
+- PRE-2. The user is in the Meteorite Database page.
+- PRE-3. The database has been properly queried and there are meteorite cards present on the page in a list to select.
+
+**Postconditions:**
+
+- POST-1. The user can view a specific meteorite from the Monnig collection.
+- POST-2. The screen displays all relevant information pertaining to the meteorite, including and not limited to: name, type, origin, and date of discovery.
+
+**Main Success Scenario:**
+
+1. The user selects a specific meteorite to view in detail.
+2. A large centered screen popup of the selected meteorite opens.
+3. The system queries the database for the selected meteorite for all needed information.
+4. The database returns requested information to the system.
+5. The system displays all information for the selected meteorite to the viewer.
+6. The user can close the popup by either clicking outisde of the popup or pressing the X button in the top right corner
+7. Use case ends.
+
+**Extensions:**
+
+- **3a. The system is unable to query the database.**
+    - 3a1. The system reports the failure to query information from the database to the user.
+    - 3a2. The popup remains blank with an error message, prompting the user to try again later.
+    - 3a3. User can try refreshing the page or leave.
+    - 3a4. Use case ends.
+- **4a. The database fails to return the queried meteorites.**
+    - 4a1. The system reports the failture to retrieve the meteoirte from the database to the user.
+    - 4a2. The page remains blank with an error message, prompting the user to try again later.
+    - 4a3. User can try refreshing the page or leave.
+    - 4a4. Use case ends.
+- **4b. Certain information on the selected meteorite is not present in the database.**
+    - 4b1. The database returns null for the specific pieces of information not present for the meteorite in the database
+    - 4b2. When displaying missing/unknown information on the meteorite to the user, the system states [NOT INDICATED] in bold red text
+    - 4b3. System displays all known information on the meteorite normally.
+    - 4b4. Use case ends.
+
+
+**Priority:** High
+
+**Frequency of Use:** Every time the application is used, as many times as the user wants to.
+
+**Business Rules:**
+
+**Associated Information:**
+
+**Related Use Cases:** `UC-DAT-display-database`
+
+**Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
+
+**Open Issues:**
+
 
 ---
 

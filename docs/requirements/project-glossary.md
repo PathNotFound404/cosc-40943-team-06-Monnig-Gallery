@@ -66,27 +66,15 @@ This Glossary displays the terminology used in conjunction with the project and 
 
 ### Scope
 
-This glossary covers the technology required for the implementation of the application/
+This glossary covers the technology required for the implementation of the application
 
 ## Definitions
 
 _[One `###` heading per term, alphabetical. Follow the heading with a definition of one to three sentences. Add **Synonyms**, **Not to be confused with**, or **Source** lines where they help. Where a term only makes sense with an example, give one._
 
-### Accessibility Feature
-
-“A feature or quality of the application offering a benefit to a user with a visual impairment to aid in their visual experience”
-
 ### Achondrite
 
 A stony meteorite that does not contain chondrules.
-
-### Blindness
-
-“The state or condition of being unable to see because of injury, disease, or a congenital condition. Specifically, a complete lack of detail vision”
-
-### Blurred Vision
-
-“Decreased clarity or sharpness in vision.”
 
 ### Chondrite
 
@@ -169,3 +157,11 @@ The catalog number of the specific meteorite
 ### Visual Impairment
 
 “A decreased ability to see to a degree that causes problems not fixable by usual means, such as glasses”
+
+### Database
+
+The database/catalog that contains the records of all meteorites in the Monnig collection. Used interchangeably with Catalog.
+
+### Catalog
+
+The database/catalog that contains the records of all meteorites in the Monnig collection. Used interchangeably with Database.
