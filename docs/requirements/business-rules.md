@@ -1,8 +1,8 @@
 # Business Rules
 
-**Project:** _[Your project name]_
-**Team:** _[Team NN]_
-**Client:** _[Client name and organization]_
+**Project:** Monnig Meteorite Gallery Tour App (working name)
+**Team:** Team 06
+**Client:** Heather Stepp and Dr. Rhiannon Mayne, Monnig Meteorite Gallery, TCU
 **Version:** 0.1
 
 ---
@@ -82,7 +82,7 @@ _The Source column is the defense. Every rule traces to a document or a person, 
 
 | Date | Version | Description | Author |
 |---|---|---|---|
-| _[YYYY-MM-DD]_ | 0.1 | Initial rules from the client brief and first client meeting | _[Name]_ |
+| 2026-11-03 | 0.1 | Initial rules from the 10/15 kickoff brief, the 2026-10-30 client interview, and the 2026-10-21 and 2026-11-02 team meetings | Turner DeMott |
 
 ---
 
@@ -92,9 +92,17 @@ _The Source column is the defense. Every rule traces to a document or a person, 
 
 _[One paragraph: this document collects the policies, regulations, standards, and formulas that govern the business your software operates in, so the specification can cite them rather than restate them.]_
 
+This document collects the info that determines how the Monnig Meteorite Gallery operates, so that the [software requirements specification](software-requirements-specification.md) and the [use cases](use-cases.md) can cite them by identifier instead of restating them. Each rule applies even without the software. The gallery's staff makes the decision, and the team complies.
+
 ### 1.2 Scope
 
 _[Which parts of the client's business these rules cover, and which are out of scope. If your client's organization has rules that your system does not touch, say so here rather than silently omitting them.]_
+
+**In scope:** how guided group visits run, gallery policies that affect visitors, branding and affiliation, ownership of and access to the meteorite database, grant-driven data collection, who pays for project costs, and who approves the finished app.
+
+**Out of scope:** the gallery's booking process (the interest form on the website, parking instructions), staff office hours, and the gallery's internal operations outside the visit. These came up in the [2026-10-30 client interview](client-interview-2026-10-30.md) but the app does not touch them. No rules have been given yet for image rights, scientist review of content, or items in the collection but not on display, so none are guessed here.
+
+**Sources cited below.** "Interview, §N" means section N of the [2026-10-30 client interview record](client-interview-2026-10-30.md), with Heather Stepp. "Minutes" means the team meeting minutes in [docs/meeting minutes/](../meeting%20minutes/). Dr. Mayne was not at the interview; anything attributed to her came through Heather.
 
 ---
 
@@ -102,17 +110,50 @@ _[Which parts of the client's business these rules cover, and which are out of s
 
 _[Group rules under topic headings that fit your project. The Project Pulse headings are one example, not a required set: Course Administration, Teams and Assignment, Access and Ownership, Identity and Uniqueness, Editing and Locking, Deletion Integrity, Review and Submission._
 
-_Format each rule as a bold identifier, the rule in one sentence, then its source. Worked examples:]_
+_Format each rule as a bold identifier, the rule in one sentence, then its source. Flag rules you are not sure about rather than dropping them; deciding whether something is a rule or a requirement is a conversation to have with your client, and it is worth having.]_
 
-### 2.1 _[Topic]_
+### 2.1 Gallery visits and groups
 
-- **`BR-active-weeks`:** A student may submit a peer evaluation only for a week that is one of the course section's active weeks; a weekly activity report is not limited this way.
-  **Source:** not recorded in Project Pulse.
-- **`BR-section-admin-only`:** Only a course admin may create or edit a course section, configure its active-weeks window (see `BR-active-weeks`), or assign a rubric to it.
-  **Source:** not recorded in Project Pulse.
-- **`BR-artifact-key-unique`:** Every artifact key is unique within a team and remains stable across edits to the artifact's content.
-  **Source:** team decision, 2026-09-10. **Candidate for the specification instead of this file**, since the team, not the client, would approve a change.
+- **`BR-group-size-split`:** About 30 visitors is the most the gallery space can take as one group, and a group of 30 is ideally split into two groups; about 15 per group is best.
+  **Source:** Heather Stepp, interview, §7, 2026-10-30; restated in minutes, 2026-11-02 ("15-20 is more comfortable"). **Unconfirmed:** she said she is "pushing it" at 30, so whether 30 is a hard cap is open.
+- **`BR-guided-tour-window`:** Group tours usually run between 9 AM and 12 PM, and during that time the gallery is closed to the public and reserved for the group.
+  **Source:** Heather Stepp, interview, §4, 2026-10-30. **Flagged, likely not a rule:** the team agreed in the 2026-11-02 meeting that the window is only a suggestion. Kept here for the record; no requirement should cite it unless the client confirms it is policy.
+- **`BR-no-gallery-photography`:** Photography is not allowed inside the gallery.
+  **Source:** Heather Stepp, interview, §5 and §9, 2026-10-30 ("inside says no photography"). **Unconfirmed scope:** she did not know the reason. Its scope matters if the app uses the camera (QR scanning, AR, or a photo-based scavenger hunt), so ask what the policy covers and who set it.
 
-_[That third entry is deliberate. Flag rules you are not sure about rather than dropping them; deciding whether something is a rule or a requirement is a conversation to have with your client, and it is worth having.]_
+### 2.2 Branding and affiliation
+
+- **`BR-no-tcu-affiliation`:** The app is presented as a Monnig Meteorite Gallery product, not as a TCU product.
+  **Source:** Heather Stepp, interview, §9, 2026-10-30; recorded as the only constraint from the interview in minutes, 2026-11-02. **Unconfirmed meaning:** the minutes say it is unclear whether this covers only branding (see `BR-monnig-branding`) or also the app's name, publisher account, and store listing. One handwritten interview note says the app "might not go through Monnig for deployment," which conflicts. If the answer is "branding only," merge this into `BR-monnig-branding`; do not delete the identifier.
+- **`BR-monnig-branding`:** The app carries Monnig branding only, using the Monnig logo and the gallery's purple-and-white color scheme, and not TCU branding.
+  **Source:** Heather Stepp, interview, §9, 2026-10-30. **Expected to change:** she said "for now" and that TCU Marketing should be asked about TCU branding. Depends on `BR-no-tcu-affiliation`.
+
+### 2.3 Content and the meteorite database
+
+- **`BR-only-admin-can-edit-database`:** Only gallery administrators may add or change content; visitors may only view it.
+  **Source:** minutes, 2026-11-02 ("only admins can add content"); minutes, 2026-10-21 ("the app is mostly read-only"). **Candidate for the specification instead of this file:** this came from the team, and the client did not answer the interview question on who edits content (interview, §11). Confirm with Heather and Dr. Mayne who counts as an administrator and whether that ties to `BR-database-access`. If they do not own the rule, move it to the specification.
+- **`BR-permanent-exhibit`:** The gallery's exhibits are mostly permanent, so what is on display changes rarely.
+  **Source:** 10/15 kickoff brief, as recorded under "Already known" in interview, §7; minutes, 2026-10-21. How often the display actually changes was not answered (interview, §7). The one known exception is the Texas map, which is replaced with each new find (minutes, 2026-10-21).
+
+### 2.4 Funding and grants
+
+- **`BR-monnig-funds-costs`:** The Monnig Meteorite Gallery pays for the project's costs, including developer accounts, hosting, and translation or text-to-speech services.
+  **Source:** Heather Stepp, interview, §9, 2026-10-30 ("Monnig pays for everything"). **Open:** she did not say who approves a purchase.
+- **`BR-grant-timeline`:** The gallery has two grants: the current one ends in December, and a new one runs for four years.
+  **Source:** Heather Stepp, interview, §9, 2026-10-30. **Unconfirmed date:** she said the first grant ends "next December." Said on 2026-10-30, that may mean December 2026 or December 2027. Record the year here once confirmed; the rule changes when the grant ends.
+- **`BR-visitor-survey-data`:** The gallery's grants call for visitor survey responses and visitor age ranges: kids' age or grade range and adult age range.
+  **Source:** Heather Stepp, interview, §3 and §9, 2026-10-30 ("very useful if it can be done, especially with the grant"); noted as worth documenting in minutes, 2026-11-02. **Unconfirmed:** the real rule is in the grant's reporting terms, which we have not seen. Ask which fields, how often, and in what form they must be reported. Depends on `BR-grant-timeline`.
+
+### 2.5 Approval
+
+- **`BR-final-signoff`:** Dr. Rhiannon Mayne gives final sign-off on the finished app, with input from Heather Stepp.
+  **Source:** Heather Stepp, interview, §12, 2026-10-30; noted as worth documenting in minutes, 2026-11-02. The 10/15 kickoff notes say Heather and Wei approve the team's documents, but that is a course process, not a gallery rule, so it is not recorded here.
+
+### 2.6 Accessibility
+
+- **`BR-accessibility-standard`:** The gallery wants the app accessible to all visitors, including visually and hearing impaired visitors, to a standard the gallery has not yet chosen.
+  **Source:** Heather Stepp, interview, §2, 2026-10-30 ("no set standard right now," she will look into it); ADA was relayed as Dr. Mayne's priority (interview, §3); listed as a rule to add in minutes, 2026-11-02. **Placeholder:** once the client names a standard, replace "a standard the gallery has not yet chosen" with that standard and its version. Until then, no requirement should claim compliance with a specific standard.
 
 _**Checklist:** Does every rule have a source? Could your client change it without asking you? Is it stated as one sentence about the business, rather than as a sentence about your software? Does any use case cite it, and if none does, is that correct?_
+
+_No use case cites these rules yet. The use case list is being rewritten after the 2026-11-04 brainstorm; when it is, add each rule's identifier to the Business Rules field of the use cases it governs._
