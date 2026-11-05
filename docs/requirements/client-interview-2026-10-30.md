@@ -414,7 +414,7 @@ _Adapt:_
 
 **Already known:** The collection database exists and is assumed to be maintained. Asa likely has the prior materials and the secondary list.
 
-**What they said:** None of these questions were answered. One related remark came up in section 13: the meteorite database is in the vault, and that is a question for Dr. Mayne.
+**What they said:** None of these questions were answered. One related remark came up in section 13: the meteorite collection is in the vault, and that is a question for Dr. Mayne.
 
 ## 11. Lifetime and who maintains it
 
@@ -467,7 +467,7 @@ _Adapt:_
 - **What worries her about restarting:**
   - "Looking into getting access into the software." (Unclear which software; needs a follow-up.)
   - "Core app done this semester. Next semester just build fun stuff." (The notes do not say who said this; confirm it was the client.)
-  - The meteorite database is in the vault. That is a question for Dr. Mayne.
+  - The meteorite collection is in the vault. That is a question for Dr. Mayne.
 
 ## 14. The read-back
 
