@@ -104,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-browse-database`: Browse the Meteorite Database |
 
 ---
 
@@ -463,6 +463,124 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
 
 **Open Issues:**
+
+
+### UC-DAT-browse-database: Browse the Meteorite Database
+
+**UC ID and Name:** `UC-DAT-browse-database`: Browse the Meteorite Database
+
+**Created By:** Tanner Temple
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The Monnig catalog, or the data source that replaces it (`SI-monnig-catalog`, `OI-4`)
+
+**Trigger:** The visitor selects the Meteorite Database on the Home screen.
+
+**Description:** The visitor opens the list of every meteorite in the Monnig collection, on display or not, and scrolls through it in alphabetical order by name. The list loads in batches as the visitor scrolls, so the first meteorites appear without waiting for the whole collection of about 3,000 to load (`SCA-full-collection`). Selecting a meteorite opens it in View meteorite. Searching, filtering, and showing only items on display are separate use cases. This use case supersedes `UC-DAT-display-database`.
+
+**Preconditions:**
+
+- PRE-1. The setup survey has been completed or skipped on this device, so the Home screen is reachable.
+
+**Postconditions:**
+
+- POST-1. The list shows the meteorites loaded so far, sorted A to Z by name.
+- POST-2. If the visitor selected a meteorite, View meteorite has opened with that meteorite's `monnigNumber`.
+- POST-3. Nothing in the catalog has changed (`FR-CONTENT-visitor-read-only`, `DI-catalog-source-of-truth`).
+
+**Main Success Scenario:**
+
+1. The visitor selects the Meteorite Database on the Home screen.
+2. The system opens the Meteorite Database screen, shows that the list is loading, and requests the first batch of meteorites from the catalog, sorted A to Z by name.
+3. The catalog returns the batch.
+4. The system shows the list. Each item shows the meteorite's name and its first image, or a placeholder image if it has none.
+5. The visitor scrolls down the list.
+6. As the visitor nears the end of the loaded items, the system requests the next batch from the catalog and adds it to the end of the list without moving the visitor's place. Steps 5 and 6 repeat as the visitor keeps scrolling.
+7. The visitor selects a meteorite.
+8. The system opens the selected meteorite in View meteorite.
+9. Use case ends.
+
+**Extensions:**
+
+- **2a. The device has no network connection, and the app has loaded catalog data before (`ROB-offline`).**
+    - 2a1. The system shows the meteorites it already has, in the same order, with a notice that the list may be incomplete while offline.
+    - 2a2. Flow continues at step 4. When the visitor reaches the end of those meteorites, step 6 fails as in 6a.
+- **3a. The catalog cannot be reached, returns an error, or returns only part of the first batch.**
+    - 3a1. The system shows a message saying the meteorites could not be loaded, with a way to try again (`FR-DATA-load-failure`). The rest of the app, including Home and Settings, stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2.
+    - 3a3. Otherwise the visitor leaves the screen, and use case ends.
+- **3b. The catalog returns no meteorites at all.**
+    - 3b1. The system shows a message saying there are no meteorites to show, instead of an empty list.
+    - 3b2. Use case ends.
+- **3c. A returned record is missing a field the list shows, or is malformed.**
+    - 3c1. A record with no name shows "[NOT INDICATED]" as its name and can still be selected (`FR-DATA-missing-field`).
+    - 3c2. A record that cannot be read at all is left out, and the rest of the batch is shown. The app does not crash (`ROB-no-crash-on-bad-data`).
+    - 3c3. Flow continues at step 4.
+- **4a. A meteorite's image fails to load, or is still loading.**
+    - 4a1. The system shows the placeholder image in its place. The item can still be selected.
+    - 4a2. Flow continues at step 5.
+- **6a. The next batch cannot be loaded.**
+    - 6a1. The system keeps every meteorite already shown, and shows at the end of the list that more could not be loaded, with a way to try again (`FR-DATA-load-failure`).
+    - 6a2. If the visitor tries again, flow rejoins at step 6. The visitor can still select any meteorite already shown (step 7).
+- **6b. Every meteorite has been loaded.**
+    - 6b1. The system makes no more requests, and the list ends after the last meteorite.
+    - 6b2. Flow continues at step 7.
+- **8a. The visitor comes back from View meteorite.**
+    - 8a1. The system shows the list at the same place, without reloading the meteorites already loaded.
+    - 8a2. Flow rejoins at step 5.
+- **\*a. The visitor chooses to search or filter the list.**
+    - \*a1. The system hands off to Search database or Filter database.
+    - \*a2. Use case ends.
+- **\*b. The visitor leaves the Meteorite Database screen for Home.**
+    - \*b1. Use case ends. The next time the visitor opens the list, it starts again at the top.
+
+**Priority:** High
+
+**Frequency of Use:** Expected at least once in most visits, in the gallery or remotely (`OE-remote-use`). Each open requests one batch, plus one more for each batch the visitor scrolls into. In the gallery, up to about 30 visitors in one group may do this at the same time (`SCA-group-concurrency`).
+
+**Business Rules:** `BR-only-admin-can-edit-database`, `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields (read from the catalog; visitors cannot change them). Definitions are in the SRS §7.2 data dictionary; this table says how this use case uses them:_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `monnigNumber` | text | Required and unique (SRS §7.2). Not shown in the list. It identifies the meteorite handed to View meteorite and breaks ties in the sort order. | Read-only to visitors | Monnig # |
+| `meteoriteName` | text | Required (SRS §7.2). Shown, and is the sort key. If missing, it shows "[NOT INDICATED]" (`FR-DATA-missing-field`). | Read-only to visitors | Meteorite Name |
+| `images` | list of Image | Optional. The list shows only the first image, or a placeholder if there are none. | Read-only to visitors; image rights are open (`OI-15`) | — |
+
+- **Sort order.** A to Z by `meteoriteName`, ignoring upper and lower case. Meteorites with the same name are ordered by `monnigNumber`. Meteorites with no name come last. Names are not translated (SRS §10), so the order is the same in English and Spanish.
+- **Batches.** The batch size is left to the design. It must let the first screen of results meet `PER-database-list` (threshold TBD, `OI-13`).
+- **Scale.** The list covers the whole collection, not only items on display (`SCA-full-collection`, `BO-display-collection`).
+- **Accessibility.** Each item's screen-reader label is the meteorite's name (`USE-screen-reader`). Every item stays readable at every text size (`USE-text-scaling`).
+- **Data source.** If the app keeps its own copy of the catalog (`OI-4`), steps 2, 3, and 6 read from that copy, and 3a and 6a happen only when the copy cannot be read or refreshed.
+- **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
+
+**Related Use Cases:**
+
+- `UC-DAT-view-meteorite` _(not yet written; today `UC-DAT-display-meteorite`)_: View meteorite. Opens the meteorite selected at step 7.
+- `UC-DAT-search-database` _(not yet written)_: Search database. Reached from this list (\*a).
+- `UC-DAT-filter-database`: Filter database. Reached from this list (\*a).
+- `UC-DAT-view-on-display-items` _(not yet written)_: View on-display items. Lists only the meteorites on display.
+- `UC-DAT-save-favorite` _(not yet written)_: Save favorite. Saving a favorite happens there, not from this list.
+- `UC-DAT-display-database`: Superseded by this use case.
+
+**Assumptions:**
+
+- The list has one item per catalog record. If the catalog holds several samples of the same meteorite, its name appears more than once (see `OI-4` on meteorite versus sample).
+- List items have no favorite control. Favoriting belongs to Save favorite.
+- The list keeps its place only while the visitor goes to View meteorite and comes back (8a). Leaving for Home resets it (\*b).
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
+
+**Open Issues:**
+
+- `OI-4`: Where the meteorite data comes from, and whether the catalog distinguishes a meteorite from its samples.
+- `OI-12`: Whether the full list must be readable offline. Today only data already loaded is promised (`ROB-offline`).
+- `OI-13`: The load-time threshold for `PER-database-list`.
 
 
 ---
