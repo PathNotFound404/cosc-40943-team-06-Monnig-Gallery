@@ -102,7 +102,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 
 | Area code | Feature area | Use cases |
 |---|---|---|
-| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
+| PREF | User preferences | `UC-PREF-first-launch-survey`: Set Up Preferences on First Launch<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
@@ -114,57 +114,120 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 ## PREF: User preferences
 
-### UC-PREF-identify-language-preference: Identifies User Language Preference
+### UC-PREF-first-launch-survey: Set Up Preferences on First Launch
 
-**UC ID and Name:** `UC-PREF-identify-language-preference`: Identifies User Language Preference
+**UC ID and Name:** `UC-PREF-first-launch-survey`: Set Up Preferences on First Launch
 
-**Created By:** Kendric D’Spain, Bradley Helmholz
+**Created By:** Cody Pinkston
 
-**Date Created:** October 16, 2021
+**Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor (including child visitors with an adult's help)
 
-**Secondary Actors:** Museum volunteers
+**Secondary Actors:** Gallery staff (they may hand a visitor a gallery tablet, if the gallery provides tablets)
 
-**Trigger:** A user starts an app for the first time the user tours the Monnig Meteorite Gallery.
+**Trigger:** The visitor opens the app on a device where no setup survey has been completed.
 
-**Description:** The user starts up the TCU MMG mobile app for the first time and prompts the user for their preferred language. The user is able to select their preferred language out of the two currently supported, English and Spanish
-
+**Description:** The first time the app opens on a device, it walks the visitor through a short two-screen setup survey: language on the first screen, then text size and light or dark mode together on the second. Every answer takes effect as soon as it is chosen, so the visitor sees the result before moving on. When the visitor finishes or skips, the app saves the answers on the device as their preferences and opens the Home screen. The survey does not run again on later launches. The visitor can change these preferences later in Settings (`UC-PREF-customize-visual-preferences`). This use case replaces the earlier `UC-PREF-identify-language-preference` (minutes 2026-10-21, 2026-11-02, 2026-11-09).
 
 **Preconditions:**
 
+- PRE-1. The app is installed and has been opened.
+- PRE-2. The device has no record of a completed setup survey (first launch, or the record was cleared by `UC-PREF-reset-preferences`).
+
 **Postconditions:**
 
-- POST-1. The user’s language preference is temporarily stored and the remaining session of the gallery should illustrate the displays in the preferred language.
+- POST-1. The visitor's language, text size, and color mode are saved on the device.
+- POST-2. The device records that the setup survey is complete. On later launches the app skips the survey and restores the saved preferences (`FR-PREF-persist`).
+- POST-3. Every screen, including the Home screen and any screen opened afterward, shows the saved preferences (`FR-PREF-apply-everywhere`).
+- POST-4. No personal information was collected (`DI-no-personal-data`).
 
 **Main Success Scenario:**
 
-1. The system requests the user to choose their preferred language, displayed to user with language name and appropriate country flag.
-2. The user selects their preferred language.
-3. The system applies the preference to the current session.
-4. Use case ends.
+1. The visitor opens the app.
+2. The system checks that no setup survey has been completed on this device and shows the language screen. This screen holds only the language choice: English and Spanish.
+3. The visitor selects a language and continues.
+4. The system switches all survey text to that language and shows the preferences screen. This one screen holds the remaining options:
+    - Text size: Small, Medium, and Large, with Medium preselected.
+    - Color mode: Light and Dark, with Light preselected.
+
+    Each choice takes effect on this screen as soon as it is selected, so the screen itself is the preview.
+5. The visitor selects a text size and a color mode, in either order, and confirms.
+6. The system saves the preferences on the device, records the survey as complete, and opens the Home screen with the preferences applied.
+7. Use case ends.
 
 **Extensions:**
 
-- **1a. The User does not provide a language preference and tries to proceed**
-    - 1a1. The system defaults language to English.
-    - 1a2. Use case ends.
+- **2a. A completed setup survey is already recorded on this device.**
+    - 2a1. The system skips the survey, applies the saved preferences, and opens the Home screen.
+    - 2a2. Use case ends.
+- **2b. A survey-complete record exists, but the saved preferences cannot be read (missing or corrupt).**
+    - 2b1. The system discards the unreadable preferences and the survey-complete record.
+    - 2b2. Flow rejoins at step 2 as a first launch.
+- **3a. The visitor continues without changing the preselected language.**
+    - 3a1. The system keeps English.
+    - 3a2. Flow continues at step 4.
+- **5a. The visitor confirms without changing one or both preselected options.**
+    - 5a1. The system keeps the preselected value for each unchanged option (Medium or Light).
+    - 5a2. Flow continues at step 6.
+- **5b. The visitor goes back from the preferences screen to the language screen.**
+    - 5b1. The system shows the language screen with the current language still selected. It keeps the text size and color mode already chosen.
+    - 5b2. Flow rejoins at step 3.
+- **\*a. On either screen (steps 2 to 5), the visitor chooses Skip.**
+    - \*a1. The system keeps every answer already given and uses the defaults for the rest.
+    - \*a2. Flow rejoins at step 6.
+- **\*b. The app is closed or killed by the operating system before step 6.**
+    - \*b1. The system saves nothing. Choices that were only shown on screen are discarded.
+    - \*b2. On the next launch the flow restarts at step 2.
+    - _If the app is only sent to the background and then resumed, the survey continues on the same screen with its selections intact._
+- **6a. Saving the preferences fails (for example, the device storage is full).**
+    - 6a1. The system applies the chosen preferences for the current session and opens the Home screen.
+    - 6a2. The system shows a non-blocking message in the selected language saying the preferences could not be saved and may be asked again next time.
+    - 6a3. The survey is not recorded as complete, so it runs again on the next launch.
+    - 6a4. Use case ends.
+- **\*c. The device has no network connection.**
+    - \*c1. No change. The survey needs no network, and both screens work offline (`ROB-offline`).
 
 **Priority:** High
 
-**Frequency of Use:** Everytime the MMG application is opened, and the user is ready to tour the Gallery.
+**Frequency of Use:** Once per installation, on each visitor's own device. It runs again only after a reset (`UC-PREF-reset-preferences`) or a retake (`UC-PREF-retake-setup-survey`). If the gallery provides shared tablets (`OI-7`), it runs once per visitor, after each "new visitor" reset (`FR-PREF-reset-for-new-visitor`). Every run stays on the device, so it adds no load to any server.
 
-**Business Rules:**
+**Business Rules:** `BR-accessibility-standard`, `BR-monnig-branding`
 
 **Associated Information:**
 
-1. The user is able to change their preferred language anytime throughout the gallery as well.
+_Data fields (stored on the device only; no account, no server):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `language` | enum | Required; one of English, Spanish (`FR-LANG-supported-languages`). Default English. | Device-local; not personal data | — |
+| `textSize` | enum | Required; one of Small, Medium, Large (minutes 2026-11-09). Default Medium. | Device-local; not personal data | Font |
+| `colorMode` | enum | Required; one of Light, Dark. Default Light (`OI-18`, resolved). | Device-local; not personal data | — |
+| `setupSurveyCompleted` | boolean | Required; default `false`. Set to `true` only at step 6, after the three preferences are saved. | Device-local | — |
+
+- **Atomic save.** Step 6 writes all three preferences and the completion flag together, or writes none of them. A failure never leaves the survey marked complete without preferences (see 6a).
+- **Live preview.** Each answer takes effect on the survey screens as soon as it is chosen. Choosing Spanish at step 3 shows the preferences screen in Spanish, and text size and color mode change that screen as they are selected.
+- **Language labels.** Each language is named in its own language, so a visitor who reads only Spanish can find theirs.
+- **Layout.** The survey has no overlapping or cut-off text at any text size in either language (`USE-text-scaling`). Its screens use Monnig branding, not TCU branding (`BR-monnig-branding`).
+- **Accessibility.** Every control must work with the device's screen reader, since visually impaired visitors set their preferences here before anything else. The required standard depends on `BR-accessibility-standard` (`OI-3`).
+- **Default color mode.** Light (`OI-18`, resolved 2026-11-11). A future version may preselect the device's own light or dark setting instead.
+- **Out of scope.** Font style is not asked (dropped unless an accessibility standard requires it, minutes 2026-11-09). The grant's visitor-demographics questions (`BR-visitor-survey-data`, `FR-SURVEY-optional`) are not part of this use case (`OI-10`, `OI-16`).
 
 **Related Use Cases:**
 
-**Assumptions:** Assume that the user must complete the language preference selection prior to starting his/her tour at TCU’s Monnig Meteorite Gallery.
+- `UC-PREF-customize-visual-preferences`: Changes the same preferences later, from Settings.
+- `UC-PREF-retake-setup-survey` _(not yet written)_: Runs this survey again from Settings, starting at step 2 with the current preferences preselected. Leaving it before step 6 keeps the existing preferences.
+- `UC-PREF-reset-preferences` _(not yet written)_: Clears the preferences and the survey-complete record, so this use case runs on the next launch (PRE-2).
+
+**Assumptions:**
+
+- The visitor completes or skips the survey before reaching the Home screen. Nothing else in the app is reachable during the survey.
+- Preferences belong to the device, not to a person (SRS §7.1, `VisitorPreferences`).
+- An adult helps a child visitor who cannot read the survey yet.
 
 **Open Issues:**
+
+- `OI-19`: Will the accessibility standard (`OI-3`) require more questions at setup, such as font style, high contrast, or turning text-to-speech on?
 
 
 ### UC-PREF-customize-visual-preferences ###
@@ -230,7 +293,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Associated Information:**
 
-**Related Use Cases:** `UC-PREF-identify-language-preference`
+**Related Use Cases:** `UC-PREF-first-launch-survey`
 
 **Assumptions:** The UI element to open the visual preferences popup is always visible on the application.
 
