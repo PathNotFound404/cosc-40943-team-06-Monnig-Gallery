@@ -42,6 +42,7 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | ID | Question | Why it matters | Who can answer | Raised |
 |---|---|---|---|---|
 | OI-3 | If we are building to ADA standards, which one specifically? If not, should we do some research or outsource to ADA consultant? | If we get this wrong, we miss one of the major uses of the app. |Heather, Dr. Mayne | 2026-10-21 |
+| OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
 
 
 
@@ -50,3 +51,4 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | ID | Question | Answer | Answered by | Date | Filed in |
 |---|---|---|---|---|---|
 | OI-0 | _[Example row, delete it]_ | _[What we were told]_ | _[Name]_ | _[YYYY-MM-DD]_ | _[`BO-grading-time`, or the glossary term, or the section]_ |
+| OI-18 | Is the default color mode Light or Dark? | Light for now. A future version may default to the device's own light or dark setting. | Team (Cody Pinkston) | 2026-11-11 | `UC-PREF-first-launch-survey` step 4 and Associated Information |
