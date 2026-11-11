@@ -105,6 +105,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| TOUR | Gallery tour | `UC-TOUR-browse-gallery-section`: Browse a Gallery Section |
 
 ---
 
@@ -463,6 +464,126 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
 
 **Open Issues:**
+
+
+## TOUR: Gallery tour
+
+### UC-TOUR-browse-gallery-section: Browse a Gallery Section
+
+**UC ID and Name:** `UC-TOUR-browse-gallery-section`: Browse a Gallery Section
+
+**Created By:** Tanner Temple
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The source of gallery section content (`OI-24`)
+
+**Trigger:** The visitor selects Gallery on the Home screen, or View gallery map hands off a room or a section the visitor chose.
+
+**Description:** Each of the gallery's three rooms is divided into themed sections. The client interview (§2) walks several, such as the asteroid belt, the types of meteorites, collisions, and the all-Texas room. The visitor sees the sections grouped by room, in the order a visitor walks the gallery. They open one to see its name, its room, its description, and the displays it holds. Selecting a display opens it in View exhibit. The gallery map, a single exhibit's details, the guided order of a self-guided tour, and visitor information are separate use cases.
+
+**Preconditions:**
+
+- PRE-1. The setup survey has been completed or skipped on this device, so the Home screen is reachable.
+
+**Postconditions:**
+
+- POST-1. The visitor has seen the list of sections and, if they chose one, its details and displays.
+- POST-2. If the visitor selected a display, View exhibit has opened with that display.
+- POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
+
+**Main Success Scenario:**
+
+1. The visitor selects Gallery on the Home screen.
+2. The system requests the list of gallery sections.
+3. The content source returns the sections.
+4. The system shows the sections grouped under the room each one is in, with rooms and sections in the order a visitor walks the gallery.
+5. The visitor selects a section.
+6. The system shows the section screen: the section's name, its room, its description, and the list of displays in it by display name.
+7. The visitor selects a display.
+8. The system opens the selected display in View exhibit.
+9. Use case ends.
+
+**Extensions:**
+
+- **1a. The visitor arrives from View gallery map with a section chosen.**
+    - 1a1. The system requests that section's details.
+    - 1a2. Flow continues at step 6.
+- **1b. The visitor arrives from View gallery map with a room chosen.**
+    - 1b1. Flow continues at step 2. At step 4 the system shows the full list, scrolled to the chosen room's sections.
+- **2a. The device has no network connection, and the app has loaded section content before (`ROB-offline`).**
+    - 2a1. The system shows the sections it already has.
+    - 2a2. Flow continues at step 4.
+- **3a. The section list cannot be loaded.**
+    - 3a1. The system shows a message saying the gallery sections could not be loaded, with a way to try again (`FR-DATA-load-failure`). The rest of the app stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2. Otherwise use case ends.
+- **3b. No sections are defined.**
+    - 3b1. The system shows a message saying gallery sections are not available, instead of an empty list.
+    - 3b2. Use case ends.
+- **3c. A section has no room recorded.**
+    - 3c1. The system lists it at the end, under "[NOT INDICATED]" as its room (`FR-DATA-missing-field`).
+    - 3c2. Flow continues at step 4.
+- **6a. The section has no description, or no description in the selected language.**
+    - 6a1. With no description at all, the system shows "[NOT INDICATED]" in its place (`FR-DATA-missing-field`).
+    - 6a2. With an English description only, the system shows the English text, marked as not translated (`FR-LANG-content-fallback`, Proposed).
+    - 6a3. Flow continues at step 7.
+- **6b. The section has no displays.**
+    - 6b1. The system shows the section's name, room, and description, with a message saying no displays are listed for this section.
+    - 6b2. The visitor goes back, and flow rejoins at step 4.
+- **6c. The section's details cannot be loaded.**
+    - 6c1. The system shows a message on the section screen saying the section could not be loaded, with a way to try again (`FR-DATA-load-failure`).
+    - 6c2. If the visitor tries again, flow rejoins at step 6. Going back to the section list still works (6d).
+- **6d. The visitor goes back from the section screen.**
+    - 6d1. The system shows the section list at the same place.
+    - 6d2. Flow rejoins at step 5.
+- **\*a. The visitor leaves for the Home screen.**
+    - \*a1. Use case ends.
+
+**Priority:** Medium
+
+**Frequency of Use:** Mostly by visitors in the gallery, a few times per visit as they move between rooms; remote visitors can use it too (`OE-remote-use`). The gallery's exhibits are mostly permanent (`BR-permanent-exhibit`), so section content rarely changes.
+
+**Business Rules:** `BR-permanent-exhibit`, `BR-only-admin-can-edit-database`, `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery → Room → Display and has no Section yet, and where this content comes from is open (`OI-24`):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `sectionName` | text, per language | Required | Read-only to visitors; set by administrators | _Section (not yet in the glossary)_ |
+| `room` | reference to a Room | Required; one of the gallery's three rooms. If missing, see 3c. | Read-only to visitors | Room |
+| `order` | integer | Required; unique across the gallery. The section's place in the order a visitor walks the gallery. | Read-only to visitors | — |
+| `description` | long text, per language | Optional; see 6a | Read-only to visitors | — |
+| `displays` | ordered list of Display | Optional; may be empty (see 6b) | Read-only to visitors | Display |
+
+- **Order.** Sections are shown in `order`. Rooms are shown in the order of their first section.
+- **Language.** Section names and descriptions are shown in the selected language, falling back to English per `FR-LANG-content-fallback`. Interface text follows `FR-LANG-interface-text`.
+- **Accessibility.** Every section and display in the lists has a screen-reader label (`USE-screen-reader`) and stays readable at every text size (`USE-text-scaling`).
+- **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
+
+**Related Use Cases:**
+
+- `UC-TOUR-view-gallery-map` _(not yet written)_: View gallery map. Can hand off a chosen room or section (1a, 1b).
+- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. Opens the display selected at step 7.
+- `UC-TOUR-self-guided-tour` _(not yet written)_: Self-guided tour. Moves the visitor through the sections in order, including any next and previous section controls.
+- `UC-TOUR-visitor-info` _(not yet written)_: Visitor info. Hours and location; not shown here.
+
+**Assumptions:**
+
+- A section is a themed area inside exactly one room, and each display belongs to exactly one section.
+- Samples are not listed on the section screen. The visitor reaches them through View exhibit.
+- "Gallery" is a working label for the Home screen entry. The design names it.
+- Reading a section's description aloud is not part of this use case. `FR-TTS-read-description` covers meteorite descriptions only.
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
+
+**Open Issues:**
+
+- `OI-23`: What are the gallery's sections, which room is each in, in what order, and which displays does each hold?
+- `OI-24`: Where do section names, descriptions, and display lists come from, and who keeps them current?
+- `OI-25`: Is this use case in release 1.0, given that `FEAT-section-screens` is listed as out of MVP scope?
 
 
 ---

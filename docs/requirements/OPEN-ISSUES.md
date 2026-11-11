@@ -45,6 +45,11 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
 
 
+| ID | Question | Why it matters | Who can answer | Raised |
+|---|---|---|---|---|
+| OI-23 | What are the gallery's themed sections: their names, which room each is in, the order a visitor walks them, and which displays each holds? | `UC-TOUR-browse-gallery-section` has no content without it, and the SRS domain model (§7.1) has no Section yet. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-24 | Where do section names, descriptions, and display lists come from (the catalog, the app's own data, or the gallery), and who keeps them current? | The catalog fields in SRS §7.2 do not record sections. Blocks the data design for `UC-TOUR-browse-gallery-section`; related to `OI-4` and `OI-11`. | Heather, Dr. Mayne, Team | 2026-11-11 |
+| OI-25 | Is browsing gallery sections in release 1.0? `FEAT-section-screens` is listed as out of MVP scope in the vision and scope, while `UI-room-selection` (Proposed) asks for a room-by-room view. | Decides whether `UC-TOUR-browse-gallery-section` is built this semester and what its priority is. | Heather, Dr. Mayne, Team | 2026-11-11 |
 
 ## Resolved
 
