@@ -252,7 +252,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Trigger:** While text-to-speech is reading aloud or paused on the current screen, the visitor selects Pause, Resume, Replay, Skip forward, or Skip back.
 
-**Description:** Once Listen to content has started reading a piece of text aloud, the visitor can pause and resume it, replay it from the beginning, or skip forward or back one paragraph at a time. The controls appear on the screen that is reading, for as long as reading is active, paused, or finished on that screen. Leaving the screen still stops reading (`FR-TTS-stop-on-leave`). Starting reading, stopping it, choosing the voice language, and changing the speed belong to other use cases.
+**Description:** Once Listen to content has started reading a piece of text aloud, the visitor can pause and resume it, replay it from the beginning, or skip forward or back one paragraph at a time. The controls appear on the screen that is reading, for as long as reading is active, paused, or finished on that screen. There is no Stop control; leaving the screen is what ends reading (`FR-TTS-stop-on-leave`). Starting reading, choosing the voice language, and changing the speed belong to other use cases.
 
 **Preconditions:**
 
@@ -342,7 +342,7 @@ _Data fields (held in memory on the device for the screen that is reading; never
 
 **Related Use Cases:**
 
-- `UC-TTS-listen-to-content` _(not yet written)_: Starts and stops reading aloud. This use case controls reading that it started (PRE-1).
+- `UC-TTS-listen-to-content`: Listen to Content. Starts reading aloud. This use case controls reading that it started (PRE-1).
 - `UC-TTS-voice-speed` _(not yet written)_: Changes the reading speed.
 - `UC-TTS-play-in-selected-language` _(not yet written)_: Chooses the language of the voice.
 
