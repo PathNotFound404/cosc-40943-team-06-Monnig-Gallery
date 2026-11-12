@@ -168,7 +168,7 @@ See [vision-and-scope.md](vision-and-scope.md).
 
 _[Link to [use-cases.md](use-cases.md). Most of your system's behavior is specified there, as use cases, and it does not get restated here.]_
 
-See [use-cases.md](use-cases.md). As of version 2.0 it specifies `UC-PREF-identify-language-preference`, `UC-PREF-customize-visual-preferences`, `UC-DAT-display-database`, `UC-DAT-filter-database`, and `UC-DAT-display-meteorite`. Use cases still to be written, per the team minutes of 2026-11-04 and 2026-11-06: a Settings use case, one general reset use case, text-to-speech (`UC-TTS-read-display-contents` is listed but empty), and the Tour area (room selection). The requirements below that depend on them say so.
+See [use-cases.md](use-cases.md). As of version 2.0 it specifies `UC-PREF-identify-language-preference`, `UC-PREF-customize-visual-preferences`, `UC-DAT-display-database`, `UC-DAT-filter-database`, and `UC-DAT-display-meteorite`. Use cases still to be written, per the team minutes of 2026-11-04 and 2026-11-06: a Settings use case, one general reset use case, text-to-speech (`UC-TTS-listen-to-content` and `UC-TTS-control-playback` are being drafted), and the Tour area (room selection). The requirements below that depend on them say so.
 
 ### 5.2 Non-use-case functional requirements
 
@@ -219,7 +219,7 @@ _**Every requirement here needs an oracle.** If you cannot say how a tester woul
 
 #### Text-to-speech
 
-- `FR-TTS-read-description`: Where text-to-speech is included, when a visitor asks for a meteorite's description to be read aloud, the app shall read it in the selected language, and shall let the visitor stop it. Starting scope per minutes 2026-11-06; `UC-TTS-read-display-contents` is still to be written, and what else must be readable depends on the accessibility standard chosen (`OI-3`).
+- `FR-TTS-read-description`: Where text-to-speech is included, when a visitor asks for a meteorite's, gallery section's, or exhibit's description to be read aloud, the app shall read its name and description in the selected language, shall not read text that has no translation in the selected language, and shall let the visitor pause it at any time (`UC-TTS-control-playback`). Specified by `UC-TTS-listen-to-content`. What else must be readable depends on the accessibility standard chosen (`OI-3`).
 - `FR-TTS-stop-on-leave`: When the visitor leaves the screen that is reading aloud, the app shall stop reading.
 
 #### Visit planning

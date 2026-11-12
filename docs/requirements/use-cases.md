@@ -103,7 +103,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | Area code | Feature area | Use cases |
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
-| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
+| TTS | Text-to-speech | `UC-TTS-listen-to-content`: Listen to Content |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
 ---
@@ -237,6 +237,136 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Open Issues:**
 
 ## TTS: Text-to-speech
+
+### UC-TTS-listen-to-content: Listen to Content
+
+**UC ID and Name:** `UC-TTS-listen-to-content`: Listen to Content
+
+**Created By:** Cody Pinkston
+
+**Date Created:** November 12, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The device's text-to-speech engine, or a paid speech service (`SI-device-speech`, `DE-device-tts`)
+
+**Trigger:** On a screen that shows a meteorite, a gallery section, or an exhibit, the visitor selects Listen.
+
+**Description:** A visitor who cannot or would rather not read the screen has the app read the content aloud. The app reads the item's name and then its description, in the selected language, from start to finish. Once reading starts, the visitor can pause, resume, replay, or skip by paragraph (`UC-TTS-control-playback`). There is no separate Stop control: Pause silences reading, and leaving the screen ends it (`FR-TTS-stop-on-leave`). Changing the reading speed and the voice language belong to other use cases.
+
+**Preconditions:**
+
+- PRE-1. The visitor is viewing a meteorite detail screen (`UC-DAT-display-meteorite`), a gallery section screen (`UC-TOUR-browse-gallery-section`), or an exhibit screen (`UC-TOUR-view-exhibit`), and its content has loaded.
+- PRE-2. The content shown has a description. It is not missing or shown as "[NOT INDICATED]".
+- PRE-3. Text-to-speech is not already reading or paused on this screen.
+
+**Postconditions:**
+
+- POST-1. Text-to-speech has read the item's name and description aloud in the selected language, and shows that reading has finished with Replay available. If the visitor paused it, it stays paused until they resume it or leave the screen. If the visitor left the screen, reading has ended.
+- POST-2. Nothing is saved. The reading position is not kept after the visitor leaves the screen or the app closes.
+- POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
+
+**Main Success Scenario:**
+
+1. The visitor selects Listen.
+2. The system checks that the description is available in the selected language.
+3. The system prepares the text to read: the item's name as the first paragraph, then the description split into paragraphs at its paragraph breaks.
+4. The system checks that the speech engine has a voice for the selected language.
+5. The system starts reading the first paragraph from its beginning, at the current voice speed. It replaces Listen with the playback controls (`UC-TTS-control-playback`).
+6. The system reads each paragraph in order, to the end of the last paragraph.
+7. The system shows that reading has finished, with Replay available, as in `UC-TTS-control-playback` step 11.
+8. Use case ends.
+
+**Extensions:**
+
+- **2a. The description has no translation in the selected language (the screen shows the English text marked as not translated, `FR-LANG-content-fallback`).**
+    - 2a1. The system does not read. It shows a message in the selected language saying this description is not available in that language, so it cannot be read aloud. It does not read the English text (`SI-device-speech`).
+    - 2a2. Listen stays available, and the rest of the screen stays usable.
+    - 2a3. Use case ends.
+- **3a. The description has no paragraph breaks.**
+    - 3a1. The system treats the whole description as one paragraph (`OI-21`). The name is still its own paragraph.
+    - 3a2. Flow continues at step 4.
+- **3b. The item has no name, or its name is shown as "[NOT INDICATED]".**
+    - 3b1. The system leaves the name out and reads only the description paragraphs.
+    - 3b2. Flow continues at step 4.
+- **4a. The speech engine has no voice for the selected language.**
+    - 4a1. The system does not read. It shows a message in the selected language saying a voice for this language is not available on this device. It does not read in a different language (`SI-device-speech`).
+    - 4a2. Listen stays available, and the rest of the screen stays usable.
+    - 4a3. Use case ends.
+- **5a. The speech engine fails to start (an engine error, or a paid speech service cannot be reached, `DE-device-tts`).**
+    - 5a1. The system shows a message in the selected language saying reading could not start. No playback controls are shown.
+    - 5a2. Listen stays available, and the rest of the screen stays usable.
+    - 5a3. If the visitor selects Listen again, flow rejoins at step 2. Otherwise use case ends.
+- **6a. The visitor uses the playback controls (Pause, Resume, Replay, Skip forward, Skip back).**
+    - 6a1. `UC-TTS-control-playback` handles them.
+    - 6a2. Flow continues at step 6 from wherever that use case leaves reading, or at step 7 if it finished.
+- **7a. After reading has finished, the visitor selects Replay.**
+    - 7a1. `UC-TTS-control-playback` step 10 handles it, and flow rejoins at step 6.
+- **\*a. The visitor leaves the screen (Home, Back, closing the meteorite detail, opening Settings, or opening another screen).**
+    - \*a1. The system stops reading and removes the playback controls (`FR-TTS-stop-on-leave`). The reading position is not kept.
+    - \*a2. Use case ends. On returning to the screen, Listen is shown and reading starts from the beginning if selected.
+- **\*b. While reading, the app goes to the background, the screen locks, a call or another app's audio interrupts, the headphones disconnect, or the speech engine fails.**
+    - \*b1. `UC-TTS-control-playback` \*b–\*f handles it. Reading pauses or stops as that use case says, and never resumes by itself.
+- **\*c. The device's volume is muted or turned all the way down.**
+    - \*c1. No change. The system reads anyway and does not detect or change the device volume, as in `UC-TTS-control-playback` \*e.
+- **\*d. The device's screen reader (VoiceOver, TalkBack) is on.**
+    - \*d1. No change. Listen is a labeled control that the screen reader can activate (`USE-screen-reader`). The system does not silence the screen reader. What the accessibility standard requires when both speak is open (`OI-20`).
+
+**Priority:** High
+
+**Frequency of Use:** For visitors who use text-to-speech, once for most items they open, in the gallery or remotely, so many times per visit. A visit runs about 30 to 60 minutes. With the device's built-in speech engine it adds no network load. With a paid speech service (`DE-device-tts`), each Listen is at least one request to that service.
+
+**Business Rules:** `BR-accessibility-standard`, `BR-monnig-funds-costs`
+
+**Associated Information:**
+
+_Data fields (held in memory on the device for the screen that is reading; never saved). They exist only from step 5 until the visitor leaves the screen; before Listen is selected there is no reading state at all. `UC-TTS-control-playback` uses the same fields:_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `paragraphs` | ordered list of text | Required; at least one item. The item's name, if it has one (3b), followed by the description split at its paragraph breaks (3a). Built at step 3 from the text in the selected language only (2a). | Memory only | — |
+| `playbackState` | enum | One of Reading, Paused, Finished. Reading at step 5; Finished at step 7. `UC-TTS-control-playback` sets Paused and Reading. | Memory only | — |
+| `currentParagraph` | integer | Required; from 0 to the number of paragraphs minus 1. Set to 0 at step 5. | Memory only | — |
+
+_Content read (read-only to visitors, from the screen's own use case):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| name (meteorite name, section name, or display name) | text, per language | Optional for reading (3b) | Read-only to visitors | Display |
+| `description` | long text, per language | Required (PRE-2); must exist in the selected language (2a) | Read-only to visitors | — |
+
+- **Where Listen appears.** One Listen control on each meteorite detail, gallery section, and exhibit screen, shown only when PRE-2 holds. While reading is active, paused, or finished, the playback controls take its place (`UC-TTS-control-playback`). Listen returns only when the visitor leaves the screen and comes back. Placement is left to the design.
+- **Controls.** Listen has a label that the device's screen reader reads (`USE-screen-reader`), is labeled in the selected language (`FR-LANG-interface-text`), and stays usable at every text size (`USE-text-scaling`). Messages in 2a, 4a, and 5a are also in the selected language and can be read by the screen reader.
+- **Language.** The voice is always the selected language. Text with no translation in the selected language is never read, even though the screen shows it in English (2a).
+- **Speed.** Reading uses the voice speed in effect when step 5 starts (`UC-TTS-voice-speed`). This use case does not change it.
+- **One reader at a time.** Only the screen the visitor is viewing can be reading, because leaving a screen stops reading (\*a).
+- **Systemic failure.** This use case makes no durable change, so a failure leaves nothing to roll back (see 4a, 5a, \*b).
+
+**Related Use Cases:**
+
+- `UC-TTS-control-playback`: Control Text-to-Speech Playback. Pause, Resume, Replay, and Skip for the reading this use case starts (6a, 7a, \*b).
+- `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite. One of the screens Listen appears on.
+- `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. The gallery section screen, one of the screens Listen appears on.
+- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. The exhibit screen, one of the screens Listen appears on.
+- `UC-TTS-voice-speed` _(not yet written)_: Changes the reading speed.
+- `UC-TTS-play-in-selected-language` _(not yet written)_: Chooses the language of the voice.
+
+**Assumptions:**
+
+- This use case replaces the empty legacy entry `UC-TTS-read-display-contents`, which has been removed from the Use Case List.
+- Only the item's name and description are read. Other fields on a meteorite detail screen (type, location found, date found) are not read; visitors who need them use the device's screen reader.
+- There is no Stop control. Pause meets the requirement that the visitor can stop reading (`FR-TTS-read-description`); Replay starts over; leaving the screen discards the reading position (\*a).
+- After reading finishes, Replay replaces Listen until the visitor leaves the screen, matching `UC-TTS-control-playback` 11a.
+- Other text in the app (Home, Settings, lists, activities) is not read by this use case. What else must be readable depends on the accessibility standard (`OI-3`).
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
+
+**Open Issues:**
+
+- `OI-3`: Which accessibility standard applies, and what else it requires to be readable.
+- `OI-20`: What the accessibility standard requires when the screen reader and the app's text-to-speech both speak.
+- `OI-21`: Does the text being read come with paragraph breaks?
+- `OI-25`: Is the gallery section screen in release 1.0? If not, Listen appears only on the meteorite detail screen (and the exhibit screen, if that is in 1.0).
+- `OI-26`: Do visitors' devices reliably have a Spanish voice installed, and if not, should the app tell them how to add one?
 
 
 
