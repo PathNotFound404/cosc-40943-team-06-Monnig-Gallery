@@ -348,7 +348,7 @@ _Data fields (held in memory on the device for the screen that is reading; never
 
 **Assumptions:**
 
-- Stopping reading outright, as opposed to pausing it, belongs to `UC-TTS-listen-to-content` (`FR-TTS-read-description`). This use case covers Pause, Resume, Replay, and Skip.
+- There is no separate Stop control (`UC-TTS-listen-to-content`). Pause meets the requirement that the visitor can stop reading (`FR-TTS-read-description`), and leaving the screen ends reading (\*a). This use case covers Pause, Resume, Replay, and Skip.
 - Skip back always goes to the start of the previous paragraph, even in the middle of the current one; it does not first restart the current paragraph.
 - Skipping while paused keeps reading paused (5a).
 - The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
