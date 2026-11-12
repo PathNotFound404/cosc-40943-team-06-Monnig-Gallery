@@ -128,7 +128,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Trigger:** The visitor opens the app on a device where no setup survey has been completed.
 
-**Description:** The first time the app opens on a device, it walks the visitor through a short two-screen setup survey: language on the first screen, then text size and light or dark mode together on the second. Every answer takes effect as soon as it is chosen, so the visitor sees the result before moving on. When the visitor finishes or skips, the app saves the answers on the device as their preferences and opens the Home screen. The survey does not run again on later launches. The visitor can change these preferences later in Settings (`UC-PREF-customize-visual-preferences`). This use case replaces the earlier `UC-PREF-identify-language-preference` (minutes 2026-10-21, 2026-11-02, 2026-11-09).
+**Description:** The first time the app opens on a device, it walks the visitor through a short two-screen setup survey: language on the first screen, then text size and light or dark mode together on the second. Every answer is previewed on the survey screens as soon as it is chosen, so the visitor sees the result before moving on. When the visitor finishes or skips, the app saves the answers on the device as their preferences, applies them to the rest of the app, and opens the Home screen. The survey does not run again on later launches. The visitor can change these preferences later in Settings (`UC-PREF-customize-visual-preferences`). This use case replaces the earlier `UC-PREF-identify-language-preference` (minutes 2026-10-21, 2026-11-02, 2026-11-09).
 
 **Preconditions:**
 
@@ -151,7 +151,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
     - Text size: Small, Medium, and Large, with Medium preselected.
     - Color mode: Light and Dark, with Light preselected.
 
-    Each choice takes effect on this screen as soon as it is selected, so the screen itself is the preview.
+    Each choice is shown on the survey screens as soon as it is selected, so the screens themselves are the preview. The preferences apply to the rest of the app only at step 6.
 5. The visitor selects a text size and a color mode, in either order, and confirms.
 6. The system saves the preferences on the device, records the survey as complete, and opens the Home screen with the preferences applied.
 7. Use case ends.
@@ -206,7 +206,7 @@ _Data fields (stored on the device only; no account, no server):_
 | `setupSurveyCompleted` | boolean | Required; default `false`. Set to `true` only at step 6, after the three preferences are saved. | Device-local | — |
 
 - **Atomic save.** Step 6 writes all three preferences and the completion flag together, or writes none of them. A failure never leaves the survey marked complete without preferences (see 6a).
-- **Live preview.** Each answer takes effect on the survey screens as soon as it is chosen. Choosing Spanish at step 3 shows the preferences screen in Spanish, and text size and color mode change that screen as they are selected.
+- **Live preview.** Each answer is shown on the survey screens as soon as it is chosen. Choosing Spanish at step 3 shows the preferences screen in Spanish, and text size and color mode change that screen as they are selected. The rest of the app takes the preferences only at step 6 (`FR-PREF-apply-everywhere`, "when a visitor confirms"), so leaving the survey early never leaves the app half-changed. `UC-PREF-retake-setup-survey` relies on this so that cancelling a retake has nothing to undo.
 - **Language labels.** Each language is named in its own language, so a visitor who reads only Spanish can find theirs.
 - **Layout.** The survey has no overlapping or cut-off text at any text size in either language (`USE-text-scaling`). Its screens use Monnig branding, not TCU branding (`BR-monnig-branding`).
 - **Accessibility.** Every control must work with the device's screen reader, since visually impaired visitors set their preferences here before anything else. The required standard depends on `BR-accessibility-standard` (`OI-3`).
