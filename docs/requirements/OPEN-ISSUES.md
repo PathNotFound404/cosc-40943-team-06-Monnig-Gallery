@@ -59,6 +59,11 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
 
 
+| ID | Question | Why it matters | Who can answer | Raised |
+|---|---|---|---|---|
+| OI-20 | Does the chosen accessibility standard (`OI-3`) require more from text-to-speech playback, such as highlighting the text being read, working with the lock-screen media controls, or a rule for when the device's screen reader and the app's text-to-speech both speak? | Could add controls or steps to `UC-TTS-control-playback`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-21 | Do meteorite descriptions, and any other text read aloud, come with paragraph breaks? | Skip forward and back in `UC-TTS-control-playback` move by paragraph. Text with no breaks is one paragraph, so skipping would only end or restart reading. | Team, once the data is seen (`OI-4`) | 2026-11-11 |
+| OI-22 | Where a platform's speech engine cannot resume in the middle of a paragraph, is resuming from the start of that paragraph acceptable? | Decides whether `UC-TTS-control-playback` step 4 can be met the same way on iOS and Android (`INT-two-platforms`). | Team | 2026-11-11 |
 
 ## Resolved
 

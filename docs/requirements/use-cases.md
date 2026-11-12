@@ -103,7 +103,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | Area code | Feature area | Use cases |
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
-| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
+| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display<br>`UC-TTS-control-playback`: Control Text-to-Speech Playback |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
 ---
@@ -238,6 +238,127 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 ## TTS: Text-to-speech
 
+### UC-TTS-control-playback: Control Text-to-Speech Playback
+
+**UC ID and Name:** `UC-TTS-control-playback`: Control Text-to-Speech Playback
+
+**Created By:** Tanner Temple
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The device's text-to-speech engine, or a paid speech service (`SI-device-speech`, `DE-device-tts`)
+
+**Trigger:** While text-to-speech is reading aloud or paused on the current screen, the visitor selects Pause, Resume, Replay, Skip forward, or Skip back.
+
+**Description:** Once Listen to content has started reading a piece of text aloud, the visitor can pause and resume it, replay it from the beginning, or skip forward or back one paragraph at a time. The controls appear on the screen that is reading, for as long as reading is active, paused, or finished on that screen. There is no Stop control; leaving the screen is what ends reading (`FR-TTS-stop-on-leave`). Starting reading, choosing the voice language, and changing the speed belong to other use cases.
+
+**Preconditions:**
+
+- PRE-1. Text-to-speech, started by `UC-TTS-listen-to-content`, is reading or paused on the screen the visitor is viewing.
+- PRE-2. The text being read has been split into one or more paragraphs.
+
+**Postconditions:**
+
+- POST-1. Reading is in the state the visitor last chose: reading from the start of the chosen paragraph, paused where it stopped, or finished.
+- POST-2. Nothing is saved. The reading position is not kept after the visitor leaves the screen or the app closes.
+
+**Main Success Scenario:**
+
+_The visitor may use the controls in any order, any number of times. The steps below use each one once._
+
+1. While the system is reading, the visitor selects Pause.
+2. The system pauses reading where it is and shows Resume in place of Pause.
+3. The visitor selects Resume.
+4. The system continues reading from where it paused and shows Pause again.
+5. The visitor selects Skip forward.
+6. The system stops reading the current paragraph and starts reading the next paragraph from its beginning.
+7. The visitor selects Skip back.
+8. The system stops reading the current paragraph and starts reading the previous paragraph from its beginning.
+9. The visitor selects Replay.
+10. The system starts reading the whole text again from the beginning of the first paragraph.
+11. The system reads to the end of the last paragraph, then shows that reading has finished, with Replay still available.
+12. Use case ends.
+
+**Extensions:**
+
+- **5a. The visitor selects Skip forward or Skip back while reading is paused.**
+    - 5a1. The system moves to the next or previous paragraph and stays paused at its beginning.
+    - 5a2. Flow rejoins at step 3; Resume starts reading from that paragraph.
+- **6a. The current paragraph is the last one.**
+    - 6a1. The system stops reading and shows that reading has finished, as in step 11.
+    - 6a2. Use case ends, or rejoins at step 9 if the visitor selects Replay.
+- **8a. The current paragraph is the first one.**
+    - 8a1. The system starts reading the first paragraph again from its beginning.
+    - 8a2. Flow continues at step 9.
+- **9a. The visitor selects Replay while reading is paused or finished.**
+    - 9a1. Flow continues at step 10. Reading starts, whatever state it was in.
+- **11a. Reading has finished.**
+    - 11a1. The system shows only Replay. Pause, Resume, and the skip controls are not available until reading starts again.
+- **\*a. The visitor leaves the screen (Home, Back, or opening another screen).**
+    - \*a1. The system stops reading and removes the controls (`FR-TTS-stop-on-leave`). The reading position is not kept.
+    - \*a2. Use case ends.
+- **\*b. While reading, the app goes to the background or the device screen locks.**
+    - \*b1. The system pauses reading where it is, as in step 2.
+    - \*b2. When the visitor returns, reading is still paused with Resume shown. It never resumes by itself.
+    - \*b3. Flow rejoins at step 3.
+- **\*c. While reading, a phone call or another app's audio interrupts.**
+    - \*c1. The system pauses reading where it is, as in step 2.
+    - \*c2. When the interruption ends, reading stays paused until the visitor selects Resume.
+    - \*c3. Flow rejoins at step 3.
+- **\*d. While reading, the audio output is disconnected (wired headphones unplugged, or Bluetooth headphones disconnect).**
+    - \*d1. The system pauses reading where it is, as in step 2, so it does not continue unexpectedly through the device's speaker.
+    - \*d2. Flow rejoins at step 3.
+- **\*e. The device's volume is muted or turned all the way down.**
+    - \*e1. No change. The system keeps reading and does not detect or change the device volume. The visitor raises the volume with the device's own controls.
+- **\*f. The speech engine fails while resuming, skipping, or replaying (an engine error, or the voice for the selected language is no longer available).**
+    - \*f1. The system stops reading and shows a message in the selected language saying reading could not continue. It does not read in a different language (`SI-device-speech`).
+    - \*f2. The system keeps Replay available, and the rest of the screen stays usable.
+    - \*f3. If the visitor selects Replay and the engine works, flow rejoins at step 10. Otherwise use case ends.
+
+**Priority:** High
+
+**Frequency of Use:** Several times each time Listen to content is used, for visitors who use text-to-speech, in the gallery or remotely. With the device's built-in speech engine it adds no network load. With a paid speech service (`DE-device-tts`), each Replay or skip may be a new request to that service.
+
+**Business Rules:** `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields (held in memory on the device for the screen that is reading; never saved):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `playbackState` | enum | Required; one of Reading, Paused, Finished. Set by `UC-TTS-listen-to-content` when reading starts, then by this use case. | Memory only | — |
+| `paragraphs` | ordered list of text | Required; at least one item. Split from the text at its paragraph breaks; text with no breaks is a single paragraph (`OI-21`). | Memory only | — |
+| `currentParagraph` | integer | Required; from 0 to the number of paragraphs minus 1. | Memory only | — |
+| `pausedAt` | position within the current paragraph | Set at Pause; cleared by any skip or Replay. | Memory only | — |
+
+- **Controls.** Pause and Resume share one place on screen, and only one shows at a time. Every control has a label that the device's screen reader reads (`USE-screen-reader`), is labeled in the selected language (`FR-LANG-interface-text`), and stays usable at every text size (`USE-text-scaling`). Placement is left to the design.
+- **Other settings.** Changes from Voice speed and Play in selected language apply to whatever is read after a skip or Replay. This use case does not change them.
+- **Resume position.** Resume continues from `pausedAt`. Whether every platform's speech engine can resume mid-paragraph is open (`OI-22`).
+- **Screen reader.** The device's screen reader (VoiceOver, TalkBack) and the app's text-to-speech can both speak. What the accessibility standard requires when they overlap is open (`OI-20`).
+- **Systemic failure.** This use case makes no durable change, so a failure leaves nothing to roll back (see \*f).
+
+**Related Use Cases:**
+
+- `UC-TTS-listen-to-content`: Listen to Content. Starts reading aloud. This use case controls reading that it started (PRE-1).
+- `UC-TTS-voice-speed` _(not yet written)_: Changes the reading speed.
+- `UC-TTS-play-in-selected-language` _(not yet written)_: Chooses the language of the voice.
+
+**Assumptions:**
+
+- There is no separate Stop control (`UC-TTS-listen-to-content`). Pause meets the requirement that the visitor can stop reading (`FR-TTS-read-description`), and leaving the screen ends reading (\*a). This use case covers Pause, Resume, Replay, and Skip.
+- Skip back always goes to the start of the previous paragraph, even in the middle of the current one; it does not first restart the current paragraph.
+- Skipping while paused keeps reading paused (5a).
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
+
+**Open Issues:**
+
+- `OI-3`: Which accessibility standard applies.
+- `OI-20`: Does the accessibility standard require more from these controls?
+- `OI-21`: Does the text being read come with paragraph breaks?
+- `OI-22`: Is resuming from the start of the paragraph acceptable where a speech engine cannot resume mid-paragraph?
 
 
 ## DAT: Meteorite database
