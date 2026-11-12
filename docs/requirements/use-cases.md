@@ -251,7 +251,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Trigger:** The visitor selects "Retake setup survey" in Settings.
 
-**Description:** A visitor who has already finished or skipped the setup survey runs it again on purpose, from Settings. The retake uses the same two screens and the same questions as `UC-PREF-first-launch-survey`, but every question starts with the visitor's current preference selected instead of the default. Each answer takes effect as soon as it is chosen, so the visitor sees the result before moving on. Finishing saves the answers shown in place of the previous preferences; quitting before then puts the previous preferences back and saves nothing. This use case is not Change settings, which edits one preference at a time in Settings, and not `UC-PREF-reset-preferences`, which goes back to the defaults.
+**Description:** A visitor who has already finished or skipped the setup survey runs it again on purpose, from Settings. The retake uses the same two screens and the same questions as `UC-PREF-first-launch-survey`, but every question starts with the visitor's current preference selected instead of the default. Each answer is previewed on the survey screens as soon as it is chosen, so the visitor sees the result before moving on, but the rest of the app keeps the current preferences until the visitor finishes. Finishing saves the answers and applies them to every screen; cancelling before then saves nothing and leaves the app as it was. This use case is not Change settings, which edits one preference at a time in Settings, and not `UC-PREF-reset-preferences`, which goes back to the defaults.
 
 **Preconditions:**
 
@@ -268,11 +268,11 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Main Success Scenario:**
 
 1. The visitor selects "Retake setup survey" in Settings.
-2. The system notes the preferences currently in effect as the restore point, and shows the language screen with the current language selected.
+2. The system shows the language screen with the current language selected.
 3. The visitor selects a language and continues.
-4. The system switches all survey text to that language and shows the preferences screen, with the current text size and current color mode selected. Each choice takes effect on this screen as soon as it is selected, so the screen itself is the preview.
+4. The system switches all survey text to that language and shows the preferences screen, with the current text size and current color mode selected. Each choice is shown on the survey screens as soon as it is selected, so the screens themselves are the preview. The rest of the app does not change yet.
 5. The visitor selects a text size and a color mode, in either order, and confirms.
-6. The system saves the three preferences on the device in place of the previous ones, and returns the visitor to Settings with the new preferences applied.
+6. The system saves the three preferences on the device in place of the previous ones, applies them to every screen (`FR-PREF-apply-everywhere`), and returns the visitor to Settings.
 7. Use case ends.
 
 **Extensions:**
@@ -286,24 +286,21 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 - **5b. The visitor goes back from the preferences screen to the language screen.**
     - 5b1. The system shows the language screen with the language most recently chosen still selected. It keeps the text size and color mode already chosen.
     - 5b2. Flow rejoins at step 3.
-- **\*a. On either screen (steps 2 to 5), the visitor chooses Skip.**
-    - \*a1. The system keeps every selection now shown on the survey screens, and keeps the restore-point value, not the default, for any question the visitor has not reached.
-    - \*a2. Flow rejoins at step 6.
-- **\*b. The visitor quits the retake before step 6, by going back from the language screen (the on-screen Back control or the device's Back action).**
-    - \*b1. The system applies the restore-point preferences to every screen again and saves nothing.
-    - \*b2. The system returns the visitor to Settings.
-    - \*b3. Use case ends.
-- **\*c. The app is closed or killed by the operating system before step 6.**
-    - \*c1. The system saves nothing. Choices that were only shown on screen are discarded.
-    - \*c2. On the next launch, the system restores the previously saved preferences. The survey-complete record is unchanged, so the first-launch survey does not run.
+- **\*a. The visitor cancels the retake before step 6, by choosing Cancel on either screen or by going back from the language screen (the on-screen Back control or the device's Back action).**
+    - \*a1. The system closes the survey and discards the choices shown on it. Nothing is saved, and the rest of the app was never changed.
+    - \*a2. The system returns the visitor to Settings.
+    - \*a3. Use case ends.
+- **\*b. The app is closed or killed by the operating system before step 6.**
+    - \*b1. The system saves nothing. Choices that were only shown on screen are discarded.
+    - \*b2. On the next launch, the system restores the previously saved preferences. The survey-complete record is unchanged, so the first-launch survey does not run.
     - _If the app is only sent to the background and then resumed, the retake continues on the same screen with its selections intact._
 - **6a. Saving the preferences fails (for example, the device storage is full).**
     - 6a1. The system keeps the new preferences applied for the current session and returns the visitor to Settings.
     - 6a2. The system shows a non-blocking message in the selected language saying the preferences could not be saved and the previous ones will return the next time the app opens.
     - 6a3. The preferences saved on the device stay as they were before the retake.
     - 6a4. Use case ends.
-- **\*d. The device has no network connection.**
-    - \*d1. No change. The retake needs no network, and both screens work offline (`ROB-offline`).
+- **\*c. The device has no network connection.**
+    - \*c1. No change. The retake needs no network, and both screens work offline (`ROB-offline`).
 
 **Priority:** Low
 
@@ -313,15 +310,11 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Associated Information:**
 
-_Data fields:_ this use case writes the same stored fields as `UC-PREF-first-launch-survey` (`language`, `textSize`, `colorMode`, and the survey-complete record `setupSurveyCompleted`), under the same validation rules; they are defined there and not repeated here. One value exists only while the retake is open:
-
-| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
-|---|---|---|---|---|
-| `restorePoint` | record of `language`, `textSize`, `colorMode` | Required; set at step 2 from the preferences in effect. Discarded at step 6 or when the use case ends. | Held in memory only; never saved | — |
+_Data fields:_ this use case writes the same stored fields as `UC-PREF-first-launch-survey` (`language`, `textSize`, `colorMode`, and the survey-complete record `setupSurveyCompleted`), under the same validation rules; they are defined there and not repeated here. The retake adds no fields of its own.
 
 - **Atomic save.** Step 6 writes all three preferences together, or writes none of them. A failure never leaves a mix of old and new values saved (see 6a). `setupSurveyCompleted` is not written, because it is already `true` (PRE-1).
-- **Same screens.** The survey screens, their language labels, the layout rule at every text size (`USE-text-scaling`), and the screen-reader requirement (`USE-screen-reader`) are those of `UC-PREF-first-launch-survey`. Any question added to that survey (`OI-19`) appears in the retake as well.
-- **Why the restore point exists.** Choices take effect as soon as they are made, so quitting (\*b) has to undo them. The restore point is what the system goes back to.
+- **Same screens.** The survey screens, their language labels, the layout rule at every text size (`USE-text-scaling`), and the screen-reader requirement (`USE-screen-reader`) are those of `UC-PREF-first-launch-survey`, with one difference: each screen has a Cancel control (\*a) in place of the first-launch survey's Skip. Any question added to that survey (`OI-19`) appears in the retake as well.
+- **Preview stays on the survey.** Choices change only the survey screens until step 6, so cancelling has nothing to undo. Whatever was in effect before the retake, including session-only values after an earlier failed save, stays in effect.
 - **Where the visitor ends up.** Settings, because that is where the retake started. The first-launch survey ends on Home instead.
 
 **Related Use Cases:**
@@ -333,7 +326,6 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 **Assumptions:**
 
 - Settings is reached from the Home screen (minutes, 2026-11-09), and the "Retake setup survey" control is in Settings. It starts the retake with no confirmation prompt, because nothing is lost until step 6.
-- Quitting means going back from the language screen. The survey screens have no separate Cancel control.
 - "Current value" means the preference in effect when the retake starts. This is normally the saved value, or a session-only value after a failed save.
 - The ID `UC-PREF-reset-preferences` is the one `UC-PREF-first-launch-survey` already uses for a use case not yet written.
 
