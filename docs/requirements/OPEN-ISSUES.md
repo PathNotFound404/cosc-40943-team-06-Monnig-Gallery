@@ -57,6 +57,9 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-16 | Is the app meant for children to use on their own devices? Should it collect any visitor data at all? | Children's-privacy law and App Store / Google Play rules for kids apps apply if it collects data from children (`DI-no-personal-data`, `FR-CONTENT-no-visitor-account`). | Heather; team to research | 2026-11-07 |
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-33 | Can the device's speech engine, or a paid speech service, read at every speed from 0.5x to 2x on both iOS and Android? If not, what should the app do? | Decides extension 4b of `UC-TTS-voice-speed` (`SI-device-speech`, `DE-device-tts`). | Team to test on a first build | 2026-11-13 |
+| OI-34 | Is a step of 0.1x right for the voice speed slider and number box? | Sets the validation rule for `voiceSpeed` in `UC-TTS-voice-speed`. | Team | 2026-11-13 |
+| OI-35 | Should voice speed apply as soon as it is set or only after a confirm step, and should it have a sample voice to listen to? | `UC-PREF-customize-visual-preferences` uses a confirm step and `FR-PREF-apply-everywhere` says "confirms"; `UC-TTS-voice-speed` does not. | Team | 2026-11-13 |
 
 
 

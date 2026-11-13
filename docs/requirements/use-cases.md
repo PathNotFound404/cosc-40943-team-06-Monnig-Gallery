@@ -103,7 +103,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | Area code | Feature area | Use cases |
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
-| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
+| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display<br>`UC-TTS-voice-speed`: Change Voice Speed |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
 ---
@@ -238,7 +238,102 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 ## TTS: Text-to-speech
 
+### UC-TTS-voice-speed: Change Voice Speed
 
+**UC ID and Name:** `UC-TTS-voice-speed`: Change Voice Speed
+
+**Created By:** Bradley Helmholz
+
+**Date Created:** November 12, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The device's text-to-speech engine, or a paid speech service (`SI-device-speech`, `DE-device-tts`)
+
+**Trigger:** The visitor opens Settings and changes the voice speed.
+
+**Description:** The visitor sets how fast text-to-speech reads aloud, from half speed (0.5x) to double speed (2x), with a slider or by typing a number. The slider and the number box always show the same value. The new speed is used the next time anything is read aloud, and is kept on the device. Starting and controlling reading (`UC-TTS-listen-to-content`, `UC-TTS-control-playback`) and choosing the voice language belong to other use cases.
+
+**Preconditions:**
+
+- PRE-1. The setup survey has been completed or skipped on this device, so Settings is reachable (`FR-PREF-settings-reachable`).
+
+**Postconditions:**
+
+- POST-1. The voice speed is the value the visitor set, between 0.5x and 2x, or it is unchanged if the visitor did not set one.
+- POST-2. The speed is saved on the device and used for all later reading, until the visitor changes it (`FR-PREF-persist`, `DI-preferences-on-device`).
+- POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
+
+**Main Success Scenario:**
+
+1. The visitor opens Settings.
+2. The system shows the text-to-speech section with the current voice speed on a slider and in a number box. A new device starts at 1x.
+3. The visitor moves the slider to a new speed.
+4. The system updates the number box to match and saves the new speed.
+5. The visitor leaves Settings.
+6. Use case ends. The next reading, started by Listen, uses the new speed.
+
+**Extensions:**
+
+- **3a. The visitor types a speed in the number box instead.**
+    - 3a1. The system checks that the value is a number from 0.5 to 2 and, if so, moves the slider to match.
+    - 3a2. Flow continues at step 4.
+- **3b. The typed value is not a number, or is outside 0.5 to 2.**
+    - 3b1. The system keeps the last valid speed, puts it back in the number box, and shows a message in the selected language saying the speed must be between 0.5x and 2x (`FR-LANG-interface-text`).
+    - 3b2. Flow rejoins at step 3.
+- **3c. The visitor clears the number box and leaves it empty.**
+    - 3c1. The system treats it as 3b.
+- **3d. The visitor sets the speed back to 1x.**
+    - 3d1. Flow continues at step 4. The system saves 1x like any other value.
+- **4a. The speed cannot be saved on the device.**
+    - 4a1. The system keeps the new speed for as long as the app stays open and shows a message saying it could not be saved. It will not be there after the app closes.
+    - 4a2. Flow continues at step 5.
+- **4b. The speech engine cannot read at the chosen speed.**
+    - 4b1. The system uses the closest speed the engine supports when it next reads, and keeps the visitor's chosen value on screen (`OI-33`).
+    - 4b2. Flow continues at step 5.
+- **\*a. The visitor opens Settings while text-to-speech is reading.**
+    - \*a1. Reading has already stopped, because leaving the screen stops it (`FR-TTS-stop-on-leave`). Flow continues at step 1. Reading is not restarted when the visitor goes back.
+
+**Priority:** Medium
+
+**Frequency of Use:** Rarely. A visitor who uses text-to-speech sets it about once, then may adjust it a few times if the pace is too fast or too slow. The setting is kept between visits on the same device.
+
+**Business Rules:** `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data field (saved on the visitor's device only):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `voiceSpeed` | decimal number, in multiples of normal speed | Required; from 0.5 to 2, in steps of 0.1 (`OI-34`). Default 1. Slider and number box show the same value. | Stored on the device only; no personal data (`DI-preferences-on-device`, `DI-no-personal-data`) | — |
+
+- **Controls.** The slider and the number box each have a label the device's screen reader reads, including the current value (`USE-screen-reader`), are labeled in the selected language (`FR-LANG-interface-text`), and stay usable at every text size (`USE-text-scaling`). Placement within Settings is left to the design.
+- **When it applies.** The speed is read by Listen when reading starts, so a change takes effect on the next reading, not on one in progress (`UC-TTS-listen-to-content` step 5). Skip and Replay in `UC-TTS-control-playback` also use the current speed.
+- **Systemic failure.** The only change is one saved number, so a failure leaves the old speed (see 4a).
+
+**Related Use Cases:**
+
+- `UC-TTS-listen-to-content`: Listen to Content. Starts reading at the speed set here (step 5).
+- `UC-TTS-control-playback`: Control Text-to-Speech Playback. Skip and Replay use the current speed.
+- `UC-PREF-customize-visual-preferences`: Customize Visual Preferences. The other part of Settings; whether the two share a confirm step is open (`OI-35`).
+- `UC-TTS-play-in-selected-language` _(not yet written)_: Chooses the language of the voice.
+
+**Assumptions:**
+
+- The range is 0.5x to 2x, from the 11-09 minutes ("about 0.5x to 2x") and the team's choice of a slider and a typed value.
+- 1x is normal speed, and is the default.
+- The speed is saved the moment it is set, with no separate confirm step (`OI-35`).
+- The speed applies to every voice and language the same way.
+- There is no sample or "test voice" button; the visitor hears the speed the next time they use Listen.
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
+- `UC-TTS-voice-speed` is the ID the `UC-TTS-listen-to-content` and `UC-TTS-control-playback` drafts already use for this use case. Those two are on unmerged branches, and this draft was written against them as they stand there.
+
+**Open Issues:**
+
+- `OI-33`: Can the device's speech engine, or a paid speech service (`DE-device-tts`), read at every speed from 0.5x to 2x? If not, what should the app do?
+- `OI-34`: Is a step of 0.1x right for the slider and the number box?
+- `OI-35`: Should the voice speed apply as soon as it is set, or only after a confirm step like `UC-PREF-customize-visual-preferences`, and should it also have a sample to listen to?
 
 ## DAT: Meteorite database
 
