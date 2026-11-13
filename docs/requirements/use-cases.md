@@ -104,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br>`UC-DAT-view-meteorite`: View a Meteorite |
 
 ---
 
@@ -393,76 +393,175 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Open Issues:**
 
 
-### UC-DAT-display-meteorite: Display Information Regarding a Single Meteorite
+### UC-DAT-view-meteorite: View a Meteorite
 
-**UC ID and Name:** `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite
+**UC ID and Name:** `UC-DAT-view-meteorite`: View a Meteorite
 
-**Created By:** Kendric D’Spain, Bradley Helmholz
+**Created By:** Cody Pinkston
 
-**Date Created:** November 3, 2021
+**Date Created:** November 12, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
-**Secondary Actors:** Museum Volunteers, Museum Staff
+**Secondary Actors:** The Monnig catalog, or the data source that replaces it (`SI-monnig-catalog`, `OI-4`)
 
-**Trigger:** The user selects a meteorite he/she wants to view in detail.
+**Trigger:** The visitor selects a meteorite in any list that shows meteorites: the Meteorite Database list, search or filter results, favorites, on-display items, an exhibit, or similar meteorites.
 
-**Description:** A user visiting the Gallery wants to be able to view a specific meteorite on the application. In the Meteorite Database page they select a meteorite information card from the list, creating a large centered popup showing them information regarding the meteorite.
+**Description:** The visitor opens one meteorite to see what the gallery knows about it: its name, its classification (class, group, composition), where and when it was found and whether its fall was observed, its description, and its pictures. If the gallery has a 3D scan of the meteorite, the 3D model takes the place of the main picture. The visitor can swipe through the photos and open any of them full screen to zoom in. From this view the visitor can also have the name and description read aloud, save the meteorite as a favorite, open similar meteorites, or turn the 3D model; each of those is its own use case. Whether the view is a full screen or a popup over the list is left to the design. This use case replaces `UC-DAT-display-meteorite`, which has been removed.
 
+**Preconditions:**
 
-**Preconditions:** 
-
-- PRE-1. The user has already opened the application and passed the home screen.
-- PRE-2. The user is in the Meteorite Database page.
-- PRE-3. The database has been properly queried and there are meteorite cards present on the page in a list to select.
+- PRE-1. The setup survey has been completed or skipped on this device, so the app's main screens are reachable.
+- PRE-2. The visitor is on a screen that lists meteorites (see Trigger), and the list shows at least one meteorite.
+- PRE-3. The selected meteorite has a `monnigNumber`.
 
 **Postconditions:**
 
-- POST-1. The user can view a specific meteorite from the Monnig collection.
-- POST-2. The screen displays all relevant information pertaining to the meteorite, including and not limited to: name, type, origin, and date of discovery.
+- POST-1. The view has shown the selected meteorite's details, images, and actions, for the `monnigNumber` the visitor selected.
+- POST-2. When the visitor closes the view, they are back on the screen they came from, at the same place in its list.
+- POST-3. Nothing in the catalog has changed (`FR-CONTENT-visitor-read-only`, `DI-catalog-source-of-truth`). Saving a favorite, if the visitor did, is stored as `UC-DAT-save-favorite` says.
 
 **Main Success Scenario:**
 
-1. The user selects a specific meteorite to view in detail.
-2. A large centered screen popup of the selected meteorite opens.
-3. The system queries the database for the selected meteorite for all needed information.
-4. The database returns requested information to the system.
-5. The system displays all information for the selected meteorite to the viewer.
-6. The user can close the popup by either clicking outisde of the popup or pressing the X button in the top right corner
-7. Use case ends.
+1. The visitor selects a meteorite.
+2. The system opens the meteorite view, shows the meteorite's name and that its details are loading, and requests the meteorite's record from the catalog by its `monnigNumber`.
+3. The catalog returns the record.
+4. The system shows the meteorite:
+    - the hero: the 3D model if the meteorite has a 3D scan, otherwise its first photo;
+    - its name;
+    - its classification: class, group, and composition;
+    - its find details: country, location found, date found, and whether its fall was observed;
+    - its description;
+    - a swipeable gallery of its photos, starting with the hero;
+    - the Listen, Save favorite, and View similar controls.
+5. The visitor swipes through the photos.
+6. The system shows the next or previous photo, and indicates which photo of how many is showing.
+7. The visitor closes the meteorite view.
+8. The system returns to the screen the visitor came from, at the same place, without reloading it.
+9. Use case ends.
 
 **Extensions:**
 
-- **3a. The system is unable to query the database.**
-    - 3a1. The system reports the failure to query information from the database to the user.
-    - 3a2. The popup remains blank with an error message, prompting the user to try again later.
-    - 3a3. User can try refreshing the page or leave.
-    - 3a4. Use case ends.
-- **4a. The database fails to return the queried meteorites.**
-    - 4a1. The system reports the failture to retrieve the meteoirte from the database to the user.
-    - 4a2. The page remains blank with an error message, prompting the user to try again later.
-    - 4a3. User can try refreshing the page or leave.
-    - 4a4. Use case ends.
-- **4b. Certain information on the selected meteorite is not present in the database.**
-    - 4b1. The database returns null for the specific pieces of information not present for the meteorite in the database
-    - 4b2. When displaying missing/unknown information on the meteorite to the user, the system states [NOT INDICATED] in bold red text
-    - 4b3. System displays all known information on the meteorite normally.
-    - 4b4. Use case ends.
-
+- **2a. The device has no network connection, and the app already has this meteorite's record (`ROB-offline`).**
+    - 2a1. The system shows the record it has, with a notice that the details may be out of date while offline. Photos and the 3D model it does not already have are handled as in 4b and 4c.
+    - 2a2. Flow continues at step 4.
+- **2b. The device has no network connection, and the app does not have this meteorite's record.**
+    - 2b1. As in 3a.
+- **3a. The catalog cannot be reached, returns an error, or returns only part of the record.**
+    - 3a1. The system shows, in the view, a message saying the meteorite's details could not be loaded, with a way to try again (`FR-DATA-load-failure`). The view can still be closed, and the rest of the app stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2.
+    - 3a3. Otherwise flow continues at step 7.
+- **3b. The catalog has no record for this `monnigNumber` (for example, it was removed after the list was loaded).**
+    - 3b1. The system shows a message saying this meteorite is no longer available, instead of the details.
+    - 3b2. Flow continues at step 7.
+- **3c. The record is missing a field the view shows, or a field cannot be read.**
+    - 3c1. The system shows "[NOT INDICATED]" in place of that field's value and shows every field that has a value (`FR-DATA-missing-field`). A field that cannot be read is treated as missing, and the app does not crash (`ROB-no-crash-on-bad-data`).
+    - 3c2. If the name is missing, "[NOT INDICATED]" is shown as the name.
+    - 3c3. If the description is missing, "[NOT INDICATED]" is shown in its place, and Listen is not shown (`UC-TTS-listen-to-content` PRE-2).
+    - 3c4. Flow continues at step 4.
+- **4a. The meteorite has no photos and no 3D scan.**
+    - 4a1. The system shows a placeholder image as the hero, and no photo gallery.
+    - 4a2. Flow continues at step 7.
+- **4b. The meteorite has a 3D scan, but the 3D model fails to load or is still loading.**
+    - 4b1. The system shows the first photo as the hero in its place, or the placeholder image if there are no photos. The rest of the view stays usable.
+    - 4b2. When the 3D model finishes loading, the system replaces the hero with it without moving the visitor's place in the view.
+    - 4b3. Flow continues at step 5.
+- **4c. A photo fails to load, or is still loading.**
+    - 4c1. The system shows the placeholder image in that photo's place. The other photos can still be swiped to.
+    - 4c2. Flow continues at step 5.
+- **4d. The description has no translation in the selected language.**
+    - 4d1. The system shows the English description marked as not translated (`FR-LANG-content-fallback`, `OI-9`). All labels stay in the selected language (`FR-LANG-interface-text`).
+    - 4d2. Flow continues at step 5.
+- **5a. The meteorite has only one photo, or only a 3D model.**
+    - 5a1. The system shows no gallery controls. Flow continues at step 7.
+- **5b. The visitor selects a photo.**
+    - 5b1. The system opens the photo full screen. The visitor can pinch to zoom and pan, and swipe to the next or previous photo.
+    - 5b2. The visitor closes the full-screen photo.
+    - 5b3. The system returns to the meteorite view, with the gallery showing the photo the visitor was last on.
+    - 5b4. Flow rejoins at step 5.
+- **5c. The visitor turns or zooms the 3D model.**
+    - 5c1. `UC-DAT-view-3d-model` handles it.
+    - 5c2. Flow rejoins at step 5.
+- **5d. The visitor selects Listen.**
+    - 5d1. `UC-TTS-listen-to-content` handles it. Reading stops when the visitor closes the view (`FR-TTS-stop-on-leave`).
+    - 5d2. Flow rejoins at step 5.
+- **5e. The visitor selects Save favorite.**
+    - 5e1. `UC-DAT-save-favorite` handles it.
+    - 5e2. Flow rejoins at step 5.
+- **5f. The visitor selects View similar.**
+    - 5f1. `UC-DAT-view-similar-meteorites` handles it. If the visitor selects a similar meteorite there, this use case starts again for that meteorite.
+    - 5f2. When the visitor comes back, the system shows this meteorite again without reloading it, and flow rejoins at step 5.
+- **\*a. The visitor closes the view while its details are still loading.**
+    - \*a1. The system stops waiting for the record and returns to the screen the visitor came from, as in step 8.
+    - \*a2. Use case ends.
+- **\*b. The visitor goes to Home or Settings instead of closing the view.**
+    - \*b1. Use case ends. Any reading aloud stops (`FR-TTS-stop-on-leave`). Preference changes made in Settings apply to every screen afterward (`FR-PREF-apply-everywhere`).
 
 **Priority:** High
 
-**Frequency of Use:** Every time the application is used, as many times as the user wants to.
+**Frequency of Use:** Many times per visit, in the gallery or remotely (`OE-remote-use`); it is the most-proposed Data use case (minutes, 2026-11-09). Each open is one request for the record, plus the photos and 3D model. In the gallery, up to about 30 visitors in one group may do this at the same time (`SCA-group-concurrency`).
 
-**Business Rules:**
+**Business Rules:** `BR-only-admin-can-edit-database`, `BR-accessibility-standard`
 
 **Associated Information:**
 
-**Related Use Cases:** `UC-DAT-display-database`
+_Data fields (read from the catalog; visitors cannot change them). Definitions are in the SRS §7.2 data dictionary; this table says how this use case uses them:_
 
-**Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `monnigNumber` | text | Required and unique (SRS §7.2). Not shown. It identifies the record requested at step 2. | Read-only to visitors | Monnig # |
+| `meteoriteName` | text | Required (SRS §7.2). Shown at step 2 from the list, then from the record. Not translated (SRS §10). | Read-only to visitors | Meteorite Name |
+| `class` | enum | Optional. Iron, Stone, or Stony-iron, shown in the selected language. | Read-only to visitors | Class |
+| `group` | enum | Optional. Chondrite, Primitive achondrite, or Achondrite (list to confirm, SRS §7.2), shown in the selected language. | Read-only to visitors | Group |
+| `composition` | text | Optional. Allowed values TBD (`OI-4`). Shown as stored. | Read-only to visitors | — |
+| `country` | text | Optional. Shown as stored. | Read-only to visitors | Country |
+| `locationFound` | text | Optional. Shown as stored. | Read-only to visitors | — |
+| `dateFound` | date or year | Optional. Shown only to the precision the catalog holds (a year alone if that is all it has), in the date format of the selected language (SRS §10). Precision TBD (`OI-4`). | Read-only to visitors | — |
+| `fall` | boolean | Optional. Shown as whether the fall was observed; the wording is left to the design. | Read-only to visitors | Fall |
+| `description` | long text, per language | Optional. Shown in the selected language, or per 4d. | Read-only to visitors | — |
+| `images` | list of Image | Optional. In the order the catalog gives. The first is the hero unless there is a 3D model. | Read-only to visitors; image rights are open (`OI-15`) | — |
+| `model3D` | 3D scan | Optional. When present, it is the hero. Format and source TBD (`OI-27`). Not yet in SRS §7.2. | Read-only to visitors | — |
+
+- **Not shown.** The Monnig # and whether the meteorite is on display are not shown in this view (author's decision, 2026-11-12).
+- **Missing values.** How "[NOT INDICATED]" is styled is left to the design. It must not rely on color alone (`USE-accessibility-standard`).
+- **Hero.** The 3D model, when there is one, replaces the main picture; it does not add a second hero. Turning and zooming the model belong to `UC-DAT-view-3d-model`.
+- **Photo gallery.** Swipeable, starting at the hero, with an indicator of which photo of how many is showing. Selecting a photo opens it full screen with pinch-zoom (5b).
+- **Accessibility.** Every photo, the 3D model, and every control has a screen-reader label (`USE-screen-reader`); a photo with no caption is labeled with the meteorite's name and its position, such as "photo 2 of 4". Every field stays readable at every text size, in both languages (`USE-text-scaling`). Swiping has a non-gesture alternative, such as next and previous buttons, so it works with a screen reader.
+- **Performance.** The details must be complete within `PER-detail-load` (threshold TBD, `OI-13`). The name and text fields should not wait for photos or the 3D model to load (4b, 4c).
+- **Data source.** If the app keeps its own copy of the catalog (`OI-4`), steps 2 and 3 read from that copy, and 3a happens only when the copy cannot be read.
+- **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
+
+**Related Use Cases:**
+
+- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. Opens a meteorite here at its step 7.
+- `UC-DAT-search-database` _(not yet written)_: Search database. Its results open a meteorite here.
+- `UC-DAT-filter-database`: Organize Meteorite Catalog Based on Filters. Its results open a meteorite here.
+- `UC-DAT-view-favorites` _(not yet written)_: View favorites. Opens a saved meteorite here.
+- `UC-DAT-view-on-display-items` _(not yet written)_: View on-display items. Opens a meteorite here.
+- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. Opens a meteorite in the display here.
+- `UC-DAT-view-similar-meteorites` _(not yet written)_: View similar meteorites. Reached from this view (5f), and opens a meteorite here.
+- `UC-DAT-save-favorite` _(not yet written)_: Save favorite. Reached from this view (5e).
+- `UC-DAT-view-3d-model` _(not yet written)_: View 3D model. Turning and zooming the hero 3D model (5c).
+- `UC-TTS-listen-to-content` _(in review)_: Listen to Content. Reads the name and description aloud (5d).
+- `UC-DAT-display-meteorite`: Replaced by this use case and removed.
+
+**Assumptions:**
+
+- One view per catalog record. If the catalog holds several samples of the same meteorite, each opens its own view (see `OI-4` on meteorite versus sample).
+- Class, group, and the fall value are a fixed list, so they are shown in the selected language. Free-text values (composition, country, location found) are shown as the catalog stores them, untranslated.
+- Opening a meteorite from a meteorite view (5f) stacks views: closing returns to the previous meteorite, not to the original list.
+- If a 3D model cannot load, the first photo takes its place (4b). The visitor is not told a 3D model exists until it loads.
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
 
 **Open Issues:**
+
+- `OI-4`: Where the meteorite data comes from, which fields it has (composition values, date precision), and whether it distinguishes a meteorite from its samples.
+- `OI-9`: Whether machine translation of descriptions is acceptable, and who reviews it.
+- `OI-12`: Whether a meteorite's details must be readable offline. Today only data already loaded is promised (`ROB-offline`).
+- `OI-13`: The load-time threshold for `PER-detail-load`.
+- `OI-15`: Who owns the meteorite photos, and what credit they need.
+- `OI-27`: Which meteorites have 3D scans, in what file format, who owns them, and where they will be hosted for the app?
+- `OI-28`: Which meteorites will have a written description in release 1.0, and who writes and approves them? The catalog may not hold descriptions (SRS §7.4).
 
 
 ---
