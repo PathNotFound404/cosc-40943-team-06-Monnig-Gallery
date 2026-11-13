@@ -256,7 +256,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Preconditions:**
 
-- PRE-1. The visitor is viewing a meteorite detail screen (`UC-DAT-display-meteorite`), a gallery section screen (`UC-TOUR-browse-gallery-section`), or an exhibit screen (`UC-TOUR-view-exhibit`), and its content has loaded.
+- PRE-1. The visitor is viewing a meteorite view (`UC-DAT-view-meteorite`), a gallery section screen (`UC-TOUR-browse-gallery-section`), or an exhibit screen (`UC-TOUR-view-exhibit`), and its content has loaded.
 - PRE-2. The content shown has a description. It is not missing or shown as "[NOT INDICATED]".
 - PRE-3. Text-to-speech is not already reading or paused on this screen.
 
@@ -345,7 +345,7 @@ _Content read (read-only to visitors, from the screen's own use case):_
 **Related Use Cases:**
 
 - `UC-TTS-control-playback`: Control Text-to-Speech Playback. Pause, Resume, Replay, and Skip for the reading this use case starts (6a, 7a, \*b).
-- `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite. One of the screens Listen appears on.
+- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. One of the screens Listen appears on.
 - `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. The gallery section screen, one of the screens Listen appears on.
 - `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. The exhibit screen, one of the screens Listen appears on.
 - `UC-TTS-voice-speed` _(not yet written)_: Changes the reading speed.
