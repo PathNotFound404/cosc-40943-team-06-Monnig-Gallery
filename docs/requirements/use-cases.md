@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-DAT-view-similar-meteorites` | Edwin Rodriguez |
 
 ---
 
@@ -104,7 +105,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-view-similar-meteorites`: View Similar Meteorites |
 
 ---
 
@@ -464,6 +465,66 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+### UC-DAT-view-similar-meteorites: View Similar Meteorites
+
+**UC ID and Name:** `UC-DAT-view-similar-meteorites`: View Similar Meteorites
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** None
+
+**Trigger:** While viewing a meteorite, the user chooses to see similar meteorites.
+
+**Description:** Like "related products" when shopping, the system suggests other meteorites in the collection that share key traits with the one being viewed, so the user can keep exploring (minutes, 2026-11-09).
+
+**Preconditions:**
+
+- PRE-1. The user is viewing a single meteorite (`UC-DAT-view-meteorite`).
+
+**Postconditions:**
+
+- POST-1. The system shows meteorites similar to the one viewed, and what makes each one similar.
+
+**Main Success Scenario:**
+
+1. The user chooses to see similar meteorites.
+2. The system finds meteorites in the database that share traits with the current one, using the similarity rule.
+3. The system shows the similar meteorites, each with its name, picture if one exists, and the trait it shares (for example, the same class).
+4. The user selects one.
+5. The system shows that meteorite in detail (`UC-DAT-view-meteorite`).
+6. Use case ends.
+
+**Extensions:**
+
+- **2a. The system cannot reach the database.**
+    - 2a1. The system shows a message and offers to try again (`FR-DATA-load-failure`).
+    - 2a2. Use case ends.
+- **2b. The current meteorite is missing the traits the rule uses.**
+    - 2b1. The system uses the traits it has; if none are left, continue at 2c.
+- **2c. No other meteorite is similar.**
+    - 2c1. The system says no similar meteorites were found.
+    - 2c2. Use case ends.
+
+**Priority:** Low
+
+**Frequency of Use:** Occasionally, after viewing a meteorite.
+
+**Business Rules:**
+
+**Associated Information:** The current meteorite is never listed as similar to itself. The number shown and their order are TBD.
+
+**Related Use Cases:** `UC-DAT-view-meteorite`, `UC-DAT-display-database`
+
+**Assumptions:** The database has enough fields (class, group, location found) to compare meteorites (`AS-catalog-data-sufficient`).
+
+**Open Issues:**
+
+- What makes two meteorites "similar"? This is a scientific judgment, so the rule should come from Dr. Mayne, not the team (`OI-4` for which fields exist).
 
 ---
 
