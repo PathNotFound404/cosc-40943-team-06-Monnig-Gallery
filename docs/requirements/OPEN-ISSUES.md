@@ -57,6 +57,10 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-16 | Is the app meant for children to use on their own devices? Should it collect any visitor data at all? | Children's-privacy law and App Store / Google Play rules for kids apps apply if it collects data from children (`DI-no-personal-data`, `FR-CONTENT-no-visitor-account`). | Heather; team to research | 2026-11-07 |
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-29 | Where does the gallery map graphic come from, and who supplies it and the room outlines? | Blocks `UC-TOUR-view-gallery-map` step 4; the floor plan was requested in the client interview and receipt is not recorded. | Heather, team | 2026-11-12 |
+| OI-30 | Is the map a fixed picture, or can the visitor zoom and pan? Are sections tappable on the map, or only rooms? | Changes steps 4 and 5 of `UC-TOUR-view-gallery-map`. | Team | 2026-11-12 |
+| OI-31 | What should a room screen list: sections, displays, meteorites, or all three? | `UI-room-selection` and `UC-TOUR-browse-gallery-section` overlap. | Team, Heather | 2026-11-12 |
+| OI-32 | Is View gallery map in release 1.0? | `UI-room-selection` is Proposed and `FEAT-section-screens` is out of MVP scope; ties to `OI-1`, `OI-25`. | Team, Heather | 2026-11-12 |
 
 
 
