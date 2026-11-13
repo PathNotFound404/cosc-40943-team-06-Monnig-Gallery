@@ -58,6 +58,8 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
 | OI-26 | Do visitors' iOS and Android devices reliably have a Spanish text-to-speech voice installed? If not, should the app tell visitors how to add one, or should the gallery pay for a speech service (`BR-monnig-funds-costs`)? | If the voice is missing, `UC-TTS-listen-to-content` 4a fires and Spanish speakers can't listen at all (`DE-device-tts`, `SI-device-speech`). | Team (test on devices), then Heather | 2026-11-12 |
+| OI-27 | Which meteorites have 3D scans, in what file format, who owns them, and where will they be hosted for the app? | The 3D model replaces the hero image in `UC-DAT-view-meteorite` and drives `UC-DAT-view-3d-model`; SRS §7.2 has no 3D scan field yet. | Dr. Mayne, Asa | 2026-11-12 |
+| OI-28 | Which meteorites will have a written description in release 1.0, and who writes and approves them? | The catalog may not hold descriptions (SRS §7.4); the description in `UC-DAT-view-meteorite` and Listen (`UC-TTS-listen-to-content` PRE-2) depend on it. | Heather, Dr. Mayne | 2026-11-12 |
 
 
 
