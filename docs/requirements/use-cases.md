@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-DAT-view-favorites` | Edwin Rodriguez |
 
 ---
 
@@ -104,7 +105,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-view-favorites`: View Favorite Meteorites |
 
 ---
 
@@ -464,6 +465,78 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+### UC-DAT-view-favorites: View Favorite Meteorites
+
+**UC ID and Name:** `UC-DAT-view-favorites`: View Favorite Meteorites
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** None
+
+**Trigger:** The user chooses to view their favorites.
+
+**Description:** The user sees the list of meteorites they saved as favorites on this device, and can open or remove any of them. Favorites are saved on the device only for now (minutes, 2026-11-09).
+
+**Preconditions:**
+
+- PRE-1. The user has opened the application and passed the home screen.
+
+**Postconditions:**
+
+- POST-1. The system shows every meteorite the user saved as a favorite on this device.
+
+**Main Success Scenario:**
+
+1. The user chooses to view favorites.
+2. The system reads the saved favorites from the device.
+3. The system retrieves the current information for each favorite from the database.
+4. The system shows the favorites, each with its name and picture if one exists.
+5. The user selects a favorite to see it in detail (`UC-DAT-view-meteorite`).
+6. Use case ends.
+
+**Extensions:**
+
+- **2a. The user has no saved favorites.**
+    - 2a1. The system says there are no favorites yet and explains how to save one.
+    - 2a2. Use case ends.
+- **3a. The system cannot reach the database.**
+    - 3a1. The system shows the saved names it already has on the device and a message that details could not be loaded (`FR-DATA-load-failure`, `ROB-offline`).
+    - 3a2. Use case ends.
+- **3b. A saved favorite no longer exists in the database.**
+    - 3b1. The system shows that favorite as no longer available and offers to remove it.
+    - 3b2. Rejoin at step 4.
+- **5a. The user removes a favorite.**
+    - 5a1. The system removes it from the device and updates the list.
+    - 5a2. Rejoin at step 4.
+
+**Priority:** Medium
+
+**Frequency of Use:** A few times per visit, for visitors who save favorites.
+
+**Business Rules:**
+
+**Associated Information:**
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| Monnig number | text | Required; must match a meteorite in the database when saved | Stored on the device only | Monnig # |
+| Meteorite name | text | Required; kept so the list can show without a network | Stored on the device only | Meteorite Name |
+
+No personal data is stored (`DI-no-personal-data`).
+
+**Related Use Cases:** `UC-DAT-view-meteorite`, `UC-PREF-reset-preferences`, the "Save favorite" use case (another pair)
+
+**Assumptions:** Saving a favorite is a separate use case. Favorites are not shared between devices; that needs a back end and is a later feature.
+
+**Open Issues:**
+
+- Does `UC-PREF-reset-preferences` clear favorites?
+- Is there a maximum number of favorites?
 
 ---
 
