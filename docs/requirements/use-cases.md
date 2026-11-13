@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-PREF-reset-preferences` | Edwin Rodriguez |
 
 ---
 
@@ -102,7 +103,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 
 | Area code | Feature area | Use cases |
 |---|---|---|
-| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
+| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage<br>`UC-PREF-reset-preferences`: Reset Preferences |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
@@ -235,6 +236,68 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Assumptions:** The UI element to open the visual preferences popup is always visible on the application.
 
 **Open Issues:**
+
+### UC-PREF-reset-preferences: Reset Preferences
+
+**UC ID and Name:** `UC-PREF-reset-preferences`: Reset Preferences
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** Museum Staff (on gallery-owned devices)
+
+**Trigger:** The user chooses to reset the app in Settings.
+
+**Description:** The user returns every preference on the device to its default, so the next person starts fresh. This is the one general reset agreed on 11/4 and 11/9; it also covers "reset for new visitor" on gallery tablets.
+
+**Preconditions:**
+
+- PRE-1. The user is in Settings, reached from the home screen (`FR-PREF-settings-reachable`).
+
+**Postconditions:**
+
+- POST-1. Language, text size, and light/dark mode are back to their defaults.
+- POST-2. The app shows the first-launch setup (`UC-PREF-first-launch-survey`).
+
+**Main Success Scenario:**
+
+1. The user chooses to reset the app.
+2. The system asks the user to confirm, and says what will be cleared.
+3. The user confirms.
+4. The system stops any text-to-speech playback.
+5. The system clears all stored preferences on the device.
+6. The system shows the first-launch setup.
+7. Use case ends.
+
+**Extensions:**
+
+- **3a. The user cancels.**
+    - 3a1. The system changes nothing and returns to Settings.
+    - 3a2. Use case ends.
+- **5a. The system cannot clear the stored preferences.**
+    - 5a1. The system keeps the preferences exactly as they were (no partial reset).
+    - 5a2. The system tells the user the reset did not complete and to try again.
+    - 5a3. Use case ends.
+
+**Priority:** Medium (High if the gallery provides tablets, `OI-7`)
+
+**Frequency of Use:** Rare on a personal phone; once per visitor or group on a gallery tablet.
+
+**Business Rules:**
+
+**Associated Information:** Preferences are stored on the device only (`DI-preferences-on-device`). Nothing is stored on a server, so there is nothing to clear there.
+
+**Related Use Cases:** `UC-PREF-first-launch-survey`, `UC-PREF-customize-visual-preferences`, `UC-DAT-view-favorites`
+
+**Assumptions:** A visitor on their own phone may also reset; the confirmation in step 2 prevents doing it by accident.
+
+**Open Issues:**
+
+- Does reset also clear saved favorites (`UC-DAT-view-favorites`)? On a shared tablet it probably should; on a personal phone it may surprise the user. (Add to OPEN-ISSUES.md.)
+- Should the reset on gallery tablets be protected so a visitor cannot trigger it mid-tour? Depends on `OI-7`.
 
 ## TTS: Text-to-speech
 
