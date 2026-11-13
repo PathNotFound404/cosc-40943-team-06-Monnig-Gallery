@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-TOUR-view-exhibit` | Edwin Rodriguez |
 
 ---
 
@@ -105,6 +106,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| TOUR | Gallery tour | `UC-TOUR-view-exhibit`: View an Exhibit |
 
 ---
 
@@ -464,6 +466,73 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+## TOUR: Gallery tour
+
+### UC-TOUR-view-exhibit: View an Exhibit
+
+**UC ID and Name:** `UC-TOUR-view-exhibit`: View an Exhibit
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** None
+
+**Trigger:** The user selects an exhibit, from a gallery room or a tour stop.
+
+**Description:** The user sees one exhibit (a display, interactive sample, or audiovisual learning aid, per the glossary): what it is about, which room it is in, and the meteorites it holds.
+
+**Preconditions:**
+
+- PRE-1. The user is viewing a gallery section (`UC-TOUR-browse-gallery-section`) or a tour stop (`UC-TOUR-take-self-guided-tour`).
+
+**Postconditions:**
+
+- POST-1. The system shows the exhibit's name, room, description, and the meteorites in it.
+
+**Main Success Scenario:**
+
+1. The user selects an exhibit.
+2. The system retrieves the exhibit's information.
+3. The system shows the exhibit's name, the room it is in, and its description.
+4. The system lists the meteorites in the exhibit, each with its name and picture if one exists.
+5. The user selects a meteorite.
+6. The system shows that meteorite in detail (`UC-DAT-view-meteorite`).
+7. Use case ends.
+
+**Extensions:**
+
+- **2a. The exhibit's information cannot be loaded.**
+    - 2a1. The system shows a message and offers to try again (`FR-DATA-load-failure`).
+    - 2a2. Use case ends.
+- **4a. The exhibit holds no meteorites (for example, the theater area).**
+    - 4a1. The system shows the description only.
+    - 4a2. Use case ends.
+- **4b. A meteorite in the exhibit is not in the database.**
+    - 4b1. The system lists it by name but does not offer its details.
+    - 4b2. Rejoin at step 5.
+- **5a. The user asks to hear the description.**
+    - 5a1. The system reads it aloud (`UC-TTS-listen-to-content`).
+    - 5a2. Rejoin at step 5.
+
+**Priority:** High
+
+**Frequency of Use:** Many times per visit.
+
+**Business Rules:** `BR-permanent-exhibit`
+
+**Associated Information:** Exhibit description is the gallery's text, used word for word. Fields missing from the data are shown per `FR-DATA-missing-field`.
+
+**Related Use Cases:** `UC-TOUR-take-self-guided-tour`, `UC-DAT-view-meteorite`, `UC-TOUR-browse-gallery-section`, `UC-TOUR-view-gallery-map`
+
+**Assumptions:** The gallery can provide which meteorites are in each exhibit.
+
+**Open Issues:**
+
+- Is the list of meteorites in each exhibit kept anywhere today, or does it need to be built (`OI-4`)?
 
 ---
 
