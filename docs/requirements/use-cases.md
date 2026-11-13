@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-TOUR-view-visitor-info` | Edwin Rodriguez |
 
 ---
 
@@ -105,6 +106,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| TOUR | Gallery tour | `UC-TOUR-view-visitor-info`: View Visitor Information |
 
 ---
 
@@ -464,6 +466,68 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+## TOUR: Gallery tour
+
+### UC-TOUR-view-visitor-info: View Visitor Information
+
+**UC ID and Name:** `UC-TOUR-view-visitor-info`: View Visitor Information
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** None
+
+**Trigger:** The user chooses Visitor Info from the home screen.
+
+**Description:** The user sees what they need to plan a visit: where the gallery is, when it is open, that admission is free, and how to contact the gallery. The client mentioned visitors wish the gallery were easier to find on campus (interview, §3).
+
+**Preconditions:**
+
+- PRE-1. The user has opened the application and passed the home screen.
+
+**Postconditions:**
+
+- POST-1. The system has shown the gallery's location, hours, admission, and contact link.
+
+**Main Success Scenario:**
+
+1. The user chooses Visitor Info.
+2. The system shows the gallery's address and building, public hours, holiday closures, and admission.
+3. The user chooses to plan a visit.
+4. The system opens the gallery's contact page in the device's browser (`FR-PLAN-contact-link`, `SI-gallery-website`).
+5. Use case ends.
+
+**Extensions:**
+
+- **2a. The device has no network connection.**
+    - 2a1. The system shows the visitor information it already has, with a note that it may be out of date.
+    - 2a2. Rejoin at step 3.
+- **3a. The user chooses directions instead.**
+    - 3a1. The system opens the gallery's address in the device's maps app.
+    - 3a2. Use case ends.
+- **4a. The browser cannot be opened.**
+    - 4a1. The system shows the contact page address so the user can copy it.
+    - 4a2. Use case ends.
+
+**Priority:** High (`FR-PLAN-visitor-info`)
+
+**Frequency of Use:** Once or twice per visitor, mostly before a visit.
+
+**Business Rules:**
+
+**Associated Information:** Booking a visit inside the app is not in release 1.0 (minutes, 2026-11-09). Opening a maps app is a new software interface and should be added to the SRS §8.3 if kept.
+
+**Related Use Cases:** None
+
+**Assumptions:** The gallery's hours are 1:00 to 4:00 p.m., Monday to Saturday, closed on university holidays, per its website; to be confirmed with the client (minutes, 2026-11-09).
+
+**Open Issues:**
+
+- Where are the hours kept so they stay current when they change (`OI-11`)?
 
 ---
 
