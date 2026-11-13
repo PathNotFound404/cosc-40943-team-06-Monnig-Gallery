@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-DAT-view-3d-model` | Edwin Rodriguez |
 
 ---
 
@@ -104,7 +105,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-view-3d-model`: View a Meteorite's 3D Model |
 
 ---
 
@@ -464,6 +465,74 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+### UC-DAT-view-3d-model: View a Meteorite's 3D Model
+
+**UC ID and Name:** `UC-DAT-view-3d-model`: View a Meteorite's 3D Model
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** None
+
+**Trigger:** While viewing a meteorite, the user chooses to view its 3D model.
+
+**Description:** The user turns and zooms a 3D model of a meteorite to see it from every side, including meteorites that are not on display. Depends on 3D scans of meteorites being made (minutes, 2026-11-04).
+
+**Preconditions:**
+
+- PRE-1. The user is viewing a single meteorite (`UC-DAT-view-meteorite`).
+- PRE-2. That meteorite has a 3D model. If it has none, the option is not offered.
+
+**Postconditions:**
+
+- POST-1. The user has viewed the model and is returned to the meteorite's details.
+
+**Main Success Scenario:**
+
+1. The user chooses to view the 3D model.
+2. The system loads the model.
+3. The system shows the model in its default position.
+4. The user rotates the model.
+5. The system turns the model to match.
+6. The user zooms in or out.
+7. The system zooms the model, within set limits.
+8. The user closes the model.
+9. The system returns to the meteorite's details.
+10. Use case ends.
+
+**Extensions:**
+
+- **2a. The model cannot be loaded.**
+    - 2a1. The system shows a message and offers to try again (`FR-DATA-load-failure`).
+    - 2a2. The meteorite's details stay available.
+    - 2a3. Use case ends.
+- **3a. The device cannot display 3D models.**
+    - 3a1. The system says so and shows the meteorite's photos instead.
+    - 3a2. Use case ends.
+- **7a. The user asks to reset the view.**
+    - 7a1. The system returns the model to its default position.
+    - 7a2. Rejoin at step 4.
+
+**Priority:** Low (depends on 3D scans existing)
+
+**Frequency of Use:** Occasionally, for meteorites that have a model.
+
+**Business Rules:**
+
+**Associated Information:** A 3D model cannot be read by a screen reader, so every model needs a text description as well (`USE-screen-reader`). Models may be large; loading over cellular data in the gallery affects `PER-detail-load`.
+
+**Related Use Cases:** `UC-DAT-view-meteorite`
+
+**Assumptions:** Someone produces 3D scans and the gallery approves their use.
+
+**Open Issues:**
+
+- Which meteorites have 3D scans, in what format, who owns them, and where are they hosted (`OI-27`)?
+- What is the largest acceptable model file to download over cellular data?
 
 ---
 
