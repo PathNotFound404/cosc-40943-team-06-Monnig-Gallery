@@ -104,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-save-favorite`: Save a Favorite Meteorite |
 
 ---
 
@@ -463,6 +463,92 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
 
 **Open Issues:**
+
+
+### UC-DAT-save-favorite: Save a Favorite Meteorite
+
+**UC ID and Name:** `UC-DAT-save-favorite`: Save a Favorite Meteorite
+
+**Created By:** Cody Pinkston
+
+**Date Created:** November 13, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** None. Favorites are stored only on the visitor's device.
+
+**Trigger:** In the meteorite view, the visitor selects the Save favorite control (`UC-DAT-view-meteorite` 5e).
+
+**Description:** While looking at a meteorite, the visitor marks it as a favorite so they can find it again later in View favorites. The control is a toggle: it saves the meteorite if it is not a favorite and removes it if it is. Favorites are stored on the device by `monnigNumber`, with no account, and are kept across app launches. The meteorite view is the only place a favorite can be saved. Shared favorites or leaderboards need a back end and come later (minutes, 2026-11-09).
+
+**Preconditions:**
+
+- PRE-1. The setup survey has been completed or skipped on this device, so the app's main screens are reachable.
+- PRE-2. The meteorite view is showing a meteorite's details (`UC-DAT-view-meteorite` step 4), so the Save favorite control is on screen.
+
+**Postconditions:**
+
+- POST-1. If the meteorite was not a favorite, its `monnigNumber` is now in the device's favorites list. If it was a favorite, its `monnigNumber` is no longer in the list.
+- POST-2. The Save favorite control shows the meteorite's new state (saved or not saved).
+- POST-3. The change is kept on the device across app launches until the visitor changes it again, the app is uninstalled, or a new-visitor reset is done (`FR-PREF-reset-for-new-visitor`).
+- POST-4. Nothing in the catalog has changed (`FR-CONTENT-visitor-read-only`).
+
+**Main Success Scenario:**
+
+1. The visitor selects Save favorite in the meteorite view.
+2. The system checks the device's favorites list and finds that this meteorite's `monnigNumber` is not in it.
+3. The system adds the `monnigNumber` to the favorites list and saves the list on the device.
+4. The system changes the control to its saved state and briefly confirms, in the selected language, that the meteorite was saved to favorites.
+5. The visitor stays in the meteorite view, at the same place. Flow returns to `UC-DAT-view-meteorite` step 5.
+6. Use case ends.
+
+**Extensions:**
+
+- **2a. The meteorite is already in the favorites list.**
+    - 2a1. The system removes the `monnigNumber` from the favorites list and saves the list on the device.
+    - 2a2. The system changes the control to its not-saved state and briefly confirms, in the selected language, that the meteorite was removed from favorites.
+    - 2a3. Flow continues at step 5.
+- **\*a. The favorites list cannot be read or saved (for example, the device storage is full).**
+    - \*a1. The system shows a message, in the selected language, saying the favorite could not be saved or removed.
+    - \*a2. The favorites list on the device stays as it was, and the control keeps its previous state.
+    - \*a3. Flow continues at step 5.
+- **\*b. The device has no network connection.**
+    - \*b1. No change. Favorites are stored only on the device, so saving and removing work offline (`ROB-offline`).
+
+**Priority:** Low. It is among the lowest-priority use cases and can be left off if time runs out (minutes, 2026-11-11).
+
+**Frequency of Use:** Occasional. Visitors who use favorites select it a few times per visit, in the gallery or remotely (`OE-remote-use`). Every save stays on the device, so it adds no load to any server.
+
+**Business Rules:** `BR-only-admin-can-edit-database`, `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields (stored on the device only; no account, no server):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `favorites` | list of `monnigNumber` | Starts empty. Each `monnigNumber` appears at most once. No limit on the number of favorites (author's decision, 2026-11-13). Only the `monnigNumber` is stored; anything View favorites shows about a meteorite comes from the catalog (author's decision, 2026-11-13). | Device-local. Never sent off the device (`DI-no-personal-data`). | Monnig # |
+
+- **Persistence.** Favorites are kept across app launches. A reset of preferences (`UC-PREF-reset-preferences`) does **not** clear them. Uninstalling the app, or a new-visitor reset on a gallery-owned device (`FR-PREF-reset-for-new-visitor`, `OI-7`), does clear them (author's decision, 2026-11-13). `FR-PREF-reset-for-new-visitor` and `DI-preferences-on-device` mention only preferences, so the SRS needs to add favorites to them.
+- **Accessibility.** The control shows its state without relying on color alone and has a screen-reader label in the selected language (`USE-accessibility-standard`, `USE-screen-reader`, `FR-LANG-interface-text`). Its look and placement are left to the design.
+
+**Related Use Cases:**
+
+- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Holds the Save favorite control and invokes this use case at 5e.
+- `UC-DAT-view-favorites` _(not yet written)_: View favorites. Lists the saved meteorites and opens each in `UC-DAT-view-meteorite`. If it lets the visitor remove a favorite, it uses the same removal as 2a.
+- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. Its list items have no favorite control.
+- `UC-PREF-reset-preferences` _(not yet written)_: Reset preferences. Does not clear favorites.
+
+**Assumptions:**
+
+- Favorites belong to the device, not to a person, like `VisitorPreferences` (SRS §7.1).
+- One favorite per catalog record (`monnigNumber`). If the catalog holds several samples of one meteorite, each is favorited separately (`OI-4`).
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
+
+**Open Issues:**
+
+- `OI-7`: Whether the gallery provides shared tablets, which decides whether the new-visitor reset that clears favorites is needed.
+- `OI-4`: Whether the catalog distinguishes a meteorite from its samples, which decides what one favorite refers to.
 
 
 ---
