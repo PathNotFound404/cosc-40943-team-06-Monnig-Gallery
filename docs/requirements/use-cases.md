@@ -103,7 +103,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | Area code | Feature area | Use cases |
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
-| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
+| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display<br>`UC-TTS-play-in-selected-language`: Play in Selected Language |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
 ---
@@ -238,7 +238,105 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 ## TTS: Text-to-speech
 
+### UC-TTS-play-in-selected-language: Play in Selected Language
 
+**UC ID and Name:** `UC-TTS-play-in-selected-language`: Play in Selected Language
+
+**Created By:** Bradley Helmholz
+
+**Date Created:** November 13, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The text-to-speech engine (`SI-device-speech`, `DE-device-tts`)
+
+**Trigger:** The visitor starts text-to-speech reading, for example by selecting Listen (`UC-TTS-listen-to-content`).
+
+**Description:** Text-to-speech always reads in the language the visitor chose for the app, English or Spanish (`FR-LANG-supported-languages`). There is no separate voice language setting. When reading starts, the system finds a voice for the selected language and reads in it. If there is no voice for that language, the system does not read in a different language (`SI-device-speech`). It tells the visitor that a voice is not available. Where the voices come from is not decided (`DE-device-tts`, `OI-26`), so this use case says only that the text-to-speech engine supplies them. Checking that the text exists in the selected language, starting and controlling playback, and changing the speed belong to other use cases.
+
+**Preconditions:**
+
+- PRE-1. A language is selected, either chosen in the setup survey or the English default (`UC-PREF-first-launch-survey`).
+- PRE-2. A use case that reads aloud is starting reading, and has already checked that the text to read exists in the selected language (`UC-TTS-listen-to-content` step 2).
+
+**Postconditions:**
+
+- POST-1. Reading has started in a voice for the selected language, or has not started and the visitor has been told why.
+- POST-2. Text is never read in a language other than the selected one.
+- POST-3. Nothing is saved. The voice chosen is not kept after the visitor leaves the screen (`FR-TTS-stop-on-leave`).
+
+**Main Success Scenario:**
+
+1. The visitor starts reading aloud.
+2. The system reads the selected language from the visitor's preferences.
+3. The system asks the text-to-speech engine for its voices for that language.
+4. The engine returns one or more voices.
+5. The system picks a voice and starts reading in it.
+6. Use case ends. Reading continues as `UC-TTS-listen-to-content` and `UC-TTS-control-playback` describe.
+
+**Extensions:**
+
+- **3a. The engine cannot supply its voices (an engine error, or the engine cannot be reached).**
+    - 3a1. The system does not read. It shows a message in the selected language saying reading could not start (`FR-DATA-load-failure`). The rest of the screen stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2. Otherwise use case ends.
+- **4a. The engine has no voice for the selected language.**
+    - 4a1. The system does not read, and does not read in a different language (`SI-device-speech`). It shows a message in the selected language saying a voice for this language is not available (`OI-26`, `OI-37`).
+    - 4a2. The reading control stays available, and the rest of the screen stays usable.
+    - 4a3. If the visitor tries again, flow rejoins at step 2. Otherwise use case ends.
+- **4b. The engine returns more than one voice.**
+    - 4b1. The system picks the voice the engine marks as its default for that language. If none is marked, it picks the first voice returned (`OI-36`).
+    - 4b2. Flow continues at step 5.
+- **4c. The only voice is a regional variant of the selected language, such as Spanish for Spain.**
+    - 4c1. The system uses it. It is still the selected language (`OI-36`).
+    - 4c2. Flow continues at step 5.
+- **5a. The voice cannot start, for example it became unavailable after step 4.**
+    - 5a1. Flow continues at 4a1.
+- **\*a. The visitor changes the app language in Settings.**
+    - \*a1. Reading has already stopped, because opening Settings leaves the screen (`FR-TTS-stop-on-leave`). Nothing from the old language carries over.
+    - \*a2. The next reading starts at step 1 and uses the new language. Reading is not restarted for the visitor.
+
+**Priority:** High
+
+**Frequency of Use:** Every time reading starts, so for visitors who use text-to-speech, many times a visit, in the gallery or remotely. Spanish-speaking visitors depend on it to hear any Spanish content aloud.
+
+**Business Rules:** `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields (held in memory on the device only; never saved):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `selectedLanguage` | enum | Required; English or Spanish. Read from the visitor's preferences; this use case never changes it. | Stored on the device only (`DI-preferences-on-device`) | — |
+| `availableVoices` | list of voices, each with a name and a language | Returned by the engine at step 4; may be empty (see 4a) | Memory only | — |
+| `chosenVoice` | one voice | Required to read; its language matches `selectedLanguage` | Memory only | — |
+
+- **Language.** The voice language and the text language are both the selected language. A missing translation is handled before this use case runs (`UC-TTS-listen-to-content` 2a), so the voice is never asked to read English text in a Spanish voice, or the reverse.
+- **Messages.** The messages in 3a and 4a are in the selected language (`FR-LANG-interface-text`), can be read by the device's screen reader (`USE-screen-reader`), and stay readable at every text size (`USE-text-scaling`).
+- **Systemic failure.** Nothing is saved, so a failure leaves nothing to undo (see 3a, 4a).
+
+**Related Use Cases:**
+
+- `UC-TTS-listen-to-content`: Listen to Content. Starts the reading this use case finds a voice for. Its 2a and 4a are the failure cases this use case matches.
+- `UC-TTS-narrate-activities`: Narrate Activities. Also starts reading, and needs a voice the same way.
+- `UC-TTS-control-playback`: Control Text-to-Speech Playback. Skip and Replay use the voice chosen here.
+- `UC-TTS-voice-speed`: Change Voice Speed. The speed the chosen voice reads at.
+- `UC-PREF-first-launch-survey` and `UC-PREF-customize-visual-preferences`: where the visitor sets the language this use case follows.
+
+**Assumptions:**
+
+- There is no separate voice language setting. The voice follows the app language (decision for this draft; the other TTS drafts assume the same).
+- English and Spanish are the only languages in release 1.0 (`FR-LANG-supported-languages`).
+- Where the engine and its voices come from, whether the device's own or a paid service, is not decided (`DE-device-tts`, `OI-26`). Nothing here depends on the answer.
+- Names in the text, such as a meteorite's name, are read by the selected language's voice as it pronounces them.
+- Listen's 4a and this use case's 4a describe the same case. This draft keeps them the same so they cannot disagree, and the two authors can merge them.
+- `UC-TTS-narrate-activities`, `UC-TTS-listen-to-content`, `UC-TTS-control-playback` and `UC-TTS-voice-speed` are on branches not yet merged. This draft was written against them as they stand there.
+
+**Open Issues:**
+
+- `OI-26`: Do visitors' devices reliably have a Spanish voice, and if not, what should the app do? (Defined on the `open-issues-OI-26` branch.)
+- `OI-36`: Which voice should the app prefer when the engine returns several for the selected language, and which Spanish (for example US or Mexican) fits a Texas audience?
+- `OI-37`: What should the "voice not available" message say, in each language, and should it tell the visitor how to get a voice once `OI-26` is decided?
 
 ## DAT: Meteorite database
 

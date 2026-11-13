@@ -57,6 +57,8 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-16 | Is the app meant for children to use on their own devices? Should it collect any visitor data at all? | Children's-privacy law and App Store / Google Play rules for kids apps apply if it collects data from children (`DI-no-personal-data`, `FR-CONTENT-no-visitor-account`). | Heather; team to research | 2026-11-07 |
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-36 | Which voice should the app prefer when the engine returns several for the selected language, and which Spanish (for example US or Mexican) fits a Texas audience? | Decides extensions 4b and 4c of `UC-TTS-play-in-selected-language`. | Team (test on devices), then Heather | 2026-11-16 |
+| OI-37 | What should the "voice not available" message say, in each language, and should it tell the visitor how to get a voice once `OI-26` is decided? | Extension 4a of `UC-TTS-play-in-selected-language`. | Team | 2026-11-16 |
 
 
 
