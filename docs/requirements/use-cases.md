@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-TOUR-take-self-guided-tour` | Edwin Rodriguez |
 
 ---
 
@@ -105,6 +106,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| TOUR | Gallery tour | `UC-TOUR-take-self-guided-tour`: Take a Self-Guided Tour |
 
 ---
 
@@ -464,6 +466,78 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+## TOUR: Gallery tour
+
+### UC-TOUR-take-self-guided-tour: Take a Self-Guided Tour
+
+**UC ID and Name:** `UC-TOUR-take-self-guided-tour`: Take a Self-Guided Tour
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor
+
+**Secondary Actors:** Museum Staff
+
+**Trigger:** The user chooses to start the self-guided tour from the home screen.
+
+**Description:** The system walks the user through the gallery one stop at a time, in the order the gallery is laid out, so they can explore at their own pace without a guide. The client's order: asteroid belt, theater, history of meteorites, entry through the atmosphere, types of meteorites, collisions, terrestrial rocks, new acquisitions, and the Texas room (interview, §2).
+
+**Preconditions:**
+
+- PRE-1. The user has opened the application and passed the home screen.
+
+**Postconditions:**
+
+- POST-1. The user has reached the end of the tour, or left it.
+
+**Main Success Scenario:**
+
+1. The user chooses to start the tour.
+2. The system shows the first stop: its name, the room it is in, and its description.
+3. The user reads the stop, or listens to it (`UC-TTS-listen-to-content`).
+4. The user moves to the next stop.
+5. The system shows the next stop.
+6. Steps 3 to 5 repeat until the last stop.
+7. The system shows that the tour is complete and offers to return home.
+8. Use case ends.
+
+**Extensions:**
+
+- **2a. The tour content cannot be loaded.**
+    - 2a1. The system shows a message and offers to try again (`FR-DATA-load-failure`).
+    - 2a2. Use case ends.
+- **4a. The user goes back to the previous stop.**
+    - 4a1. The system shows the previous stop.
+    - 4a2. Rejoin at step 3.
+- **4b. The user jumps to a different stop from the list of stops.**
+    - 4b1. The system shows the chosen stop.
+    - 4b2. Rejoin at step 3.
+- **4c. The user selects an exhibit at the stop.**
+    - 4c1. The system shows the exhibit (`UC-TOUR-view-exhibit`).
+    - 4c2. When the user returns, rejoin at step 3.
+- **\*a. The user leaves the tour.**
+    - \*a1. The system remembers the last stop viewed during this session and offers to resume from it next time the tour is started.
+    - \*a2. Use case ends.
+
+**Priority:** High (`BO-tour`)
+
+**Frequency of Use:** Once per visit for most visitors; tours take about 30 to 60 minutes.
+
+**Business Rules:** `BR-permanent-exhibit`
+
+**Associated Information:** No location detection is used; the user moves through the stops themselves (minutes, 2026-11-02). Gallery text is used word for word (minutes, 2026-11-09). The tour works the same for remote visitors (`OE-remote-use`).
+
+**Related Use Cases:** `UC-TOUR-view-exhibit`, `UC-TTS-listen-to-content`
+
+**Assumptions:** The gallery provides the list of stops and their text.
+
+**Open Issues:**
+
+- Who writes each stop's text, and is it the same as the gallery's wall text?
+- Should the tour differ by age range (interview, §5)?
 
 ---
 
