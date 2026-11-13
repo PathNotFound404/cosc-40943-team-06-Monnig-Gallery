@@ -32,6 +32,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/08/21 | 1.0 | Defined Use Case 1, 2, 3 | Kendric D’Spain |
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
+| 11/11/26 | 2.1 | Draft `UC-TTS-narrate-activities` | Edwin Rodriguez |
 
 ---
 
@@ -103,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | Area code | Feature area | Use cases |
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
-| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
+| TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display<br>`UC-TTS-narrate-activities`: Narrate an Activity |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
 ---
@@ -237,6 +238,75 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Open Issues:**
 
 ## TTS: Text-to-speech
+
+### UC-TTS-narrate-activities: Narrate an Activity
+
+**UC ID and Name:** `UC-TTS-narrate-activities`: Narrate an Activity
+
+**Created By:** Edwin Rodriguez
+
+**Date Created:** November 11, 2026
+
+**Primary Actor:** Monnig Gallery Visitor (especially child visitors and pre-readers)
+
+**Secondary Actors:** Museum Staff, teachers and chaperones
+
+**Trigger:** The user starts an interactive activity (for example a scavenger hunt or quiz) with narration turned on.
+
+**Description:** The system reads each step of an activity aloud, in the selected language, so visitors who cannot read yet, or who prefer listening, can take part. The client said pre-readers (Kinder to 2nd) need picture- and sound-based activities (interview, §5).
+
+**Preconditions:**
+
+- PRE-1. The user has opened an interactive activity.
+- PRE-2. Narration is turned on for the user.
+
+**Postconditions:**
+
+- POST-1. Every instruction and prompt in the activity has been read aloud to the user, or the user chose to stop narration.
+
+**Main Success Scenario:**
+
+1. The user starts the activity.
+2. The system reads the activity's instructions aloud in the selected language.
+3. The system reads the first step's prompt aloud.
+4. The user completes the step.
+5. The system reads the result of the step and the next step's prompt aloud.
+6. Steps 4 and 5 repeat until the last step.
+7. The system reads the activity's closing message aloud.
+8. Use case ends.
+
+**Extensions:**
+
+- **2a. The device has no voice for the selected language.**
+    - 2a1. The system tells the user that narration is not available in that language.
+    - 2a2. The activity continues with text only.
+    - 2a3. Use case ends.
+- **3a. The user asks to hear the prompt again.**
+    - 3a1. The system reads the current prompt again.
+    - 3a2. Rejoin at step 4.
+- **4a. The user turns narration off.**
+    - 4a1. The system stops reading and the activity continues with text only.
+    - 4a2. Use case ends.
+- **\*a. The user leaves the activity at any step.**
+    - \*a1. The system stops reading (`FR-TTS-stop-on-leave`).
+    - \*a2. Use case ends.
+
+**Priority:** Low for release 1.0; interactive features come after the core app (`FEAT-scavenger-hunt`, `FEAT-quizzes` are out of MVP scope).
+
+**Frequency of Use:** Every time a narrated activity is played.
+
+**Business Rules:** `BR-accessibility-standard`
+
+**Associated Information:** Uses the text-to-speech engine in `SI-device-speech` (`DE-device-tts`). Pause, replay, and speed are covered by `UC-TTS-control-playback` and `UC-TTS-change-voice-speed`.
+
+**Related Use Cases:** `UC-TTS-listen-to-content`, `UC-TTS-control-playback`
+
+**Assumptions:** Interactive activities exist in a later release; this use case is written now so it is ready when they do (minutes, 2026-11-02, versioned use cases).
+
+**Open Issues:**
+
+- Which activities will exist, and is narration on by default for them?
+- Does every piece of activity text need narration, or only instructions and prompts? Depends on the accessibility standard (`OI-3`).
 
 
 
