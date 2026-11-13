@@ -105,6 +105,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| TOUR | Gallery tour | `UC-TOUR-view-gallery-map`: View Gallery Map |
 
 ---
 
@@ -464,6 +465,135 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+---
+
+## TOUR: Gallery tour
+
+### UC-TOUR-view-gallery-map: View Gallery Map
+
+**UC ID and Name:** `UC-TOUR-view-gallery-map`: View Gallery Map
+
+**Created By:** Bradley Helmholz
+
+**Date Created:** November 12, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The source of the gallery map and room content (`OI-29`)
+
+**Trigger:** The visitor selects Gallery Map on the Home screen, or goes back to the map from a room screen.
+
+**Description:** The visitor sees a graphic map of the gallery divided into its three rooms (`UI-room-selection`). They tap a room to open a detail screen for it: its name, a short description, the sections it holds, and the meteorites housed in it. From there the visitor can open a section in Browse a Gallery Section, or open a meteorite or display in View exhibit. This works the same for visitors in the gallery and remote visitors (`OE-remote-use`). The map does not show the visitor's position, because release 1.0 uses no Bluetooth, camera, or location services. A section's own details, a single exhibit's details, the guided order of a self-guided tour, and visitor information are separate use cases.
+
+**Preconditions:**
+
+- PRE-1. The setup survey has been completed or skipped on this device, so the Home screen is reachable.
+
+**Postconditions:**
+
+- POST-1. The visitor has seen the gallery map and, if they chose one, a room's details.
+- POST-2. If the visitor chose a section, a meteorite, or a display, the matching use case has opened with it.
+- POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
+
+**Main Success Scenario:**
+
+1. The visitor selects Gallery Map on the Home screen.
+2. The system requests the gallery map and the list of rooms.
+3. The content source returns them.
+4. The system shows the map graphic with the three rooms drawn, each labeled with its name and tappable.
+5. The visitor taps a room.
+6. The system shows the room screen: the room's name, its description, the list of its sections, and the list of meteorites housed in it, each by name.
+7. The visitor selects a section.
+8. The system opens the selected section in Browse a Gallery Section.
+9. Use case ends.
+
+**Extensions:**
+
+- **2a. The device has no network connection, and the app has loaded the map before (`ROB-offline`).**
+    - 2a1. The system shows the map and rooms it already has.
+    - 2a2. Flow continues at step 4.
+- **3a. The map and rooms cannot be loaded.**
+    - 3a1. The system shows a message saying the gallery map could not be loaded, with a way to try again (`FR-DATA-load-failure`). The rest of the app stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2. Otherwise use case ends.
+- **3b. The map graphic is missing or cannot be shown, but the rooms were returned.**
+    - 3b1. The system shows the rooms as a plain list in walking order, with a message saying the map could not be shown.
+    - 3b2. Flow rejoins at step 5.
+- **3c. No rooms are defined.**
+    - 3c1. The system shows a message saying the gallery map is not available, instead of an empty map.
+    - 3c2. Use case ends.
+- **4a. The visitor uses a screen reader or a larger text size (`USE-screen-reader`, `USE-text-scaling`).**
+    - 4a1. The system gives each room a spoken label with its name, and offers the same rooms as a list under the map, so the map is never the only way in (`BR-accessibility-standard`).
+    - 4a2. Flow continues at step 5.
+- **5a. The visitor taps part of the map that is not a room.**
+    - 5a1. The system does nothing and keeps the map as it is.
+    - 5a2. Flow rejoins at step 5.
+- **6a. The room has no description, or no description in the selected language.**
+    - 6a1. With no description at all, the system shows "[NOT INDICATED]" in its place (`FR-DATA-missing-field`).
+    - 6a2. With an English description only, the system shows the English text, marked as not translated (`FR-LANG-content-fallback`, Proposed).
+    - 6a3. Flow continues at step 7.
+- **6b. The room has no sections, no meteorites, or neither.**
+    - 6b1. The system shows the room's name and description, with a message saying nothing is listed for this room.
+    - 6b2. The visitor goes back, and flow rejoins at step 5 (6d).
+- **6c. The room's details cannot be loaded.**
+    - 6c1. The system shows a message on the room screen saying the room could not be loaded, with a way to try again (`FR-DATA-load-failure`).
+    - 6c2. If the visitor tries again, flow rejoins at step 6. Going back to the map still works (6d).
+- **6d. The visitor goes back from the room screen.**
+    - 6d1. The system shows the map as it was.
+    - 6d2. Flow rejoins at step 5.
+- **7a. The visitor selects a meteorite or display instead of a section.**
+    - 7a1. The system opens it in View exhibit.
+    - 7a2. Use case ends.
+- **\*a. The visitor leaves for the Home screen.**
+    - \*a1. Use case ends.
+
+**Priority:** Medium
+
+**Frequency of Use:** Mostly by visitors in the gallery, once or twice a visit as they decide where to go next; remote visitors can use it too (`OE-remote-use`). The gallery's exhibits are mostly permanent (`BR-permanent-exhibit`), so map and room content rarely change.
+
+**Business Rules:** `BR-permanent-exhibit`, `BR-only-admin-can-edit-database`, `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only a name, and has no map graphic or Section yet:_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `mapGraphic` | image or vector drawing | Required; shows all three rooms. If missing, see 3b. | Read-only to visitors; set by administrators | _Gallery map (not yet in the glossary)_ |
+| `roomName` | text, per language | Required | Read-only to visitors | Room |
+| `roomRegion` | shape on the map graphic | Required; one per room; regions do not overlap | Read-only to visitors | Room |
+| `order` | integer | Required; unique; the room's place in the order a visitor walks the gallery | Read-only to visitors | — |
+| `roomDescription` | long text, per language | Optional; see 6a | Read-only to visitors | — |
+| `sections` | ordered list of Section | Optional; may be empty (see 6b) | Read-only to visitors | _Section (not yet in the glossary)_ |
+| `meteorites` | list of Sample or Display | Optional; may be empty (see 6b) | Read-only to visitors | Display, Sample |
+
+- **Rooms.** There are three, as in the old app's room-selection view. The map is the existing gallery floor plan, not a new drawing (minutes 2026-11-04).
+- **Language.** Room names and descriptions are shown in the selected language, falling back to English per `FR-LANG-content-fallback`. Interface text follows `FR-LANG-interface-text`.
+- **Accessibility.** Every room has a screen-reader label and stays readable at every text size (see 4a).
+- **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
+
+**Related Use Cases:**
+
+- `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. Opens the section selected at step 7. It can also be reached from this map with a room chosen (its 1a, 1b).
+- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. Opens the meteorite or display selected at 7a.
+- `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite. May be where a selected meteorite lands, depending on the View exhibit design.
+- `UC-TOUR-self-guided-tour` _(not yet written)_: Self-guided tour. Walks the visitor through rooms in order; not shown here.
+- `UC-TOUR-visitor-info` _(not yet written)_: Visitor info. Hours and location; not shown here.
+
+**Assumptions:**
+
+- The map is a picture with tappable room regions. Whether it also zooms or pans is open (`OI-30`).
+- Each section is in exactly one room, and each display is in exactly one section.
+- "Gallery Map" is a working label for the Home screen entry. The design names it.
+- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
+- Other teammates' use cases are on branches not yet merged. This draft was written against Browse a Gallery Section as it stands on its branch, and should be rechecked after that merges.
+
+**Open Issues:**
+
+- `OI-29`: Where does the map graphic come from, and who supplies it and the room outlines? The client interview (§ floor plan) requested a floor plan, and receipt is not recorded.
+- `OI-30`: Is the map a fixed picture, or can the visitor zoom and pan? Are sections tappable on the map, or only rooms?
+- `OI-31`: What should a room screen list: sections, displays, meteorites, or all three? `UI-room-selection` and Browse a Gallery Section overlap here.
+- `OI-32`: Is this use case in release 1.0? `UI-room-selection` is Proposed, and `FEAT-section-screens` is out of MVP scope (see `OI-1`, `OI-25`).
 
 ---
 

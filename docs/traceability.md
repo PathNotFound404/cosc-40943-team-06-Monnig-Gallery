@@ -54,6 +54,14 @@ _Worked example, from Project Pulse:]_
 | `BR-evaluation-submission-window` | Not recorded | `UC-EVA-submit-evaluation` step 7 and extension 1b |
 | `BR-section-admin-only` | Not recorded | `UC-RUB-assign-rubric`, `UC-SEC-create-section`, `UC-SEC-edit-section`, `UC-SEC-setup-active-weeks` |
 
+**Monnig Gallery rules (project rows):**
+
+| Business rule | Source | Enforced by |
+|---|---|---|
+| `BR-only-admin-can-edit-database` | Minutes 2026-11-02 and 2026-10-21 (team; client did not answer, interview §11) | `UC-TOUR-view-gallery-map` POST-3 and Associated Information (every field read-only to visitors) |
+| `BR-permanent-exhibit` | 10/15 kickoff brief (interview §7); minutes 2026-10-21 | `UC-TOUR-view-gallery-map` Frequency of Use (map and room content rarely change) |
+| `BR-accessibility-standard` | Heather Stepp, interview §2, 2026-10-30; minutes 2026-11-02 | `UC-TOUR-view-gallery-map` extension 4a (spoken room labels and a list equivalent to the map) |
+
 **Checks.**
 
 1. **Every rule is enforced by something.** A rule with an empty third column is a policy your software ignores. That may be the right answer, and it is only the right answer if you decided it on purpose. Write the decision in `OPEN-ISSUES.md` rather than leaving the cell blank.
@@ -80,6 +88,12 @@ _Worked example, from Project Pulse, which numbers its releases from its own tag
 | `UC-NOT-remind-non-submitters` | 📐 Designed |  | `v1.6.0` | `design/not.md` |  |  |
 | `FR-NOT-weekly-reminder` | 📐 Designed |  | `v1.6.0` | `design/not.md` | `WeeklyReminderScheduler` (predates the amended requirement) | `WeeklyReminderSchedulerTest` (predates it too) |
 | `UC-AI-critique` | ❌ Not started |  | `v1.8.0` |  |  |  |
+
+**Monnig Gallery use cases (project rows):**
+
+| Use case or FR | Build | Verify | Release | Design | Code | Tests |
+|---|---|---|---|---|---|---|
+| `UC-TOUR-view-gallery-map` | ❌ Not started |  | TBD (`OI-32`) |  |  |  |
 
 **Checks.**
 
