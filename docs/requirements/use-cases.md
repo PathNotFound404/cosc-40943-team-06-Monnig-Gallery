@@ -504,7 +504,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 2. The system shows an empty meteorite form: the record fields, an English and a Spanish description, a photo area, and a display picker listing the gallery's existing displays grouped by room.
 3. The administrator fills in the fields, writes the description, uploads photos (with optional captions, in the order they should appear), and optionally picks the display the meteorite is in.
 4. The administrator saves.
-5. The system checks that the session is still an administrator's (`SEC-admin-authenticated`) and validates the form: required fields are present, the `monnigNumber` is not used by any other record (hidden ones included), and every field meets its rule in Associated Information.
+5. The system checks that the session is still valid (`SEC-admin-authenticated`) and validates the form: required fields are present, the `monnigNumber` is not used by any other record (hidden ones included), and every field meets its rule in Associated Information.
 6. The system saves the record and its photos together, sets `onDisplay` from the placement (on display if a display was picked), and sets the record's `lastEdited` and the database's `contentLastChanged` to now.
 7. The system confirms that the meteorite was added and shows the meteorite list with the new meteorite in it.
 8. Use case ends.
@@ -544,7 +544,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 - **5c. (Editing) The record has changed since the administrator opened it: its `lastEdited` no longer matches the time noted at 1a1.**
     - 5c1. The system does not save. It says another administrator changed this meteorite, and when. The administrator's entries stay on the form so they can be copied.
     - 5c2. The administrator chooses to reload, and the system discards the unsaved entries. Flow rejoins at 1a1 with the latest version. Nothing is overwritten without the administrator first seeing the other change.
-- **5d. The session has expired, or the account is no longer an administrator.**
+- **5d. The session has expired or is no longer valid.**
     - 5d1. The system does not save, and refuses the change (`SEC-admin-authenticated`). It says the administrator must sign in again (`UC-ADM-log-in`).
     - 5d2. After the administrator signs in again, the system returns them to the form with their entries, and flow rejoins at step 4.
 - **6a. The content database cannot be reached, or the save fails partway (for example, a photo fails to store).**
@@ -586,7 +586,7 @@ _Data fields (set by the administrator in the portal; visitors only read them, `
 
 - **Going live.** A saved change is live right away, with no draft or approval step (author's decision, 2026-11-15). The visitor app finds out by checking the single `contentLastChanged` value and reloading only if it is newer than the copy it has (minutes, 2026-11-06). When it checks (on launch, or more often) and whether it reloads everything or only the records whose `lastEdited` is newer are left to the design.
 - **What visitors see of a hidden meteorite.** It does not appear in any list (browse, search, filter, favorites, exhibits, similar meteorites). If a visitor opens it from a favorite or from a list loaded before it was hidden, `UC-DAT-view-meteorite` 3b shows that it is no longer available.
-- **Security.** Every save, hide, and restore is checked against the session on the server, not only in the browser (`SEC-admin-authenticated`). All traffic uses HTTPS (minutes, 2026-11-09).
+- **Security.** Every save, hide, and restore is checked against the session on the server, not only in the browser (`SEC-admin-authenticated`). Every portal account is an administrator account, so a valid session is all the check needs; there are no roles or permission levels to check (author's decision, 2026-11-15). All traffic uses HTTPS (minutes, 2026-11-09).
 - **Systemic failure.** Every change is all or nothing (6a). A record is never left saved without its photos, or with only some of its changes.
 - **Not in this use case:** adding or renaming rooms and displays; 3D models (`OI-27`); visitor information such as hours (`UC-TOUR-view-visitor-info`); creating administrator accounts; loading the full collection at the start (`OI-4`).
 - **SRS changes needed.** SRS §7.2 needs the `hidden`, `lastEdited`, and `display` fields and the database-wide `contentLastChanged` value, and needs to show that `onDisplay` is derived from `display`. SRS §2 says it is open whether a back end exists at all (`OI-4`). This use case assumes one does.
@@ -604,7 +604,7 @@ _Data fields (set by the administrator in the portal; visitors only read them, `
 
 - The portal writes to the app's own content database, not to the gallery's catalog at monnigcatalog.tcu.edu. The catalog is never changed (`DI-catalog-source-of-truth`). Whether the content database starts as a copy of the catalog is `OI-4`.
 - The portal is a browser-based tool, separate from the visitor app (minutes, 2026-11-09). Its layout is left to the design.
-- The administrators are Dr. Mayne and Heather Stepp (minutes, 2026-11-09). Both can do everything in this use case, and neither needs the other's approval.
+- The administrators are Dr. Mayne and Heather Stepp (minutes, 2026-11-09). Only administrators have portal accounts, and every account can do everything in this use case. Neither needs the other's approval.
 - One record per `monnigNumber`, as in `UC-DAT-view-meteorite`. If the catalog separates a meteorite from its samples, this changes (`OI-4`).
 - The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
 
