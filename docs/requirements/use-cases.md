@@ -533,7 +533,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
     - 5a2. Use case ends.
 - **\*a. The session expires after a period with no activity (TBD, `OI-46`).**
     - \*a1. The next request the administrator makes is refused, and the system shows the sign-in page, saying the session expired.
-    - \*a2. After the administrator signs in again, the system returns them to the page they were on. What happens to unsaved edits is described in `UC-ADM-update-content` \*a.
+    - \*a2. After the administrator signs in again, the system returns them to the page they were on. Unsaved edits on the page must not be lost; how is left to `UC-ADM-update-content`.
 - **\*b. The administrator selects Sign out.**
     - \*b1. The system ends the session and shows the sign-in page. Using the browser's Back button afterward shows no portal data.
     - \*b2. Use case ends.
