@@ -57,6 +57,8 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-16 | Is the app meant for children to use on their own devices? Should it collect any visitor data at all? | Children's-privacy law and App Store / Google Play rules for kids apps apply if it collects data from children (`DI-no-personal-data`, `FR-CONTENT-no-visitor-account`). | Heather; team to research | 2026-11-07 |
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-40 | What is the default for each preference (language, text size, voice speed, color mode) that a reset returns to? | POST-1 of `UC-PREF-reset-preferences` and the first-launch setup depend on it. Color mode is light (`OI-18`); the rest are not decided. | Team, Heather | 2026-11-15 |
+| OI-41 | Does resetting preferences also clear saved favorites? | On a shared gallery tablet it probably should; on a personal phone it may surprise the visitor. Affects `UC-PREF-reset-preferences` and `UC-DAT-view-favorites`; depends on `OI-7`. | Team, Heather | 2026-11-15 |
 
 
 

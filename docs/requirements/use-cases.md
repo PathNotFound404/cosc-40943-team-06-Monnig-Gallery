@@ -296,7 +296,8 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
-- Does reset also clear saved favorites (`UC-DAT-view-favorites`)? On a shared tablet it probably should; on a personal phone it may surprise the user. (Add to OPEN-ISSUES.md.)
+- Does reset also clear saved favorites (`UC-DAT-view-favorites`)? On a shared tablet it probably should; on a personal phone it may surprise the user (`OI-41`).
+- What are the default settings that reset returns to (`OI-40`)?
 - Should the reset on gallery tablets be protected so a visitor cannot trigger it mid-tour? Depends on `OI-7`.
 
 ## TTS: Text-to-speech
