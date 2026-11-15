@@ -533,6 +533,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 - Which meteorites have 3D scans, in what format, who owns them, and where are they hosted (`OI-27`)?
 - What is the largest acceptable model file to download over cellular data?
+- Who writes the text description for each model, since a screen reader can't read the model itself (`OI-38`)?
 
 ---
 

@@ -57,6 +57,7 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-16 | Is the app meant for children to use on their own devices? Should it collect any visitor data at all? | Children's-privacy law and App Store / Google Play rules for kids apps apply if it collects data from children (`DI-no-personal-data`, `FR-CONTENT-no-visitor-account`). | Heather; team to research | 2026-11-07 |
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-38 | A 3D model can't be read by a screen reader. Does every model need a text description, who writes it, and what must it cover? | `UC-DAT-view-3d-model` must meet `USE-screen-reader`; without a description, screen reader users get nothing from the model. | Heather, Dr. Mayne | 2026-11-15 |
 
 
 
