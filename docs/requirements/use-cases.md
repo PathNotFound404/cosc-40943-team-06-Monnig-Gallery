@@ -102,7 +102,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 
 | Area code | Feature area | Use cases |
 |---|---|---|
-| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
+| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage<br>`UC-PREF-toggle-captions`: Turn Captions On or Off |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
@@ -235,6 +235,111 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Assumptions:** The UI element to open the visual preferences popup is always visible on the application.
 
 **Open Issues:**
+
+### UC-PREF-toggle-captions: Turn Captions On or Off
+
+**UC ID and Name:** `UC-PREF-toggle-captions`: Turn Captions On or Off
+
+**Created By:** Koen Dolezar
+
+**Date Created:** November 15, 2026
+
+**Primary Actor:** Visitor, especially a visitor who is deaf or hard of hearing, or who is in a noisy group
+
+**Secondary Actors:** None
+
+**Trigger:** The visitor selects the Captions switch in Settings.
+
+**Description:** The visitor turns captions on or off for everything the app plays aloud. The setting is saved on the device and applies to every screen. In release 1.0 the only audio the app plays is text-to-speech, so with captions on, the system highlights the sentence being read on screen and keeps it in view, so the visitor can follow along without hearing it. When the app later plays gallery videos or recorded narration (`FEAT-videos-games`, the audio tour idea in minutes 2026-11-04), the same switch shows their captions. Captions are off by default. Proposed by two team members as a new idea (minutes 2026-11-09).
+
+**Preconditions:**
+
+- PRE-1. The visitor is on the Settings screen (`UC-PREF-customize-visual-preferences` step 2).
+
+**Postconditions:**
+
+- POST-1. The captions setting saved on the device is the value the visitor selected.
+- POST-2. Anything read aloud or played afterward, on any screen, follows that setting (`FR-PREF-apply-everywhere`).
+- POST-3. On later launches the app restores the setting (`FR-PREF-persist`, `DI-preferences-on-device`).
+
+**Main Success Scenario:**
+
+1. The system shows the Captions switch on the Settings screen with its current value (Off on a new device).
+2. The visitor turns captions on.
+3. The system saves the setting on the device and updates the switch.
+4. The visitor later has content read aloud on another screen (`UC-TTS-listen-to-content`).
+5. While reading, the system highlights the sentence being read and scrolls the text so that sentence stays in view.
+6. Reading ends or stops.
+7. The system removes the highlight.
+8. Use case ends.
+
+**Extensions:**
+
+- **2a. The visitor turns captions off.**
+    - 2a1. The system saves the setting. Text that is read aloud is no longer highlighted.
+    - 2a2. Use case ends.
+- **3a. Saving the setting fails (for example, the device storage is full).**
+    - 3a1. The system keeps the new setting for as long as the app stays open.
+    - 3a2. The system shows a non-blocking message, in the selected language, saying the setting could not be saved and will be lost when the app closes.
+    - 3a3. Flow continues at step 4.
+- **3b. The saved setting cannot be read when the app opens.**
+    - 3b1. The system treats captions as Off and shows the switch off.
+    - 3b2. Flow rejoins at step 1.
+- **5a. The visitor scrolls the text away from the highlighted sentence while it is being read.**
+    - 5a1. The system stops scrolling the text on its own, so it does not fight the visitor, and keeps highlighting.
+    - 5a2. The system shows a control to jump back to the sentence being read. Selecting it resumes automatic scrolling.
+    - 5a3. Flow continues at step 6.
+- **5b. The visitor pauses, replays, or skips (`UC-TTS-control-playback`).**
+    - 5b1. On pause, the highlight stays on the sentence where reading paused. On replay or skip, the highlight moves with the reading.
+    - 5b2. Flow continues at step 5.
+- **5c. The speech engine does not report which sentence it is reading.**
+    - 5c1. The system highlights the whole passage being read, and still removes the highlight when reading ends.
+    - 5c2. Flow continues at step 6.
+- **\*a. Text-to-speech is reading when the visitor goes to Settings.**
+    - \*a1. Reading has already stopped, because leaving a screen stops it (`FR-TTS-stop-on-leave`). The new setting applies the next time anything is read.
+- **\*b. Media with no captions is played (a later release, when videos or recorded narration exist).**
+    - \*b1. The system plays it and shows, once, in the selected language, that captions are not available for it.
+- **\*c. The device has no network connection.**
+    - \*c1. No change. The setting and the highlighting need no network (`ROB-offline`).
+
+**Priority:** Low
+
+**Frequency of Use:** Rare to change; most visitors who want captions turn them on once. Highlighting runs every time content is read aloud while captions are on. Everything stays on the device, so it adds no load to any server.
+
+**Business Rules:** `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields (stored on the device only; no account, no server):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `captionsOn` | boolean | Required. Default `false`. | Device-local; not personal data | — |
+
+- **Default.** Off, because in release 1.0 the text being read is already on screen. This is the author's decision; the reviewer or the accessibility standard may change it (`OI-42`).
+- **Not in the setup survey.** Captions is not asked at first launch (`UC-PREF-first-launch-survey` asks only language, text size, and color mode). If the accessibility standard requires asking, that is `OI-19`.
+- **Reset.** `UC-PREF-reset-preferences` returns this setting to Off along with the other preferences.
+- **Highlight style.** The highlight must not rely on color alone and must stay readable in light and dark mode at every text size (`USE-text-scaling`); its exact look is left to the design.
+- **Screen readers.** The switch's screen-reader label says its state, such as "Captions, off" (`USE-screen-reader`). Highlighting must not move screen-reader focus while the visitor's screen reader is speaking.
+- **Language.** Captions are in the language being read, which is the selected language unless the content fell back to English (`FR-LANG-content-fallback`).
+- **SRS.** `VisitorPreferences` in SRS §7.2 has no captions field yet; add `captionsOn` when this use case is accepted.
+
+**Related Use Cases:**
+
+- `UC-PREF-customize-visual-preferences`: Change Settings. The Captions switch is on its screen.
+- `UC-TTS-listen-to-content` _(in review)_: Reads content aloud. Highlighting runs while it reads.
+- `UC-TTS-control-playback` _(in review)_: Pause, replay, and skip move the highlight (5b).
+- `UC-PREF-reset-preferences` _(in review)_: Returns captions to Off.
+
+**Assumptions:**
+
+- Release 1.0 has no videos and no recorded audio; text-to-speech is the only thing the app plays aloud (SRS §1.2, `FEAT-videos-games` out of MVP).
+- The device's speech engine can report its progress through the text on both iOS and Android. Where it cannot, 5c applies.
+
+**Open Issues:**
+
+- `OI-42`: Is highlighting the sentence being read what the gallery means by captions for release 1.0, and should captions default to on? When gallery videos or recorded narration are added, will they come with caption files?
+- `OI-3`: Which accessibility standard applies; it may require captions for any future video.
 
 ## TTS: Text-to-speech
 
