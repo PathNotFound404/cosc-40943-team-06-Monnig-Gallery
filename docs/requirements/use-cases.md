@@ -105,6 +105,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| ADM | Content administration | `UC-ADM-log-in`: Log In as an Administrator |
 
 ---
 
@@ -464,6 +465,120 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+## ADM: Content administration
+
+### UC-ADM-log-in: Log In as an Administrator
+
+**UC ID and Name:** `UC-ADM-log-in`: Log In as an Administrator
+
+**Created By:** Koen Dolezar
+
+**Date Created:** November 15, 2026
+
+**Primary Actor:** Gallery administrator (the gallery staff the client designates; today Dr. Rhiannon Mayne and Heather Stepp, minutes 2026-11-09)
+
+**Secondary Actors:** The sign-in service that checks administrators' credentials, either one built into the admin portal or TCU's own sign-in (`OI-45`)
+
+**Trigger:** The administrator opens the admin portal's address in a web browser.
+
+**Description:** Only gallery administrators may change the app's content (`BR-only-admin-can-edit-database`), and the team decided that they will do it in a browser-based admin portal, not in the visitor app (minutes 2026-11-06, 2026-11-09). Before the portal shows or changes anything, the administrator proves who they are. After signing in they reach the portal's content list, where `UC-ADM-update-content` begins. The visitor app has no sign-in at all (`FR-CONTENT-no-visitor-account`). This use case applies only if release 1.0 includes the admin portal (`OI-11`).
+
+**Preconditions:**
+
+- PRE-1. The admin portal is deployed and reachable over HTTPS (`SEC-https-only`).
+- PRE-2. The person has an administrator account, created as `OI-45` decides.
+
+**Postconditions:**
+
+- POST-1. The portal has an authenticated session for this administrator, and every later request to change content in that session is checked against it (`SEC-admin-authenticated`).
+- POST-2. The administrator sees the portal's content list.
+- POST-3. No password or other secret was stored in the visitor app (`SEC-no-write-credentials`).
+
+**Main Success Scenario:**
+
+1. The administrator opens the admin portal in a web browser.
+2. The system shows the sign-in page.
+3. The administrator enters their username and password and selects Sign in.
+4. The system checks the credentials with the sign-in service.
+5. The sign-in service confirms them, and the system confirms that the account is an administrator.
+6. The system starts a session and shows the content list, with the administrator's name and a Sign out control.
+7. Use case ends.
+
+**Extensions:**
+
+- **1a. The administrator already has a session that has not expired.**
+    - 1a1. The system skips the sign-in page and shows the content list.
+    - 1a2. Use case ends.
+- **1b. The administrator opens a page deeper in the portal (for example, a bookmarked meteorite) without a session.**
+    - 1b1. Flow continues at step 2. After step 6 the system opens the page that was asked for instead of the content list.
+- **3a. The administrator leaves a field empty.**
+    - 3a1. The system says which field is missing and does not contact the sign-in service.
+    - 3a2. Flow rejoins at step 3.
+- **4a. The username or password is wrong.**
+    - 4a1. The system shows one message saying the username or password is not correct, without saying which, and clears the password field.
+    - 4a2. Flow rejoins at step 3.
+- **4b. There have been too many failed attempts for this account in a short time.**
+    - 4b1. The system refuses further attempts for a while and says to try again later or contact the person who manages accounts. The number of attempts and the wait are TBD (`OI-46`).
+    - 4b2. Use case ends.
+- **4c. The sign-in service cannot be reached or returns an error.**
+    - 4c1. The system says sign-in is unavailable right now and to try again later. It does not start a session.
+    - 4c2. Use case ends.
+- **4d. The administrator has forgotten their password.**
+    - 4d1. The administrator selects "Forgot password".
+    - 4d2. The system sends them to the sign-in service's own reset process (`OI-45`).
+    - 4d3. Use case ends. The administrator starts again at step 1 after resetting.
+- **5a. The credentials are valid, but the account is not an administrator (for example, a TCU account of someone who is not on the administrator list).**
+    - 5a1. The system says this account does not have access to the portal, and starts no session.
+    - 5a2. Use case ends.
+- **\*a. The session expires after a period with no activity (TBD, `OI-46`).**
+    - \*a1. The next request the administrator makes is refused, and the system shows the sign-in page, saying the session expired.
+    - \*a2. After the administrator signs in again, the system returns them to the page they were on. What happens to unsaved edits is described in `UC-ADM-update-content` \*a.
+- **\*b. The administrator selects Sign out.**
+    - \*b1. The system ends the session and shows the sign-in page. Using the browser's Back button afterward shows no portal data.
+    - \*b2. Use case ends.
+- **\*c. The administrator's access is removed while they have a session.**
+    - \*c1. The next request to change content is refused, as in 5a (`SEC-admin-authenticated`).
+
+**Priority:** Medium. Needed only if `UC-ADM-update-content` is in release 1.0 (`OI-11`).
+
+**Frequency of Use:** Rare: a few times a year, when the exhibit changes or a meteorite's information is corrected (`BR-permanent-exhibit`). Two or three administrators at most. Proposed by one team member (minutes 2026-11-09).
+
+**Business Rules:** `BR-only-admin-can-edit-database`, `BR-monnig-branding`
+
+**Associated Information:**
+
+_Data fields:_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `username` | text | Required. Its form (email address, TCU username) depends on `OI-45`. | Not shown to visitors | — |
+| `password` | text | Required. Never shown, logged, or stored in plain text; rules for it come from the sign-in service (`OI-45`). | Sent only over HTTPS (`SEC-https-only`) | — |
+| `isAdministrator` | boolean | Required. Set only by whoever manages accounts (`OI-45`). | Never settable from the portal's sign-in page | Staff |
+| `session` | token | Created at step 6; ends at sign-out or after inactivity (`OI-46`). | Held only by the administrator's browser; not visible to scripts on the page | — |
+
+- **Portal, not app.** There is no administrator sign-in in the visitor app, which holds no credential that can change content (`SEC-no-write-credentials`, minutes 2026-11-09: "credentials only for admin").
+- **Who decides who is an administrator.** The client (`BR-only-admin-can-edit-database`). The portal only checks the list it is given.
+- **Messages.** A failed sign-in never says whether the username exists (4a). Messages are in English; the portal is for staff and is not translated in release 1.0 (author's decision).
+- **Accessibility.** The sign-in page works with a keyboard alone and with a screen reader (`USE-accessibility-standard`).
+- **Branding.** The portal uses Monnig branding (`CO-monnig-branding`).
+- **Systemic failure.** A failure during sign-in leaves no session; there is nothing partly done to undo.
+- **Not invented here.** No password length, lockout count, or session length is set in this use case, because none came from the client or TCU; they are `OI-46`.
+
+**Related Use Cases:**
+
+- `UC-ADM-update-content` _(in review)_: Update Meteorite Content. Starts from the content list this use case ends on, and requires a session.
+
+**Assumptions:**
+
+- The admin portal is a separate web page, built and hosted as part of the app's back end. Whether that back end exists depends on `OI-4`.
+- Administrators use a desktop or laptop browser.
+
+**Open Issues:**
+
+- `OI-11`: Whether release 1.0 includes an admin portal at all.
+- `OI-45`: How do administrators sign in: with their TCU accounts through TCU's sign-in, or with accounts the portal manages itself? Who adds and removes administrators, and how is a forgotten password reset?
+- `OI-46`: How long may an administrator's session stay idle, and how many failed sign-ins lock an account, and for how long? Does TCU IT have a policy?
 
 ---
 

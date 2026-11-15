@@ -57,6 +57,8 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-16 | Is the app meant for children to use on their own devices? Should it collect any visitor data at all? | Children's-privacy law and App Store / Google Play rules for kids apps apply if it collects data from children (`DI-no-personal-data`, `FR-CONTENT-no-visitor-account`). | Heather; team to research | 2026-11-07 |
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-45 | How do administrators sign in to the admin portal: with their TCU accounts through TCU's sign-in, or with accounts the portal manages itself? Who adds and removes administrators, and how is a forgotten password reset? | Decides the sign-in service in `UC-ADM-log-in` and `SEC-admin-authenticated`, and what the maintainer must run (`OI-5`). | Heather, Dr. Mayne, Asa (TCU IT) | 2026-11-15 |
+| OI-46 | How long may an administrator's portal session stay idle, and how many failed sign-ins lock an account, and for how long? Does TCU IT have a policy we must follow? | Values for `UC-ADM-log-in` 4b and session expiry; the team should not invent them. | Asa (TCU IT), then team | 2026-11-15 |
 
 
 
