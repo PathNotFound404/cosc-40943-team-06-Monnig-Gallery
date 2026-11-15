@@ -326,7 +326,7 @@ _Data fields (stored on the device only; no account, no server):_
 
 **Related Use Cases:**
 
-- `UC-PREF-customize-visual-preferences`: Change Settings. The Captions switch is on its screen.
+- `UC-PREF-customize-visual-preferences`: Customize Visual Preferences. The Captions switch is on its screen.
 - `UC-TTS-listen-to-content` _(in review)_: Reads content aloud. Highlighting runs while it reads.
 - `UC-TTS-control-playback` _(in review)_: Pause, replay, and skip move the highlight (5b).
 - `UC-PREF-reset-preferences` _(in review)_: Returns captions to Off.
