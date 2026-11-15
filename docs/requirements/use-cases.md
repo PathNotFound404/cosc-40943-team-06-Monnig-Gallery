@@ -535,8 +535,9 @@ No personal data is stored (`DI-no-personal-data`).
 
 **Open Issues:**
 
-- Does `UC-PREF-reset-preferences` clear favorites?
+- Does `UC-PREF-reset-preferences` clear favorites (`OI-41`)?
 - Is there a maximum number of favorites?
+- Favorites are saved on the device only for now. Keeping them across devices needs a back end and is a later issue (`OI-39`).
 
 ---
 
