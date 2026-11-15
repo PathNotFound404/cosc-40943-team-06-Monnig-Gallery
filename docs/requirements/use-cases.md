@@ -104,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Filter the Meteorite Database<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
 ---
 
@@ -307,91 +307,135 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Open Issues:**
 
 
-### UC-DAT-filter-database: Organize Meteorite Catalog Based on Filters
+### UC-DAT-filter-database: Filter the Meteorite Database
 
-**UC ID and Name:** `UC-DAT-filter-database`: Organize Meteorite Database Based on Filters
+**UC ID and Name:** `UC-DAT-filter-database`: Filter the Meteorite Database
 
-**Created By:** Asa Tuten, Bradley Helmholz
+**Created By:** Koen Dolezar (rewrite of the 2022 draft by Asa Tuten and Bradley Helmholz)
 
-**Date Created:** 5/4/2022
+**Date Created:** November 15, 2026
 
-**Primary Actor:** Monnig Visitor
+**Primary Actor:** Visitor
 
-**Secondary Actors:** Museum Volunteer, Museum Staff
+**Secondary Actors:** The Monnig catalog, or the data source that replaces it (`SI-monnig-catalog`, `OI-4`)
 
-**Trigger:** User selects the Filter button button at the top of the screen.
+**Trigger:** The visitor selects Filter at the top of the Meteorite Database screen.
 
-**Description:** The app is equipped with being able to query meteorites for visitors to look at, whether the meteorite is on display in the gallery or not. The user can filter out meteorites based a variety of categories. Prior to user selections all filters are defaultly set to ALL.
-
-1. Type of meteorite
-2. Composition of meteorite
-2. Location of find
-3. Time range of find
-3. Whether or not the meteorite is on display
+**Description:** The visitor narrows the list of meteorites to those that match one or more filters: class, group, composition, country found, year found, and whether the meteorite is on display. Every filter starts at "All". The visitor sets filters in a panel and applies them together; the list then shows only meteorites that match every filter set, and any search text (`UC-DAT-search-database`). This use case keeps its identifier but replaces the 2022 draft, to match the current data dictionary (SRS §7.2), the browse and search use cases, and `FR-DATA-no-results`.
 
 **Preconditions:**
 
-- PRE-1. The user is in the "Meteorite Database" page of the application.
-- PRE-2. The application is currently able to query information from the database.
+- PRE-1. The visitor is on the Meteorite Database screen (`UC-DAT-browse-database`) or the On Display screen (`UC-DAT-view-on-display-items`).
 
 **Postconditions:**
 
-- POST-1. The selected filters become active
-- POST-2. The page is automatically refreshed showing meteorites with updated filters.
+- POST-1. The applied filters are the ones the visitor applied, and the Filter control shows how many are active.
+- POST-2. The list shows only meteorites that match every applied filter and the search text, or the no-results message (`FR-DATA-no-results`).
+- POST-3. Nothing in the catalog has changed (`FR-CONTENT-visitor-read-only`, `DI-catalog-source-of-truth`).
 
 **Main Success Scenario:**
 
-1. User selects the "Filter" button located at the top of the Meteorite Database page.
-2. System reveals the filter bar dropdown.
-3. Filter bar lists filter options and categories.
-4. User can select and change the filters
-5. For the category pertaining to location, user can either select from an additional dropdown, or begin to type in their location, which will be automatically be text-matched from options present in the location dropdown.
-6. The time range filter has both a two node sliding time range line, as well as manual numerical input.
-7. The user indicates to apply current filters.
-8. System queries Monnig database with new filters.
-9. Database returns all meteorites that fit all filters.
-10. System displays selected meteorites to user.
-11. Use case ends.
+1. The visitor selects Filter.
+2. The system opens the filter panel, showing each filter with its applied value ("All" if none):
+    - Class: Iron, Stone, Stony-iron. Any number can be selected.
+    - Group: Chondrite, Primitive achondrite, Achondrite. Any number can be selected.
+    - Composition: the values the catalog holds (`OI-4`). Any number can be selected.
+    - Country found: a list of the countries the catalog holds, which narrows as the visitor types. Any number can be selected.
+    - Year found: a range from the earliest to the latest year in the catalog, set with a two-handle slider or by typing the two years.
+    - On display only: a switch, off by default.
+3. The visitor changes one or more filters, in any order.
+4. The visitor selects Apply.
+5. The system closes the panel, requests from the catalog the meteorites that match the applied filters and any search text, and shows that the list is loading.
+6. The catalog returns the matches.
+7. The system shows the matching meteorites, sorted A to Z by name, with the number found, and shows the number of active filters on the Filter control.
+8. The visitor selects a meteorite.
+9. The system opens it in View meteorite.
+10. Use case ends.
 
 **Extensions:**
 
-- **2a. User wishes to collapse the filter bar.**
-    - 2a1. The user indicates to collapse the filter bar through a UI button.
-    - 2a2. The filter bar collapses back to how it was before it was opened.
-    - 2a2. Use case ends.
-- **7a. User does not indicate to apply current filters and collapses the filter bar.**
-    - 7a1. No filters are applied, and all filter settings are reset to default.
-    - 7a2. Use case ends.
-- **8a. The system is unable to query the database.**
-    - 8a1. The system reports the failure to retrieve all information from the database to the user.
-    - 8a2. The page remains blank with an error message, prompting the user to try again later.
-    - 8a3. User can try refreshing the page or leave.
-    - 8a4. Use case ends.
-- **9a. The database fails to return one or more queried meteorites.**
-    - 9a1. The system reports the failture to retrieve all information from the database to the user.
-    - 9a2. The page remains blank with an error message, prompting the user to try again later.
-    - 9a3. User can try refreshing the page or leave.
-    - 9a4. Use case ends.
-- **9b. There are no meteorites that fit all applied filters**
-    - 9b1. The database indicates to the system that there are no meteorites that fit the current filters.
-    - 9b2. The system does not display a list of meteorites, instead showing a message stating "No meteorites match current filters."
-    - 9b3. User is prompted to change their filters.
-    - 9b4. Use case ends.
+- **2a. The list of composition or country values cannot be loaded.**
+    - 2a1. The system shows that filter as unavailable, with a way to try again. The other filters still work.
+    - 2a2. Flow continues at step 3.
+- **3a. The visitor types a year range where the first year is after the second, or a year outside the catalog's range or in the future.**
+    - 3a1. The system shows a message, in the selected language, beside the year fields saying what is allowed, and disables Apply until the range is valid.
+    - 3a2. Flow rejoins at step 3.
+- **3b. The visitor types in the country list and no country matches.**
+    - 3b1. The system shows that no country matches. Nothing is selected.
+    - 3b2. Flow rejoins at step 3.
+- **3c. The visitor selects Clear all.**
+    - 3c1. The system sets every filter in the panel back to "All". Nothing changes in the list until the visitor applies.
+    - 3c2. Flow rejoins at step 3.
+- **4a. The visitor closes the panel without applying.**
+    - 4a1. The system discards the changes made in the panel. The filters that were applied before stay applied, and the list does not change.
+    - 4a2. Use case ends.
+- **4b. The visitor applies with every filter at "All".**
+    - 4b1. The system removes all filters, and the list shows every meteorite (with any search text still applied). The Filter control shows no count.
+    - 4b2. Flow continues at step 5.
+- **5a. The device has no network connection, and the app has catalog data loaded already (`ROB-offline`).**
+    - 5a1. The system filters only the meteorites it already has and shows a notice that the results may be incomplete while offline.
+    - 5a2. Flow continues at step 7.
+- **6a. The catalog cannot be reached, returns an error, or returns only part of the results.**
+    - 6a1. The system shows a message saying the meteorites could not be loaded, with a way to try again (`FR-DATA-load-failure`). The applied filters are kept.
+    - 6a2. If the visitor tries again, flow rejoins at step 5. Otherwise the visitor can change the filters (step 1) or leave.
+- **6b. No meteorite matches every applied filter.**
+    - 6b1. The system shows "No meteorites match current filters." in place of the list (`FR-DATA-no-results`), with a control to clear all filters.
+    - 6b2. If the visitor clears them, flow continues at step 5 with no filters. Otherwise the visitor can change the filters (step 1).
+- **6c. A meteorite has no value for a field that a filter is set on.**
+    - 6c1. It does not match that filter, because the catalog does not say. It still appears when that filter is at "All".
+- **7a. There are more matches than fit in one batch.**
+    - 7a1. The system loads them in batches as the visitor scrolls, as `UC-DAT-browse-database` steps 5 and 6 describe.
+- **9a. The visitor comes back from View meteorite.**
+    - 9a1. The system shows the same filtered list at the same place, without loading it again.
+    - 9a2. Flow rejoins at step 8.
+- **\*a. The visitor leaves the screen for Home.**
+    - \*a1. The system clears the filters. The next time the visitor opens the list, it starts with every filter at "All", the same as search (`UC-DAT-search-database` \*a).
+    - \*a2. Use case ends.
 
 **Priority:** Medium
 
-**Frequency of Use:** Any time a user wants to view a specific selection meteorites.
+**Frequency of Use:** Less often than browsing or searching; a few times per visit by visitors who want one kind of meteorite. Proposed by two team members (minutes 2026-11-09). Each Apply sends one request. In the gallery, up to about 30 visitors in one group may filter at the same time (`SCA-group-concurrency`).
 
-**Business Rules:**
+**Business Rules:** `BR-only-admin-can-edit-database`, `BR-accessibility-standard`
 
 **Associated Information:**
 
-**Related Use Cases:** `UC-DAT-display-database`
+_Data fields (read from the catalog; visitors cannot change them). Definitions are in the SRS §7.2 data dictionary; this table says how this use case filters on them:_
 
-**Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `class` | enum | Filter: any of Iron, Stone, Stony-iron. Labels shown in the selected language. | Read-only to visitors | Class |
+| `group` | enum | Filter: any of Chondrite, Primitive achondrite, Achondrite (list to confirm, SRS §7.2). Labels shown in the selected language. | Read-only to visitors | Group |
+| `composition` | text | Filter: any of the values the catalog holds. Allowed values TBD (`OI-4`). Shown as stored. | Read-only to visitors | — |
+| `country` | text | Filter: any of the countries the catalog holds. Shown as stored. | Read-only to visitors | Country |
+| `dateFound` | date or year | Filter: by year only, from and to inclusive. From is not after To; neither is in the future. Precision TBD (`OI-4`). | Read-only to visitors | — |
+| `onDisplay` | boolean | Filter: when the switch is on, only `true`. | Read-only to visitors | — |
+
+- **How filters combine.** Within one filter, selected values are joined by OR (Iron or Stony-iron). Across filters, and with the search text, they are joined by AND.
+- **Changes from the 2022 draft.** Location filters by country only; `locationFound` is free text and too varied to filter, but it is still shown in View meteorite. Closing the panel without applying keeps the filters already applied, rather than resetting them all (old 7a). The old 2a is covered by 4a.
+- **Values come from the data.** The composition and country lists, and the ends of the year range, come from the catalog, not from a list kept in the app, so new finds appear without an app update (`MNT-content-update`).
+- **Accessibility.** Every filter control has a screen-reader label that says its current value, and the year range can be set by typing as well as by dragging, so it works with a screen reader (`USE-screen-reader`). The panel stays readable at every text size (`USE-text-scaling`).
+- **Performance.** The filtered list must appear within `PER-filter-response` (threshold TBD, `OI-13`) over the full collection (`SCA-full-collection`).
+- **Data source.** If the app keeps its own copy of the catalog (`OI-4`), filtering runs on that copy, and 6a happens only when the copy cannot be read.
+- **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
+
+**Related Use Cases:**
+
+- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. The Filter control is on its screen. It supersedes `UC-DAT-display-database`.
+- `UC-DAT-search-database` _(in review)_: Search the Meteorite Database. Search and filters combine.
+- `UC-DAT-view-on-display-items` _(in review)_: View on-display items. Filters there work the same, with On display only fixed on.
+- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 8.
+
+**Assumptions:**
+
+- The catalog holds class, group, composition, country, year found, and on-display values for most meteorites (`AS-catalog-data-sufficient`). A filter whose field the catalog lacks entirely is left out of the panel until it does.
+- One list item per catalog record, as in `UC-DAT-browse-database`.
 
 **Open Issues:**
 
+- `OI-4`: Which fields the catalog holds, the allowed composition values, and how precise the find dates are.
+- `OI-13`: The response-time threshold for `PER-filter-response`.
+- `OI-44`: Where "on display" comes from and who keeps it current (shared with `UC-DAT-view-on-display-items`).
 
 ### UC-DAT-display-meteorite: Display Information Regarding a Single Meteorite
 
