@@ -564,7 +564,7 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 - `UC-DAT-search-database` _(in review)_: Search, within this list (5a).
 - `UC-DAT-filter-database`: Filter, within this list (5b).
 - `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 6.
-- `UC-ADM-update-content` _(in review)_: Where an administrator marks a meteorite on or off display.
+- `UC-ADM-update-content` _(not yet written; another pair)_: Where an administrator marks a meteorite on or off display.
 - `UC-TOUR-view-gallery-map` _(in review)_, `UC-TOUR-browse-gallery-section` _(in review)_: Find meteorites by where they are in the gallery.
 
 **Assumptions:**
