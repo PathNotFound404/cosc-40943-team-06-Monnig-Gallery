@@ -57,6 +57,7 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 | OI-16 | Is the app meant for children to use on their own devices? Should it collect any visitor data at all? | Children's-privacy law and App Store / Google Play rules for kids apps apply if it collects data from children (`DI-no-personal-data`, `FR-CONTENT-no-visitor-account`). | Heather; team to research | 2026-11-07 |
 | OI-17 | What is the app's name, and who publishes it: does "no TCU affiliation" cover the name, the publisher account, and the store listing, or only branding? | Drives `CO-monnig-branding` and store setup (`BR-no-tcu-affiliation`). | Heather, TCU Marketing | 2026-10-30 |
 | OI-19 | Will the chosen accessibility standard (`OI-3`) require more setup questions, such as font style, high contrast, or turning text-to-speech on? | Could add steps to `UC-PREF-first-launch-survey`. | Heather, Dr. Mayne | 2026-11-11 |
+| OI-44 | Where does "on display" come from: a field in the catalog, or the gallery's separate list of items on display (interview §10)? Who keeps it current when a display changes, such as the Texas map? | `UC-DAT-view-on-display-items` and the on-display filter in `UC-DAT-filter-database` depend on it; drives `onDisplay` in SRS §7.2. | Dr. Mayne, Asa | 2026-11-15 |
 
 
 

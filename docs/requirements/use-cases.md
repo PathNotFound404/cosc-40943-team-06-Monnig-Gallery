@@ -104,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-view-on-display-items`: View Meteorites on Display |
 
 ---
 
@@ -464,6 +464,119 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+### UC-DAT-view-on-display-items: View Meteorites on Display
+
+**UC ID and Name:** `UC-DAT-view-on-display-items`: View Meteorites on Display
+
+**Created By:** Koen Dolezar
+
+**Date Created:** November 15, 2026
+
+**Primary Actor:** Visitor, usually in the gallery
+
+**Secondary Actors:** The Monnig catalog, or the data source that replaces it (`SI-monnig-catalog`, `OI-4`)
+
+**Trigger:** The visitor selects On Display on the Home screen.
+
+**Description:** Most of the roughly 3,000 meteorites in the collection are not on view. A visitor standing in the gallery usually wants only the ones they can see. This use case opens a list of only the meteorites currently on display, sorted A to Z by name, where the visitor can search and filter as in the full database and open any meteorite. It is a shortcut to the full list with "On display only" fixed on, so it shares its behavior with `UC-DAT-browse-database`. Finding a meteorite by room or display case belongs to the Tour use cases.
+
+**Preconditions:**
+
+- PRE-1. The setup survey has been completed or skipped on this device, so the Home screen is reachable.
+
+**Postconditions:**
+
+- POST-1. The list shows only meteorites whose `onDisplay` is `true`, sorted A to Z by name.
+- POST-2. If the visitor selected a meteorite, View meteorite has opened with that meteorite's `monnigNumber`.
+- POST-3. Nothing in the catalog has changed (`FR-CONTENT-visitor-read-only`, `DI-catalog-source-of-truth`).
+
+**Main Success Scenario:**
+
+1. The visitor selects On Display on the Home screen.
+2. The system opens the On Display screen, titled so the visitor knows it lists only meteorites on display, shows that the list is loading, and requests from the catalog the first batch of meteorites on display, sorted A to Z by name.
+3. The catalog returns the batch.
+4. The system shows the list and the total number of meteorites on display. Each item shows the meteorite's name and its first image, or a placeholder image if it has none.
+5. The visitor scrolls, and the system loads more batches as needed, as in `UC-DAT-browse-database` steps 5 and 6.
+6. The visitor selects a meteorite.
+7. The system opens the selected meteorite in View meteorite.
+8. Use case ends.
+
+**Extensions:**
+
+- **2a. The device has no network connection, and the app has loaded catalog data before (`ROB-offline`).**
+    - 2a1. The system shows the meteorites on display that it already has, with a notice that the list may be incomplete while offline.
+    - 2a2. Flow continues at step 4.
+- **3a. The catalog cannot be reached, returns an error, or returns only part of the first batch.**
+    - 3a1. The system shows a message saying the meteorites could not be loaded, with a way to try again (`FR-DATA-load-failure`). The rest of the app stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2. Otherwise the visitor leaves, and use case ends.
+- **3b. The catalog reports no meteorites on display.**
+    - 3b1. The system shows a message saying no meteorites are listed as on display, with a link to the full Meteorite Database (`UC-DAT-browse-database`), instead of an empty list.
+    - 3b2. Use case ends.
+- **3c. A returned record is missing a field the list shows, or is malformed.**
+    - 3c1. As `UC-DAT-browse-database` 3c.
+- **4a. A meteorite's image fails to load, or is still loading.**
+    - 4a1. The system shows the placeholder image in its place. The item can still be selected.
+- **5a. The visitor searches the list.**
+    - 5a1. `UC-DAT-search-database` handles it, searching only meteorites on display.
+    - 5a2. Flow rejoins at step 6.
+- **5b. The visitor filters the list.**
+    - 5b1. `UC-DAT-filter-database` handles it. The panel shows "On display only" switched on and locked, because this screen lists nothing else.
+    - 5b2. Flow rejoins at step 6.
+- **5c. The next batch cannot be loaded.**
+    - 5c1. As `UC-DAT-browse-database` 6a.
+- **7a. The visitor comes back from View meteorite.**
+    - 7a1. The system shows the list at the same place, without loading it again.
+    - 7a2. Flow rejoins at step 5.
+- **7b. The meteorite was taken off display after the list loaded.**
+    - 7b1. View meteorite still opens it; the list is not changed until it is next loaded.
+- **\*a. The visitor leaves the screen for Home.**
+    - \*a1. Use case ends. The next time the visitor opens On Display, the list starts again at the top with no search or filters.
+
+**Priority:** Medium
+
+**Frequency of Use:** Once or more in most in-gallery visits; less often for remote visitors (`OE-remote-use`). Proposed by one team member (minutes 2026-11-09). Each open requests one batch, plus one for each batch scrolled into. In the gallery, up to about 30 visitors in one group may do this at the same time (`SCA-group-concurrency`).
+
+**Business Rules:** `BR-only-admin-can-edit-database`, `BR-permanent-exhibit`, `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields (read from the catalog; visitors cannot change them). Definitions are in the SRS §7.2 data dictionary:_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `onDisplay` | boolean | Required, default `false` (SRS §7.2). Only `true` records are listed. Not shown on each item, since every item is on display. | Read-only to visitors; set only by an administrator (`UC-ADM-update-content`) | Display |
+| `monnigNumber` | text | Required and unique. Not shown. Identifies the meteorite handed to View meteorite and breaks ties in the sort. | Read-only to visitors | Monnig # |
+| `meteoriteName` | text | Required. Shown, and is the sort key. If missing, "[NOT INDICATED]" (`FR-DATA-missing-field`). | Read-only to visitors | Meteorite Name |
+| `images` | list of Image | Optional. Only the first image is shown, or a placeholder. | Read-only to visitors; image rights are open (`OI-15`) | — |
+
+- **Same list, one fixed filter.** Sorting, batching, missing-data handling, and accessibility are those of `UC-DAT-browse-database`. This use case adds only the fixed `onDisplay = true` condition, the title, and the total count.
+- **Why its own entry on Home.** Visitors in the gallery mostly look for what is in front of them, and the full list of about 3,000 is mostly items not on view (`SCA-full-collection`). The author chose a Home entry over relying on the filter alone; the reviewer may prefer to drop this screen and use the filter instead.
+- **Freshness.** What is on display changes rarely (`BR-permanent-exhibit`), but the Texas map changes with each new find. The list is only as current as the `onDisplay` values (`OI-44`, `MNT-content-update`).
+- **Not by room.** Grouping by room or display case is left to the Tour use cases (`UC-TOUR-view-gallery-map`, `UC-TOUR-browse-gallery-section`), which need location data this use case does not.
+- **Accessibility.** The screen title and the total count are read by the screen reader when the list loads (`USE-screen-reader`).
+- **Data source.** If the app keeps its own copy of the catalog (`OI-4`), steps 2 and 3 read from that copy.
+- **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
+
+**Related Use Cases:**
+
+- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. This screen is the same list with "On display only" fixed on.
+- `UC-DAT-search-database` _(in review)_: Search, within this list (5a).
+- `UC-DAT-filter-database`: Filter, within this list (5b).
+- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 6.
+- `UC-ADM-update-content` _(in review)_: Where an administrator marks a meteorite on or off display.
+- `UC-TOUR-view-gallery-map` _(in review)_, `UC-TOUR-browse-gallery-section` _(in review)_: Find meteorites by where they are in the gallery.
+
+**Assumptions:**
+
+- The catalog, or the app's own copy of it, records for each meteorite whether it is on display (`onDisplay`, SRS §7.2). If it does not, this use case cannot be built until `OI-44` is settled.
+- One list item per catalog record. If two samples of the same meteorite are on display, its name appears twice (`OI-4`).
+
+**Open Issues:**
+
+- `OI-44`: Where does "on display" come from: a field in the catalog, or the gallery's separate list of items on display (interview §10)? Who keeps it current when a display changes?
+- `OI-4`: Where the meteorite data comes from.
+- `OI-13`: The load-time threshold for `PER-database-list`, which applies to this list as well.
 
 ---
 
