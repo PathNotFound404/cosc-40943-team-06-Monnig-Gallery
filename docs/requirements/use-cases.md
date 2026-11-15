@@ -102,7 +102,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 
 | Area code | Feature area | Use cases |
 |---|---|---|
-| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Change Settings |
+| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
@@ -167,9 +167,9 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Open Issues:**
 
 
-### UC-PREF-customize-visual-preferences: Change Settings
+### UC-PREF-customize-visual-preferences: Customize Visual Preferences
 
-**UC ID and Name:** `UC-PREF-customize-visual-preferences`: Change Settings
+**UC ID and Name:** `UC-PREF-customize-visual-preferences`: Customize Visual Preferences
 
 **Created By:** Koen Dolezar (rewrite of Bradley Helmholz's November 3, 2026 draft)
 
@@ -181,7 +181,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Trigger:** The visitor selects Settings on the Home screen.
 
-**Description:** After setup, the visitor changes their display preferences one at a time in Settings: language, text size, and light or dark mode. Each change applies to every screen as soon as it is selected and is saved on the device, so there is no separate confirm step. The Settings screen also holds the controls that belong to other use cases: voice speed, captions, retaking the setup survey, and resetting preferences. This use case keeps its original identifier, but its content replaces the earlier "Customize Visual Preferences" draft to match later team decisions: Settings is a screen reached from Home, not a popup on every screen (minutes 2026-11-06, 2026-11-09); font style is not offered (minutes 2026-11-09); and text size has three choices.
+**Description:** After setup, the visitor changes their display preferences one at a time in Settings: language, text size, and light or dark mode. Each change applies to every screen as soon as it is selected and is saved on the device, so there is no separate confirm step. The Settings screen also holds the controls that belong to other use cases: voice speed, captions, retaking the setup survey, and resetting preferences. This use case keeps its original identifier and name, but its content replaces the earlier draft to match later team decisions: Settings is a screen reached from Home, not a popup on every screen (minutes 2026-11-06, 2026-11-09); font style is not offered (minutes 2026-11-09); and text size has three choices.
 
 **Preconditions:**
 
