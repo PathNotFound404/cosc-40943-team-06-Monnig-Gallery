@@ -567,7 +567,7 @@ _Data fields:_
 
 **Related Use Cases:**
 
-- `UC-ADM-update-content` _(in review)_: Update Meteorite Content. Starts from the content list this use case ends on, and requires a session.
+- `UC-ADM-update-content` _(not yet written; another pair)_: Update Meteorite Content. Starts from the content list this use case ends on, and requires a session.
 
 **Assumptions:**
 
