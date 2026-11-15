@@ -102,7 +102,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 
 | Area code | Feature area | Use cases |
 |---|---|---|
-| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
+| PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Change Settings |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
 | DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
 
@@ -167,74 +167,120 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Open Issues:**
 
 
-### UC-PREF-customize-visual-preferences ###
+### UC-PREF-customize-visual-preferences: Change Settings
 
-**UC ID and Name:** `UC-PREF-customize-visual-preferences`: Customize Visual Preferences
+**UC ID and Name:** `UC-PREF-customize-visual-preferences`: Change Settings
 
-**Created By:** Bradley Helmholz
+**Created By:** Koen Dolezar (rewrite of Bradley Helmholz's November 3, 2026 draft)
 
-**Date Created:** November 3, 2026
+**Date Created:** November 15, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor (including child visitors with an adult's help)
 
-**Secondary Actors:** Museum Volunteers, Museum Staff
+**Secondary Actors:** Gallery staff (on a gallery tablet, if the gallery provides tablets, `OI-7`)
 
-**Trigger:** User selects a UI element on the screen to edit their visual preferences
+**Trigger:** The visitor selects Settings on the Home screen.
 
-**Description:** The user presses a UI element on the app screen, which directs them to a page to set their visual preferences for the application, including previews for their selections
+**Description:** After setup, the visitor changes their display preferences one at a time in Settings: language, text size, and light or dark mode. Each change applies to every screen as soon as it is selected and is saved on the device, so there is no separate confirm step. The Settings screen also holds the controls that belong to other use cases: voice speed, captions, retaking the setup survey, and resetting preferences. This use case keeps its original identifier, but its content replaces the earlier "Customize Visual Preferences" draft to match later team decisions: Settings is a screen reached from Home, not a popup on every screen (minutes 2026-11-06, 2026-11-09); font style is not offered (minutes 2026-11-09); and text size has three choices.
 
-1. Font Size
-2. Font Style
-3. Change Language (with language name and country flag)
-4. Dark mode vs Light mode
+**Preconditions:**
 
-
-**Preconditions:** 
-
-- PRE-1. The user has already opened the application and passed the home screen.
+- PRE-1. The setup survey has been completed or skipped on this device (`UC-PREF-first-launch-survey` POST-2), so the Home screen is reachable.
+- PRE-2. The visitor is on the Home screen.
 
 **Postconditions:**
 
-- POST-1. The user's visual preference changes are previewed to them before they confirm changes.
-- POST-2. The user's visual preferences are stored and persists for the remainder of the current instance of the application running.
+- POST-1. The language, text size, and color mode saved on the device are the values last selected in Settings.
+- POST-2. Every screen, including screens opened afterward, shows the saved preferences, without restarting the app (`FR-PREF-apply-everywhere`).
+- POST-3. On later launches the app restores these preferences (`FR-PREF-persist`, `DI-preferences-on-device`).
+- POST-4. No personal information was collected (`DI-no-personal-data`), and no content changed (`FR-CONTENT-visitor-read-only`).
 
 **Main Success Scenario:**
 
-1. The user interacts with a UI element to change their current visual preferences.
-2. The system responds by opening a popup page centered on the screen listing the visual preference options, all of which can be selected and changed in any order.
-3. The system requests the user to select their preferred font style, from a choice of four.
-4. The system requests the user to select their prefrerred font size, from a choice of four.
-5. The system requests the user to select their preferred language, with both language name and appropriate country flag presented to the user
-6. The system presents a toggle between light mode and dark mode, which applies to the entire application
-7. The user can select from any available options the system presents to the user for visual preferences.
-8. All selections the user makes before confirming their choices are shown immediately througout the application
-9. The user confirms their selections.
-10. The system applies the selected changes from all preferences across the application to the current instance.
-11. Use case ends.
+1. The visitor selects Settings on the Home screen.
+2. The system opens the Settings screen, with each control showing the current saved value:
+    - Language: English or Spanish, each named in its own language.
+    - Text size: Small, Medium, or Large.
+    - Color mode: Light or Dark.
+    - Voice speed (`UC-TTS-voice-speed`), Captions (`UC-PREF-toggle-captions`), Retake setup survey (`UC-PREF-retake-setup-survey`), and Reset preferences (`UC-PREF-reset-preferences`).
+3. The visitor selects a new value for one preference.
+4. The system applies the new value at once to the Settings screen and to every other screen, and saves it on the device.
+5. The visitor repeats steps 3 and 4 for any other preference, in any order.
+6. The visitor selects Home.
+7. The system shows the Home screen with the saved preferences applied.
+8. Use case ends.
 
 **Extensions:**
 
-- **7a. The user does not make any selections.**
-    - 7a1. No changes are made to the applications UI.
-    - 7a2. Use case ends.
-- **9a. The user does not confirm their selections**
-    - 9a1. No selected changes take hold in the current application's session.
-    - 9a2. The UI returns to its settings prior to the user interacting with the visual preferences setting.
-    - 9a3. Use case ends.
+- **2a. The saved preferences cannot be read (missing or corrupt).**
+    - 2a1. The system shows the default for each preference that cannot be read (English, Medium, Light) and applies those defaults.
+    - 2a2. Flow continues at step 3. The defaults are saved only for a preference the visitor then changes.
+- **3a. The visitor selects the value that is already selected.**
+    - 3a1. Nothing changes and nothing is saved.
+    - 3a2. Flow rejoins at step 3.
+- **3b. The visitor selects a different language.**
+    - 3b1. The system switches all interface text, including the Settings screen itself, to the new language (`FR-LANG-interface-text`). Keyboard and screen-reader focus stay on the language control, so a screen-reader user is not sent back to the top of the screen.
+    - 3b2. Meteorite content with no translation in the new language shows in English, marked as not translated (`FR-LANG-content-fallback`).
+    - 3b3. Text-to-speech uses the new language the next time anything is read (`UC-TTS-play-in-selected-language`).
+    - 3b4. Flow continues at step 4.
+- **3c. The visitor selects a voice speed, captions, Retake setup survey, or Reset preferences.**
+    - 3c1. The matching use case handles it (`UC-TTS-voice-speed`, `UC-PREF-toggle-captions`, `UC-PREF-retake-setup-survey`, `UC-PREF-reset-preferences`).
+    - 3c2. If that use case returns the visitor to Settings, flow rejoins at step 3.
+- **4a. Saving the preference fails (for example, the device storage is full).**
+    - 4a1. The system keeps the new value applied for as long as the app stays open.
+    - 4a2. The system shows a non-blocking message, in the selected language, saying the change could not be saved and will be lost when the app closes.
+    - 4a3. The value saved on the device stays as it was.
+    - 4a4. Flow rejoins at step 3.
+- **6a. The visitor leaves Settings without changing anything.**
+    - 6a1. Nothing is saved, and the app looks as it did before.
+    - 6a2. Flow continues at step 7.
+- **6b. The visitor uses the device's Back action instead of Home.**
+    - 6b1. Flow continues at step 7. Every change made in steps 3 to 5 is already saved, so leaving by any route keeps it.
+- **\*a. The app is closed or killed by the operating system while Settings is open.**
+    - \*a1. Every change already selected was saved at step 4 (except under 4a). On the next launch the app restores the saved preferences and opens at Home.
+- **\*b. Text-to-speech was reading on the screen the visitor left to reach Home and Settings.**
+    - \*b1. Reading has already stopped, because leaving a screen stops it (`FR-TTS-stop-on-leave`). It does not restart when the visitor returns.
+- **\*c. The device has no network connection.**
+    - \*c1. No change. Settings needs no network (`ROB-offline`).
 
-**Priority:** Medium
+**Priority:** High
 
-**Frequency of Use:** User can access settings to change visual preferences at any point in the application. The UI element is never hidden or hard to find.
+**Frequency of Use:** Occasional. Most visitors set their preferences once in the first-launch survey; a visitor opens Settings only to change one, perhaps once or twice per visit. Proposed by two team members (minutes 2026-11-09). Every change stays on the device, so it adds no load to any server.
 
-**Business Rules:**
+**Business Rules:** `BR-accessibility-standard`, `BR-monnig-branding`
 
 **Associated Information:**
 
-**Related Use Cases:** `UC-PREF-identify-language-preference`
+_Data fields:_ this use case writes the same stored fields as `UC-PREF-first-launch-survey` (`language`, `textSize`, `colorMode`), under the same validation rules and defaults; they are defined there and not repeated here. It does not write `setupSurveyCompleted`. Voice speed and captions are stored by their own use cases.
 
-**Assumptions:** The UI element to open the visual preferences popup is always visible on the application.
+- **No confirm step.** Each change applies and saves as soon as it is selected (step 4). This matches voice speed (`UC-TTS-voice-speed`), so every control on the Settings screen behaves the same way. The visitor undoes a change by selecting the old value again. This is the author's decision; the earlier draft's confirm step (its POST-1 and step 9) is dropped.
+- **One save per change.** Each preference is saved on its own. A failure saving one never changes another (4a).
+- **Live preview.** The Settings screen is itself the preview: it redraws in the new language, text size, or color mode as soon as each is selected.
+- **Reaching Settings.** Settings is reached from the Home screen, and Home is reachable from every screen (decision, minutes 2026-11-09). `FR-PREF-settings-reachable` in the SRS still says "one tap from every main screen" and is due to be reworded to match.
+- **Layout.** No text on the Settings screen is cut off or overlaps, at every text size in both languages (`USE-text-scaling`). Each control has a screen-reader label that includes its current value, such as "Text size, Medium" (`USE-screen-reader`). The screen follows `CO-monnig-branding`.
+- **Out of scope.** Font style is not offered unless an accessibility standard requires it (minutes 2026-11-09, `OI-19`). The first-launch language screen is not shown again; Retake setup survey does that.
+- **Systemic failure.** Settings only touches the device, so a network or server failure cannot affect it.
+
+**Related Use Cases:**
+
+- `UC-PREF-first-launch-survey` _(in review)_: Sets the same three preferences the first time the app opens.
+- `UC-PREF-retake-setup-survey` _(in review)_: Runs the setup survey again from this screen.
+- `UC-PREF-reset-preferences` _(in review)_: Returns every preference to its default from this screen.
+- `UC-PREF-toggle-captions` _(in review)_: Turns captions on or off from this screen.
+- `UC-TTS-voice-speed` _(in review)_: Sets the voice speed from this screen.
+- `UC-TTS-play-in-selected-language` _(in review)_: Uses the language chosen here for reading aloud.
+
+**Assumptions:**
+
+- Preferences belong to the device, not to a person (SRS §7.1, `VisitorPreferences`).
+- The defaults are those of `UC-PREF-first-launch-survey` (English, Medium, Light). If `OI-40` settles different defaults, 2a uses them.
+- An adult helps a child visitor who cannot read the Settings screen yet.
 
 **Open Issues:**
+
+- `OI-8`: The SRS and the use cases disagree on whether preferences persist. This use case follows the 2026-11-02 decision that they persist (`FR-PREF-persist`).
+- `OI-19`: Whether the accessibility standard requires more settings, such as font style or high contrast.
+- `OI-40`: The defaults a preference falls back to when it cannot be read (2a).
 
 ## TTS: Text-to-speech
 
