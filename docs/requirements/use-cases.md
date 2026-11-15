@@ -483,8 +483,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Preconditions:**
 
-- PRE-1. The setup survey has been completed or skipped on this device, so the app's main screens are reachable.
-- PRE-2. The meteorite view is showing a meteorite's details (`UC-DAT-view-meteorite` step 4), so the Save favorite control is on screen.
+- PRE-1. The meteorite view is showing a meteorite's details (`UC-DAT-view-meteorite` step 4), so the Save favorite control is on screen.
 
 **Postconditions:**
 
@@ -498,7 +497,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 1. The visitor selects Save favorite in the meteorite view.
 2. The system checks the device's favorites list and finds that this meteorite's `monnigNumber` is not in it.
 3. The system adds the `monnigNumber` to the favorites list and saves the list on the device.
-4. The system changes the control to its saved state and briefly confirms, in the selected language, that the meteorite was saved to favorites.
+4. The system changes the control to a filled star. No text is shown on screen. The screen reader announces that the meteorite was saved to favorites.
 5. The visitor stays in the meteorite view, at the same place. Flow returns to `UC-DAT-view-meteorite` step 5.
 6. Use case ends.
 
@@ -506,10 +505,10 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 - **2a. The meteorite is already in the favorites list.**
     - 2a1. The system removes the `monnigNumber` from the favorites list and saves the list on the device.
-    - 2a2. The system changes the control to its not-saved state and briefly confirms, in the selected language, that the meteorite was removed from favorites.
+    - 2a2. The system changes the control to an outlined (unfilled) star. No text is shown on screen. The screen reader announces that the meteorite was removed from favorites.
     - 2a3. Flow continues at step 5.
 - **\*a. The favorites list cannot be read or saved (for example, the device storage is full).**
-    - \*a1. The system shows a message, in the selected language, saying the favorite could not be saved or removed.
+    - \*a1. The system shows a message, in the selected language, saying the favorite could not be saved or removed. The message does not cover the star.
     - \*a2. The favorites list on the device stays as it was, and the control keeps its previous state.
     - \*a3. Flow continues at step 5.
 - **\*b. The device has no network connection.**
@@ -530,7 +529,7 @@ _Data fields (stored on the device only; no account, no server):_
 | `favorites` | list of `monnigNumber` | Starts empty. Each `monnigNumber` appears at most once. No limit on the number of favorites (author's decision, 2026-11-13). Only the `monnigNumber` is stored; anything View favorites shows about a meteorite comes from the catalog (author's decision, 2026-11-13). | Device-local. Never sent off the device (`DI-no-personal-data`). | Monnig # |
 
 - **Persistence.** Favorites are kept across app launches. A reset of preferences (`UC-PREF-reset-preferences`) does **not** clear them. Uninstalling the app, or a new-visitor reset on a gallery-owned device (`FR-PREF-reset-for-new-visitor`, `OI-7`), does clear them (author's decision, 2026-11-13). `FR-PREF-reset-for-new-visitor` and `DI-preferences-on-device` mention only preferences, so the SRS needs to add favorites to them.
-- **Accessibility.** The control shows its state without relying on color alone and has a screen-reader label in the selected language (`USE-accessibility-standard`, `USE-screen-reader`, `FR-LANG-interface-text`). Its look and placement are left to the design.
+- **Control.** The Save favorite control is a star icon with no visible text on or around it: filled when the meteorite is a favorite, outlined when it is not (author's decision, 2026-11-15). The filled-versus-outlined shape shows the state without relying on color alone (`USE-accessibility-standard`). The star has a screen-reader label that is never shown on screen, "Save favorite" or "Remove favorite" in the selected language (`USE-screen-reader`, `FR-LANG-interface-text`). Its placement is left to the design.
 
 **Related Use Cases:**
 
