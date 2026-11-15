@@ -104,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite |
+| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-search-database`: Search the Meteorite Database |
 
 ---
 
@@ -306,6 +306,127 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Open Issues:**
 
+
+### UC-DAT-search-database: Search the Meteorite Database
+
+**UC ID and Name:** `UC-DAT-search-database`: Search the Meteorite Database
+
+**Created By:** Koen Dolezar
+
+**Date Created:** November 15, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The Monnig catalog, or the data source that replaces it (`SI-monnig-catalog`, `OI-4`)
+
+**Trigger:** The visitor selects the search box at the top of the Meteorite Database screen.
+
+**Description:** The visitor types part of a meteorite's name to find it in the full collection of about 3,000 meteorites, on display or not (`SCA-full-collection`). Results update as the visitor types, and selecting one opens it in View meteorite. Search works together with any active filters (`UC-DAT-filter-database`): the list shows only meteorites that match both. Clearing the search returns the visitor to the full list.
+
+**Preconditions:**
+
+- PRE-1. The visitor is on the Meteorite Database screen (`UC-DAT-browse-database`) or the On Display screen (`UC-DAT-view-on-display-items`).
+
+**Postconditions:**
+
+- POST-1. The list shows the meteorites whose names match the search text and the active filters, or a no-results message.
+- POST-2. If the visitor selected a meteorite, View meteorite has opened with that meteorite's `monnigNumber`.
+- POST-3. Nothing in the catalog has changed (`FR-CONTENT-visitor-read-only`, `DI-catalog-source-of-truth`).
+
+**Main Success Scenario:**
+
+1. The visitor selects the search box.
+2. The system shows the keyboard and keeps the current list on screen.
+3. The visitor types part of a meteorite's name.
+4. When the visitor pauses typing, the system requests from the catalog the meteorites whose names match the text and the active filters, and shows that results are loading.
+5. The catalog returns the matches.
+6. The system replaces the list with the matches, sorted as described under Associated Information, and shows how many were found. Each item shows the meteorite's name and its first image, as in the Meteorite Database list.
+7. The visitor selects a meteorite.
+8. The system opens the selected meteorite in View meteorite.
+9. Use case ends.
+
+**Extensions:**
+
+- **3a. The visitor keeps typing or deletes characters.**
+    - 3a1. The system cancels any request still waiting for the older text, so results for old text never replace newer ones.
+    - 3a2. Flow rejoins at step 4.
+- **3b. The visitor clears the search box, or selects the clear control.**
+    - 3b1. The system shows the list as it was before the search, with any active filters still applied.
+    - 3b2. Use case ends.
+- **3c. The search text is only spaces.**
+    - 3c1. The system treats it as empty, as in 3b.
+- **3d. The visitor types more than 100 characters.**
+    - 3d1. The system accepts no more characters.
+    - 3d2. Flow continues at step 4.
+- **4a. The device has no network connection, and the app has catalog data loaded already (`ROB-offline`).**
+    - 4a1. The system searches only the meteorites it already has and shows a notice that results may be incomplete while offline.
+    - 4a2. Flow continues at step 6.
+- **5a. The catalog cannot be reached, returns an error, or returns only part of the results.**
+    - 5a1. The system shows a message saying the search could not be completed, with a way to try again (`FR-DATA-load-failure`). The search text stays in the box.
+    - 5a2. If the visitor tries again, flow rejoins at step 4.
+    - 5a3. Otherwise, the visitor can change the text (3a) or clear it (3b).
+- **5b. No meteorite matches.**
+    - 5b1. The system shows a message, in the selected language, saying no meteorites match the search. If filters are active, the message says so and offers to clear them (`FR-DATA-no-results`).
+    - 5b2. The visitor changes the text (3a), clears it (3b), or clears the filters, after which flow rejoins at step 4.
+- **5c. A matching record has no name or cannot be read.**
+    - 5c1. As `UC-DAT-browse-database` 3c: a record with no name cannot match a name search; a record that cannot be read is left out, and the app does not crash (`ROB-no-crash-on-bad-data`).
+- **6a. There are more matches than fit in one batch.**
+    - 6a1. The system loads them in batches as the visitor scrolls, as `UC-DAT-browse-database` steps 5 and 6 describe.
+    - 6a2. Flow continues at step 7.
+- **6b. A result's image fails to load, or is still loading.**
+    - 6b1. The system shows the placeholder image in its place. The item can still be selected.
+- **6c. The visitor opens or changes filters while a search is active.**
+    - 6c1. `UC-DAT-filter-database` handles it, keeping the search text. Flow rejoins at step 4 with the new filters.
+- **8a. The visitor comes back from View meteorite.**
+    - 8a1. The system shows the same search text and results, at the same place in the list, without searching again.
+    - 8a2. Flow rejoins at step 7.
+- **\*a. The visitor leaves the screen for Home.**
+    - \*a1. The search text is cleared. The next time the visitor opens the list, it starts without a search.
+    - \*a2. Use case ends.
+
+**Priority:** High
+
+**Frequency of Use:** Several times per visit for most visitors who use the collection, in the gallery or remotely (`OE-remote-use`). Proposed by two team members (minutes 2026-11-09). Each pause in typing sends at most one request. In the gallery, up to about 30 visitors in one group may search at the same time (`SCA-group-concurrency`).
+
+**Business Rules:** `BR-only-admin-can-edit-database`, `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields:_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `searchText` | text | Optional. Up to 100 characters. Leading and trailing spaces are ignored. Not stored after the visitor leaves the screen. | Never sent anywhere except the catalog request; not logged | — |
+| `meteoriteName` | text | Read from the catalog (SRS §7.2). The only field matched. | Read-only to visitors | Meteorite Name |
+| `monnigNumber` | text | Read from the catalog. Not matched or shown; identifies the meteorite handed to View meteorite. | Read-only to visitors | Monnig # |
+
+- **What matches.** A meteorite matches if its name contains the search text anywhere, ignoring upper and lower case, accents, spaces, and hyphens. "sikhote alin" matches "Sikhote-Alin", and "gibeon" matches "Gibeon". Only the name is searched in release 1.0 (author's decision); searching by Monnig # depends on `OI-43`.
+- **Sort order.** Names that start with the search text come first, then names that contain it elsewhere. Within each group, A to Z by name, then by `monnigNumber`, as in `UC-DAT-browse-database`.
+- **When it searches.** After the visitor stops typing for a short pause (the length is left to the design) or presses the keyboard's search key. The first character starts a search; there is no minimum length.
+- **Names are not translated** (SRS §10), so the same text finds the same meteorites in English and Spanish.
+- **Accessibility.** The search box has a screen-reader label, and the result count is announced when results change (`USE-screen-reader`). The box and results stay readable at every text size (`USE-text-scaling`).
+- **Performance.** Results must appear within `PER-filter-response` (threshold TBD, `OI-13`), which applies to search as well as filters.
+- **Data source.** If the app keeps its own copy of the catalog (`OI-4`), search runs on that copy, and 5a happens only when the copy cannot be read.
+- **Privacy.** The search text is not saved or used for anything else (`DI-no-personal-data`).
+- **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
+
+**Related Use Cases:**
+
+- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. The search box is on its screen.
+- `UC-DAT-filter-database`: Filter the Meteorite Database. Search and filters combine.
+- `UC-DAT-view-on-display-items` _(in review)_: View on-display items. The same search box searches only items on display there.
+- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 7.
+
+**Assumptions:**
+
+- Visitors know, or can read off a display label, at least part of a meteorite's name.
+- One list item per catalog record, as in `UC-DAT-browse-database`.
+
+**Open Issues:**
+
+- `OI-43`: Do the gallery's display labels show the Monnig # or another number a visitor could type to find a meteorite? If so, search should match it as well as the name.
+- `OI-4`: Where the meteorite data comes from, which decides whether search runs on the catalog or on the app's own copy.
+- `OI-13`: The response-time threshold for `PER-filter-response`.
 
 ### UC-DAT-filter-database: Organize Meteorite Catalog Based on Filters
 
