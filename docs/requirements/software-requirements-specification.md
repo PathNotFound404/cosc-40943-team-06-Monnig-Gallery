@@ -219,7 +219,7 @@ _**Every requirement here needs an oracle.** If you cannot say how a tester woul
 
 #### Text-to-speech
 
-- `FR-TTS-read-description`: Where text-to-speech is included, when a visitor asks for a meteorite's, gallery section's, or exhibit's description to be read aloud, the app shall read its name and description in the selected language, shall not read text that has no translation in the selected language, and shall let the visitor pause it at any time (`UC-TTS-control-playback`). Specified by `UC-TTS-listen-to-content`. What else must be readable depends on the accessibility standard chosen (`OI-3`).
+- `FR-TTS-read-description`: Where text-to-speech is included, when a visitor asks for a meteorite's, gallery section's, or exhibit's description to be read aloud, the app shall read the description in the selected language, shall not read text that has no translation in the selected language, and shall let the visitor pause it at any time (`UC-TTS-control-playback`). Specified by `UC-TTS-listen-to-content`. What else must be readable depends on the accessibility standard chosen (`OI-3`).
 - `FR-TTS-stop-on-leave`: When the visitor leaves the screen that is reading aloud, the app shall stop reading.
 
 #### Visit planning

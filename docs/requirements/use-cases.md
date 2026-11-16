@@ -246,13 +246,13 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Date Created:** November 12, 2026
 
-**Primary Actor:** Visitor
+**Primary Actor:** Visitor or Remote Visitor
 
 **Secondary Actors:** The device's text-to-speech engine, or a paid speech service (`SI-device-speech`, `DE-device-tts`)
 
 **Trigger:** On a screen that shows a meteorite, a gallery section, or an exhibit, the visitor selects Listen.
 
-**Description:** A visitor who cannot or would rather not read the screen has the app read the content aloud. The app reads the item's description, in the selected language, from start to finish. Reading the item's name aloud is its own use case. Once reading starts, the visitor can pause, resume, replay, or skip by paragraph (`UC-TTS-control-playback`). There is no separate Stop control: Pause silences reading, and leaving the screen ends it (`FR-TTS-stop-on-leave`). Changing the reading speed and the voice language belong to other use cases.
+**Description:** A visitor who cannot or would rather not read the screen has the app read the content aloud. The app reads the item's description, in the selected language, from start to finish. Once reading starts, the visitor can pause, resume, replay, or skip by paragraph (`UC-TTS-control-playback`). There is no separate Stop control: Pause silences reading, and leaving the screen ends it (`FR-TTS-stop-on-leave`). Changing the reading speed belongs to `UC-TTS-voice-speed`. The voice always uses the language selected in preferences.
 
 **Preconditions:**
 
@@ -341,20 +341,18 @@ _Content read (read-only to visitors, from the screen's own use case):_
 **Related Use Cases:**
 
 - `UC-TTS-control-playback`: Control Text-to-Speech Playback. Pause, Resume, Replay, and Skip for the reading this use case starts (6a, 7a, \*b).
-- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. One of the screens Listen appears on.
+- `UC-DAT-view-meteorite`: View a Meteorite. One of the screens Listen appears on.
 - `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. The gallery section screen, one of the screens Listen appears on.
-- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. The exhibit screen, one of the screens Listen appears on.
-- `UC-TTS-voice-speed` _(not yet written)_: Changes the reading speed.
-- `UC-TTS-play-in-selected-language` _(not yet written)_: Chooses the language of the voice.
+- `UC-TOUR-view-exhibit`: View an Exhibit. The exhibit screen, one of the screens Listen appears on.
+- `UC-TTS-voice-speed`: Change Voice Speed. Sets the speed this use case reads at.
 
 **Assumptions:**
 
 - This use case replaces the empty legacy entry `UC-TTS-read-display-contents`, which has been removed from the Use Case List.
-- Only the item's description is read. Reading the item's name aloud is its own use case, not yet written. Other fields on a meteorite detail screen (type, location found, date found) are not read; visitors who need them use the device's screen reader.
+- Only the item's description is read (minutes 2026-11-09: "Reads exhibit and meteorite descriptions aloud"). The name and other fields on a meteorite detail screen (type, location found, date found) are not read; visitors who need them use the device's screen reader.
 - There is no Stop control. Pause meets the requirement that the visitor can stop reading (`FR-TTS-read-description`); Replay starts over; leaving the screen discards the reading position (\*a).
 - After reading finishes, Replay replaces Listen until the visitor leaves the screen, matching `UC-TTS-control-playback` 11a.
 - Other text in the app (Home, Settings, lists, activities) is not read by this use case. What else must be readable depends on the accessibility standard (`OI-3`).
-- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
 
 **Open Issues:**
 
