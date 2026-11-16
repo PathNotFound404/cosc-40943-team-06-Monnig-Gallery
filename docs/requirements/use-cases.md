@@ -104,7 +104,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 |---|---|---|
 | PREF | User preferences | `UC-PREF-identify-language-preference`: Identifies User Language Preference<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage |
 | TTS | Text-to-speech | `UC-TTS-read-display-contents`: Text-To-Speech Reads Contents of Each Display |
-| DAT | Meteorite catalog | `UC-DAT-display-database`: Display Meteorites in Catalog<br>`UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-browse-database`: Browse the Meteorite Database |
+| DAT | Meteorite catalog | `UC-DAT-filter-database`: Organize Meteorite Catalog Based on Specific Filters<br> `UC-DAT-display-meteorite`: Display Information Regarding a Single Meteorite<br>`UC-DAT-browse-database`: Browse the Meteorite Database |
 
 ---
 
@@ -241,71 +241,6 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 
 ## DAT: Meteorite database
-
-### UC-DAT-display-databse: Displays Meteorites in Catalog
-
-**UC ID and Name:** `UC-DAT-display-database`: Displays Meteorites in Catalog
-
-**Created By:** Aparajita Biswas, Bradley Helmholz
-
-**Date Created:** November 03, 2021
-
-**Primary Actor:** Monnig Gallery Visitor
-
-**Secondary Actors:** Museum Volunteers, Museum Staff
-
-**Trigger:** The user selects "Meteorite Database" in the application.
-
-**Description:** The user navigates to the section of the application that displays a list of all of the meteorites present in Monnig's meteorite collection database.
-
-**Preconditions:**
-
-- PRE-1. The user has already opened the application and passed the home screen.
-- PRE-2. The application can query the database with all needed information regarding all available meteorites.
-
-**Postconditions:**
-
-- POST-1. The system displays a list of all meteorites in the Monnig database.
-- POST-2. The user can scroll down the list of meteorites to select them (`UC-DAT-display-meteorite`), or further refine their search (`UC-DAT-filter-database`).
-
-**Main Success Scenario:**
-
-1. The user indicates to view the full meteorite catalog.
-2. The system moves the user to a new page to display the list of meteorites.
-3. The system queries the database to retrieve all meteorites according to active filters.
-4. The database returns all queried meteorites.
-5. The system displays all meteorites in small card form in a list that can be scrolled down to the user.
-6. The card shows only the name/label of the meteorite as well as the picture of the meteorite if applicable.
-6. User can select a meteorite (`UC-DAT-display-meteorite`) or further filter (`UC-DAT-filter-database`).
-7. Use case ends.
-
-**Extensions:**
-
-- **3a. The system is unable to query the database.**
-    - 3a1. The system reports the failure to retrieve all information from the database to the user.
-    - 3a2. The page remains blank with an error message, prompting the user to try again later.
-    - 3a3. User can try refreshing the page or leave.
-    - 3a3. Use case ends.
-- **4a. The database fails to return one or more queried meteorites.**
-    - 4a1. The system reports the failture to retrieve all information from the database to the user.
-    - 4a2. The page remains blank with an error message, prompting the user to try again later.
-    - 4a3. User can try refreshing the page or leave.
-    - 4a3. Use case ends.
-
-**Priority:** High
-
-**Frequency of Use:** For all times that the application is running, as the user can view the catalog at any time.
-
-**Business Rules:**
-
-**Associated Information:** The database for all relevant information is located at monnigcatalog.tcu.edu
-
-**Related Use Cases:** `UC-DAT-filter-database`, `UC-DAT-display-meteorite`
-
-**Assumptions:** Assumes user and application has internet access. Assumes the meteorites present in the database have been inputted correctly.
-
-**Open Issues:**
-
 
 ### UC-DAT-filter-database: Organize Meteorite Catalog Based on Filters
 
@@ -479,7 +414,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Trigger:** The visitor selects the Meteorite Database on the Home screen.
 
-**Description:** The visitor opens the list of every meteorite in the Monnig collection, on display or not, and scrolls through it in alphabetical order by name. The list loads in batches as the visitor scrolls, so the first meteorites appear without waiting for the whole collection of about 3,000 to load (`SCA-full-collection`). Selecting a meteorite opens it in View meteorite. Searching, filtering, and showing only items on display are separate use cases. This use case supersedes `UC-DAT-display-database`.
+**Description:** The visitor opens the list of every meteorite in the Monnig collection, on display or not, and scrolls through it in alphabetical order by name. The list loads in batches as the visitor scrolls, so the first meteorites appear without waiting for the whole collection of about 3,000 to load (`SCA-full-collection`). Selecting a meteorite opens it in View meteorite. Searching, filtering, and showing only items on display are separate use cases. This use case replaces `UC-DAT-display-database`, which has been removed.
 
 **Preconditions:**
 
@@ -508,7 +443,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 - **2a. The device has no network connection, and the app has loaded catalog data before (`ROB-offline`).**
     - 2a1. The system shows the meteorites it already has, in the same order, with a notice that the list may be incomplete while offline.
     - 2a2. Flow continues at step 4. When the visitor reaches the end of those meteorites, step 6 fails as in 6a.
-- **3a. The catalog cannot be reached, returns an error, or returns only part of the first batch.**
+- **3a. The catalog cannot be reached (including when the device is offline and has no meteorites loaded yet), returns an error, or returns only part of the first batch.**
     - 3a1. The system shows a message saying the meteorites could not be loaded, with a way to try again (`FR-DATA-load-failure`). The rest of the app, including Home and Settings, stays usable.
     - 3a2. If the visitor tries again, flow rejoins at step 2.
     - 3a3. Otherwise the visitor leaves the screen, and use case ends.
@@ -562,19 +497,18 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 **Related Use Cases:**
 
-- `UC-DAT-view-meteorite` _(not yet written; today `UC-DAT-display-meteorite`)_: View meteorite. Opens the meteorite selected at step 7.
-- `UC-DAT-search-database` _(not yet written)_: Search database. Reached from this list (\*a).
-- `UC-DAT-filter-database`: Filter database. Reached from this list (\*a).
-- `UC-DAT-view-on-display-items` _(not yet written)_: View on-display items. Lists only the meteorites on display.
-- `UC-DAT-save-favorite` _(not yet written)_: Save favorite. Saving a favorite happens there, not from this list.
-- `UC-DAT-display-database`: Superseded by this use case.
+- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 7.
+- `UC-DAT-search-database` _(in review)_: Search the Meteorite Database. Reached from this list (\*a).
+- `UC-DAT-filter-database` _(in review)_: Filter the Meteorite Database. Reached from this list (\*a).
+- `UC-DAT-view-on-display-items` _(in review)_: View Meteorites on Display. Lists only the meteorites on display.
+- `UC-DAT-save-favorite` _(in review)_: Save a Favorite Meteorite. Saving a favorite happens there, not from this list.
+- `UC-DAT-display-database`: Replaced by this use case and removed.
 
 **Assumptions:**
 
 - The list has one item per catalog record. If the catalog holds several samples of the same meteorite, its name appears more than once (see `OI-4` on meteorite versus sample).
 - List items have no favorite control. Favoriting belongs to Save favorite.
 - The list keeps its place only while the visitor goes to View meteorite and comes back (8a). Leaving for Home resets it (\*b).
-- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
 
 **Open Issues:**
 
