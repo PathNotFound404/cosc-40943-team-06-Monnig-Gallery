@@ -473,7 +473,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Date Created:** November 13, 2026
 
-**Primary Actor:** Visitor
+**Primary Actor:** Visitor or Remote Visitor
 
 **Secondary Actors:** None. Favorites are stored only on the visitor's device.
 
@@ -489,7 +489,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 - POST-1. If the meteorite was not a favorite, its `monnigNumber` is now in the device's favorites list. If it was a favorite, its `monnigNumber` is no longer in the list.
 - POST-2. The Save favorite control shows the meteorite's new state (saved or not saved).
-- POST-3. The change is kept on the device across app launches until the visitor changes it again, the app is uninstalled, or a new-visitor reset is done (`FR-PREF-reset-for-new-visitor`).
+- POST-3. The change is kept on the device across app launches until the visitor changes it again or the app is uninstalled.
 - POST-4. Nothing in the catalog has changed (`FR-CONTENT-visitor-read-only`).
 
 **Main Success Scenario:**
@@ -528,25 +528,25 @@ _Data fields (stored on the device only; no account, no server):_
 |---|---|---|---|---|
 | `favorites` | list of `monnigNumber` | Starts empty. Each `monnigNumber` appears at most once. No limit on the number of favorites (author's decision, 2026-11-13). Only the `monnigNumber` is stored; anything View favorites shows about a meteorite comes from the catalog (author's decision, 2026-11-13). | Device-local. Never sent off the device (`DI-no-personal-data`). | Monnig # |
 
-- **Persistence.** Favorites are kept across app launches. A reset of preferences (`UC-PREF-reset-preferences`) does **not** clear them. Uninstalling the app, or a new-visitor reset on a gallery-owned device (`FR-PREF-reset-for-new-visitor`, `OI-7`), does clear them (author's decision, 2026-11-13). `FR-PREF-reset-for-new-visitor` and `DI-preferences-on-device` mention only preferences, so the SRS needs to add favorites to them.
+- **Persistence.** Favorites are kept across app launches. In v1.0, only uninstalling the app clears them; the one general reset (`UC-PREF-reset-preferences`, minutes 2026-11-09) does not, since v1.0 assumes visitors' own phones (`AS-visitor-own-device`). Whether the reset should clear favorites on shared gallery tablets is open (`OI-7`, `OI-41`). `DI-preferences-on-device` mentions only preferences, so the SRS needs to add favorites to it.
 - **Control.** The Save favorite control is a star icon with no visible text on or around it: filled when the meteorite is a favorite, outlined when it is not (author's decision, 2026-11-15). The filled-versus-outlined shape shows the state without relying on color alone (`USE-accessibility-standard`). The star has a screen-reader label that is never shown on screen, "Save favorite" or "Remove favorite" in the selected language (`USE-screen-reader`, `FR-LANG-interface-text`). Its placement is left to the design.
 
 **Related Use Cases:**
 
-- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Holds the Save favorite control and invokes this use case at 5e.
-- `UC-DAT-view-favorites` _(not yet written)_: View favorites. Lists the saved meteorites and opens each in `UC-DAT-view-meteorite`. If it lets the visitor remove a favorite, it uses the same removal as 2a.
-- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. Its list items have no favorite control.
-- `UC-PREF-reset-preferences` _(not yet written)_: Reset preferences. Does not clear favorites.
+- `UC-DAT-view-meteorite`: View a Meteorite. Holds the Save favorite control and invokes this use case at 5e.
+- `UC-DAT-view-favorites`: View Favorite Meteorites. Lists the saved meteorites, opens each in `UC-DAT-view-meteorite`, and can remove a favorite from the same device list (its 5a).
+- `UC-DAT-browse-database`: Browse the Meteorite Database. Its list items have no favorite control.
+- `UC-PREF-reset-preferences`: Reset preferences. Does not clear favorites in v1.0 (`OI-41`).
 
 **Assumptions:**
 
 - Favorites belong to the device, not to a person, like `VisitorPreferences` (SRS §7.1).
 - One favorite per catalog record (`monnigNumber`). If the catalog holds several samples of one meteorite, each is favorited separately (`OI-4`).
-- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
 
 **Open Issues:**
 
-- `OI-7`: Whether the gallery provides shared tablets, which decides whether the new-visitor reset that clears favorites is needed.
+- `OI-7`: Whether the gallery provides shared tablets.
+- `OI-41`: Whether the reset clears favorites, for example on shared tablets.
 - `OI-4`: Whether the catalog distinguishes a meteorite from its samples, which decides what one favorite refers to.
 
 
