@@ -122,9 +122,9 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Visitor (including child visitors with an adult's help)
+**Primary Actor:** Visitor or Remote Visitor (including child visitors with an adult's help)
 
-**Secondary Actors:** Gallery staff (they may hand a visitor a gallery tablet, if the gallery provides tablets)
+**Secondary Actors:** None
 
 **Trigger:** The visitor opens the app on a device where no setup survey has been completed.
 
@@ -145,7 +145,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Main Success Scenario:**
 
 1. The visitor opens the app.
-2. The system checks that no setup survey has been completed on this device and shows the language screen. This screen holds only the language choice: English and Spanish.
+2. The system checks that no setup survey has been completed on this device and shows the language screen. This screen holds only the language choice: English and Spanish, with English preselected.
 3. The visitor selects a language and continues.
 4. The system switches all survey text to that language and shows the preferences screen. This one screen holds the remaining options:
     - Text size: Small, Medium, and Large, with Medium preselected.
@@ -190,7 +190,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Priority:** High
 
-**Frequency of Use:** Once per installation, on each visitor's own device. It runs again only after a reset (`UC-PREF-reset-preferences`) or a retake (`UC-PREF-retake-setup-survey`). If the gallery provides shared tablets (`OI-7`), it runs once per visitor, after each "new visitor" reset (`FR-PREF-reset-for-new-visitor`). Every run stays on the device, so it adds no load to any server.
+**Frequency of Use:** Once per installation, on each visitor's own device. It runs again only after a reset (`UC-PREF-reset-preferences`) or a retake (`UC-PREF-retake-setup-survey`). If the gallery provides shared tablets (`OI-7`), staff reset each tablet between visitors with `UC-PREF-reset-preferences`, so it runs once per visitor. Every run stays on the device, so it adds no load to any server.
 
 **Business Rules:** `BR-accessibility-standard`, `BR-monnig-branding`
 
@@ -209,15 +209,15 @@ _Data fields (stored on the device only; no account, no server):_
 - **Live preview.** Each answer is shown on the survey screens as soon as it is chosen. Choosing Spanish at step 3 shows the preferences screen in Spanish, and text size and color mode change that screen as they are selected. The rest of the app takes the preferences only at step 6 (`FR-PREF-apply-everywhere`, "when a visitor confirms"), so leaving the survey early never leaves the app half-changed. `UC-PREF-retake-setup-survey` relies on this so that cancelling a retake has nothing to undo.
 - **Language labels.** Each language is named in its own language, so a visitor who reads only Spanish can find theirs.
 - **Layout.** The survey has no overlapping or cut-off text at any text size in either language (`USE-text-scaling`). Its screens use Monnig branding, not TCU branding (`BR-monnig-branding`).
-- **Accessibility.** Every control must work with the device's screen reader, since visually impaired visitors set their preferences here before anything else. The required standard depends on `BR-accessibility-standard` (`OI-3`).
+- **Accessibility.** Every control must work with the device's screen reader (`USE-screen-reader`), since visually impaired visitors set their preferences here before anything else. The required standard depends on `BR-accessibility-standard` (`OI-3`).
 - **Default color mode.** Light (`OI-18`, resolved 2026-11-11). A future version may preselect the device's own light or dark setting instead.
 - **Out of scope.** Font style is not asked (dropped unless an accessibility standard requires it, minutes 2026-11-09). The grant's visitor-demographics questions (`BR-visitor-survey-data`, `FR-SURVEY-optional`) are not part of this use case (`OI-10`, `OI-16`).
 
 **Related Use Cases:**
 
 - `UC-PREF-customize-visual-preferences`: Changes the same preferences later, from Settings.
-- `UC-PREF-retake-setup-survey` _(not yet written)_: Runs this survey again from Settings, starting at step 2 with the current preferences preselected. Leaving it before step 6 keeps the existing preferences.
-- `UC-PREF-reset-preferences` _(not yet written)_: Clears the preferences and the survey-complete record, so this use case runs on the next launch (PRE-2).
+- `UC-PREF-retake-setup-survey`: Runs this survey again from Settings, starting at step 2 with the current preferences preselected. Leaving it before step 6 keeps the existing preferences.
+- `UC-PREF-reset-preferences`: Clears the preferences and the survey-complete record, so this use case runs on the next launch (PRE-2).
 
 **Assumptions:**
 
