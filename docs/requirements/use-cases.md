@@ -484,7 +484,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Trigger:** The visitor selects Gallery Map on the Home screen, or goes back to the map from a room screen.
 
-**Description:** The visitor sees a graphic map of the gallery divided into its three rooms (`UI-room-selection`). They tap a room to open a detail screen for it: its name, a short description, the sections it holds, and the meteorites housed in it. From there the visitor can open a section in Browse a Gallery Section, or open a meteorite or display in View exhibit. This works the same for visitors in the gallery and remote visitors (`OE-remote-use`). The map does not show the visitor's position, because release 1.0 uses no Bluetooth, camera, or location services. A section's own details, a single exhibit's details, the guided order of a self-guided tour, and visitor information are separate use cases.
+**Description:** The visitor sees a graphic map of the gallery divided into its three rooms (`UI-room-selection`). They tap a room to open a detail screen for it: its name, a short description, the sections it holds, and the meteorites housed in it. From there the visitor can open a section in Browse a Gallery Section, or open a meteorite or display in View exhibit. This works the same for visitors in the gallery and remote visitors (`OE-remote-use`). When the app cannot load the map graphic, it instead falls back on a list of the room names, which can be selected to bring up the associated information with that room. The map does not show the visitor's position, because release 1.0 uses no Bluetooth, camera, or location services. A section's own details, a single exhibit's details, the guided order of a self-guided tour, and visitor information are separate use cases.
 
 **Preconditions:**
 
@@ -492,7 +492,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Postconditions:**
 
-- POST-1. The visitor has seen the gallery map and, if they chose one, a room's details.
+- POST-1. The visitor has seen the gallery map or room list and, if they chose one, a room's details.
 - POST-2. If the visitor chose a section, a meteorite, or a display, the matching use case has opened with it.
 - POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
 
@@ -525,6 +525,10 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 - **4a. The visitor uses a screen reader or a larger text size (`USE-screen-reader`, `USE-text-scaling`).**
     - 4a1. The system gives each room a spoken label with its name, and offers the same rooms as a list under the map, so the map is never the only way in (`BR-accessibility-standard`).
     - 4a2. Flow continues at step 5.
+- **4b. The application cannot load the image graphic of the gallery rooms.**
+    - 4b1. The system instead displays a list of the room names, displayed in walking order.
+    - 4b2. Users can select the room name in the list as they would the corresponding section on the graphic map.
+    - 4b3. Flow continues at step 5.
 - **5a. The visitor taps part of the map that is not a room.**
     - 5a1. The system does nothing and keeps the map as it is.
     - 5a2. Flow rejoins at step 5.
@@ -583,6 +587,7 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 **Assumptions:**
 
 - The map is a picture with tappable room regions. Whether it also zooms or pans is open (`OI-30`).
+- When the map picture graphic cannot be loaded a labeled room list will be displayed to the user to be interacted with in place of the graphic.
 - Each section is in exactly one room, and each display is in exactly one section.
 - "Gallery Map" is a working label for the Home screen entry. The design names it.
 - The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
