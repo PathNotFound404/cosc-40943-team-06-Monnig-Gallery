@@ -268,7 +268,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 2. The visitor turns captions on.
 3. The system saves the setting on the device and updates the switch.
 4. The visitor later has content read aloud on another screen (`UC-TTS-listen-to-content`).
-5. While reading, the system highlights the sentence being read and scrolls the text so that sentence stays in view.
+5. While reading, the system highlights the sentence being read.
 6. Reading ends or stops.
 7. The system removes the highlight.
 8. Use case ends.
@@ -285,22 +285,16 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 - **3b. The saved setting cannot be read when the app opens.**
     - 3b1. The system treats captions as Off and shows the switch off.
     - 3b2. Flow rejoins at step 1.
-- **5a. The visitor scrolls the text away from the highlighted sentence while it is being read.**
-    - 5a1. The system stops scrolling the text on its own, so it does not fight the visitor, and keeps highlighting.
-    - 5a2. The system shows a control to jump back to the sentence being read. Selecting it resumes automatic scrolling.
-    - 5a3. Flow continues at step 6.
-- **5b. The visitor pauses, replays, or skips (`UC-TTS-control-playback`).**
-    - 5b1. On pause, the highlight stays on the sentence where reading paused. On replay or skip, the highlight moves with the reading.
-    - 5b2. Flow continues at step 5.
-- **5c. The speech engine does not report which sentence it is reading.**
-    - 5c1. The system highlights the whole passage being read, and still removes the highlight when reading ends.
-    - 5c2. Flow continues at step 6.
-- **\*a. Text-to-speech is reading when the visitor goes to Settings.**
-    - \*a1. Reading has already stopped, because leaving a screen stops it (`FR-TTS-stop-on-leave`). The new setting applies the next time anything is read.
-- **\*b. Media with no captions is played (a later release, when videos or recorded narration exist).**
-    - \*b1. The system plays it and shows, once, in the selected language, that captions are not available for it.
-- **\*c. The device has no network connection.**
-    - \*c1. No change. The setting and the highlighting need no network (`ROB-offline`).
+- **5a. The visitor pauses, replays, or skips (`UC-TTS-control-playback`).**
+    - 5a1. On pause, the highlight stays on the sentence where reading paused. On replay or skip, the highlight moves with the reading.
+    - 5a2. Flow continues at step 5.
+- **5b. The speech engine does not report which sentence it is reading.**
+    - 5b1. The system highlights the whole passage being read, and still removes the highlight when reading ends.
+    - 5b2. Flow continues at step 6.
+- **\*a. Media with no captions is played (a later release, when videos or recorded narration exist).**
+    - \*a1. The system plays it and shows, once, in the selected language, that captions are not available for it.
+- **\*b. The device has no network connection.**
+    - \*b1. No change. The setting and the highlighting need no network (`ROB-offline`).
 
 **Priority:** Low
 
