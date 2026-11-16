@@ -401,13 +401,13 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Date Created:** November 12, 2026
 
-**Primary Actor:** Visitor
+**Primary Actor:** Visitor or Remote Visitor
 
 **Secondary Actors:** The Monnig catalog, or the data source that replaces it (`SI-monnig-catalog`, `OI-4`)
 
 **Trigger:** The visitor selects a meteorite in any list that shows meteorites: the Meteorite Database list, search or filter results, favorites, on-display items, an exhibit, or similar meteorites.
 
-**Description:** The visitor opens one meteorite to see what the gallery knows about it: its name, its classification (class, group, composition), where and when it was found and whether its fall was observed, its description, and its pictures. If the gallery has a 3D scan of the meteorite, the 3D model takes the place of the main picture. The visitor can swipe through the photos and open any of them full screen to zoom in. From this view the visitor can also have the name and description read aloud, save the meteorite as a favorite, open similar meteorites, or turn the 3D model; each of those is its own use case. Whether the view is a full screen or a popup over the list is left to the design. This use case replaces `UC-DAT-display-meteorite`, which has been removed.
+**Description:** The visitor opens one meteorite to see what the gallery knows about it: its name, its classification (class, group, composition), where and when it was found and whether its fall was observed, its description, and its pictures. If the gallery has a 3D scan of the meteorite, the 3D model takes the place of the main picture. The visitor can swipe through the photos and open any of them full screen. From this view the visitor can also have the description read aloud, save the meteorite as a favorite, open similar meteorites, or turn the 3D model; each of those is its own use case. Whether the view is a full screen or a popup over the list is left to the design. This use case replaces `UC-DAT-display-meteorite`, which has been removed.
 
 **Preconditions:**
 
@@ -475,10 +475,9 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 - **5a. The meteorite has only one photo, or only a 3D model.**
     - 5a1. The system shows no gallery controls. Flow continues at step 7.
 - **5b. The visitor selects a photo.**
-    - 5b1. The system opens the photo full screen. The visitor can pinch to zoom and pan, and swipe to the next or previous photo.
+    - 5b1. The system shows the photo full screen, using the framework's default image view (Flutter's default). No custom zoom or pan is required.
     - 5b2. The visitor closes the full-screen photo.
-    - 5b3. The system returns to the meteorite view, with the gallery showing the photo the visitor was last on.
-    - 5b4. Flow rejoins at step 5.
+    - 5b3. Flow rejoins at step 5.
 - **5c. The visitor turns or zooms the 3D model.**
     - 5c1. `UC-DAT-view-3d-model` handles it.
     - 5c2. Flow rejoins at step 5.
@@ -525,7 +524,7 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 - **Not shown.** The Monnig # and whether the meteorite is on display are not shown in this view (author's decision, 2026-11-12).
 - **Missing values.** How "[NOT INDICATED]" is styled is left to the design. It must not rely on color alone (`USE-accessibility-standard`).
 - **Hero.** The 3D model, when there is one, replaces the main picture; it does not add a second hero. Turning and zooming the model belong to `UC-DAT-view-3d-model`.
-- **Photo gallery.** Swipeable, starting at the hero, with an indicator of which photo of how many is showing. Selecting a photo opens it full screen with pinch-zoom (5b).
+- **Photo gallery.** Swipeable, starting at the hero, with an indicator of which photo of how many is showing. Selecting a photo shows it full screen in the platform's default image view (5b).
 - **Accessibility.** Every photo, the 3D model, and every control has a screen-reader label (`USE-screen-reader`); a photo with no caption is labeled with the meteorite's name and its position, such as "photo 2 of 4". Every field stays readable at every text size, in both languages (`USE-text-scaling`). Swiping has a non-gesture alternative, such as next and previous buttons, so it works with a screen reader.
 - **Performance.** The details must be complete within `PER-detail-load` (threshold TBD, `OI-13`). The name and text fields should not wait for photos or the 3D model to load (4b, 4c).
 - **Data source.** If the app keeps its own copy of the catalog (`OI-4`), steps 2 and 3 read from that copy, and 3a happens only when the copy cannot be read.
@@ -533,16 +532,16 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 **Related Use Cases:**
 
-- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. Opens a meteorite here at its step 7.
-- `UC-DAT-search-database` _(not yet written)_: Search database. Its results open a meteorite here.
+- `UC-DAT-browse-database`: Browse the Meteorite Database. Opens a meteorite here at its step 7.
+- `UC-DAT-search-database`: Search database. Its results open a meteorite here.
 - `UC-DAT-filter-database`: Organize Meteorite Catalog Based on Filters. Its results open a meteorite here.
-- `UC-DAT-view-favorites` _(not yet written)_: View favorites. Opens a saved meteorite here.
-- `UC-DAT-view-on-display-items` _(not yet written)_: View on-display items. Opens a meteorite here.
-- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. Opens a meteorite in the display here.
-- `UC-DAT-view-similar-meteorites` _(not yet written)_: View similar meteorites. Reached from this view (5f), and opens a meteorite here.
-- `UC-DAT-save-favorite` _(not yet written)_: Save favorite. Reached from this view (5e).
-- `UC-DAT-view-3d-model` _(not yet written)_: View 3D model. Turning and zooming the hero 3D model (5c).
-- `UC-TTS-listen-to-content` _(in review)_: Listen to Content. Reads the name and description aloud (5d).
+- `UC-DAT-view-favorites`: View favorites. Opens a saved meteorite here.
+- `UC-DAT-view-on-display-items`: View on-display items. Opens a meteorite here.
+- `UC-TOUR-view-exhibit`: View exhibit. Opens a meteorite in the display here.
+- `UC-DAT-view-similar-meteorites`: View similar meteorites. Reached from this view (5f), and opens a meteorite here.
+- `UC-DAT-save-favorite`: Save favorite. Reached from this view (5e).
+- `UC-DAT-view-3d-model`: View 3D model. Turning and zooming the hero 3D model (5c).
+- `UC-TTS-listen-to-content`: Listen to Content. Reads the description aloud (5d).
 - `UC-DAT-display-meteorite`: Replaced by this use case and removed.
 
 **Assumptions:**
@@ -551,7 +550,6 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 - Class, group, and the fall value are a fixed list, so they are shown in the selected language. Free-text values (composition, country, location found) are shown as the catalog stores them, untranslated.
 - Opening a meteorite from a meteorite view (5f) stacks views: closing returns to the previous meteorite, not to the original list.
 - If a 3D model cannot load, the first photo takes its place (4b). The visitor is not told a 3D model exists until it loads.
-- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
 
 **Open Issues:**
 
