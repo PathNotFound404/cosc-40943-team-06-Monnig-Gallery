@@ -306,7 +306,7 @@ _Data field (saved on the visitor's device only):_
 
 | Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
 |---|---|---|---|---|
-| `voiceSpeed` | decimal number, in multiples of normal speed | Required; from 0.5 to 2, in steps of 0.1 (`OI-34`). Default 1. Slider and number box show the same value. | Stored on the device only; no personal data (`DI-preferences-on-device`, `DI-no-personal-data`) | — |
+| `voiceSpeed` | decimal number, in multiples of normal speed | Required; from 0.5 to 2.0, in steps of 0.1 (`OI-34`). User can only manually input 3 characters maximum. Invalid numbers are rejected and leave the field as blank. Default 1.0. Slider and number box show the same value. | Stored on the device only; no personal data (`DI-preferences-on-device`, `DI-no-personal-data`) | — |
 
 - **Controls.** The slider and the number box each have a label the device's screen reader reads, including the current value (`USE-screen-reader`), are labeled in the selected language (`FR-LANG-interface-text`), and stay usable at every text size (`USE-text-scaling`). Placement within Settings is left to the design.
 - **When it applies.** The speed is read by Listen when reading starts, so a change takes effect on the next reading, not on one in progress (`UC-TTS-listen-to-content` step 5). Skip and Replay in `UC-TTS-control-playback` also use the current speed.
