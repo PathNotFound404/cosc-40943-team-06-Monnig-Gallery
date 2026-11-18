@@ -715,7 +715,7 @@ _Data fields (held in memory on the device for the screen that is reading; never
 
 - `UC-TTS-listen-to-content`: Listen to Content. Starts reading aloud. This use case controls reading that it started (PRE-1).
 - `UC-TTS-narrate-activities`: Narrate an Activity. Reads an activity's instructions and prompts aloud. This use case controls that narration too (PRE-1).
-- `UC-TTS-voice-speed` _(not yet written)_: Changes the reading speed.
+- `UC-TTS-voice-speed`: Change Voice Speed. Changes the reading speed.
 - `UC-TTS-play-in-selected-language`: Play in Selected Language. Picks the voice for the selected language.
 
 **Assumptions:**
@@ -1016,7 +1016,7 @@ _Data field (saved on the visitor's device only):_
 
 **Business Rules:** `BR-accessibility-standard`
 
-**Associated Information:** Uses the text-to-speech engine in `SI-device-speech` (`DE-device-tts`). Pause, replay, and speed are covered by `UC-TTS-control-playback` and `UC-TTS-change-voice-speed`.
+**Associated Information:** Uses the text-to-speech engine in `SI-device-speech` (`DE-device-tts`). Pause, replay, and speed are covered by `UC-TTS-control-playback` and `UC-TTS-voice-speed`.
 
 **Related Use Cases:** `UC-TTS-listen-to-content`, `UC-TTS-control-playback`
 
