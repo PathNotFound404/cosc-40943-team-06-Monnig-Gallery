@@ -2095,8 +2095,8 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery �
 
 - `OI-23`: What are the gallery's sections, which room is each in, in what order, and which displays does each hold?
 - `OI-24`: Where do section names, descriptions, and display lists come from, and who keeps them current?
-- `OI-30`: What is a gallery section, and how does it differ from a room, a display, and an exhibit? Which areas of the gallery are sections?
-- `OI-31`: For group discussion: the browse flow Rooms → Sections → Displays → View, and what it changes in `UC-TOUR-view-gallery-map`, `UC-TOUR-view-exhibit`, `UC-DAT-view-meteorite`, and `UC-TOUR-take-self-guided-tour`.
+- `OI-47`: What is a gallery section, and how does it differ from a room, a display, and an exhibit? Which areas of the gallery are sections?
+- `OI-48`: For group discussion: the browse flow Rooms → Sections → Displays → View, and what it changes in `UC-TOUR-view-gallery-map`, `UC-TOUR-view-exhibit`, `UC-DAT-view-meteorite`, and `UC-TOUR-take-self-guided-tour`.
 
 
 ### UC-TOUR-view-gallery-map: View Gallery Map
