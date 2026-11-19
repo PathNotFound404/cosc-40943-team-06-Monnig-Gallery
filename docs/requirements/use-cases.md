@@ -33,6 +33,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 10/17/21 | 1.1 | Set Use Case Priorities and added Language Preference Case | Kendric D’Spain |
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
 | 11/18/26 | 2.1 | Draft use cases for PREF, TTS, DAT, TOUR, and ADM | Cody Pinkston, Tanner Temple, Bradley Helmholz, Edwin Rodriguez, Koen Dolezar, Turner DeMott |
+| 11/18/26 | 2.2 | Add `UC-TTS-play-in-selected-language`, missed in the 2.1 merge | Bradley Helmholz, Cody Pinkston |
 
 ---
 
@@ -104,7 +105,7 @@ _[Your area codes, then a table of every use case by area. Write this list first
 | Area code | Feature area | Use cases |
 |---|---|---|
 | PREF | User preferences | `UC-PREF-first-launch-survey`: Set Up Preferences on First Launch<br>`UC-PREF-customize-visual-preferences`: Customize Visual Preferences During Application Usage<br>`UC-PREF-retake-setup-survey`: Retake the Setup Survey<br>`UC-PREF-reset-preferences`: Reset Preferences<br>`UC-PREF-toggle-captions`: Turn Captions On or Off |
-| TTS | Text-to-speech | `UC-TTS-control-playback`: Control Text-to-Speech Playback<br>`UC-TTS-listen-to-content`: Listen to Content<br>`UC-TTS-voice-speed`: Change Voice Speed<br>`UC-TTS-narrate-activities`: Narrate an Activity |
+| TTS | Text-to-speech | `UC-TTS-control-playback`: Control Text-to-Speech Playback<br>`UC-TTS-listen-to-content`: Listen to Content<br>`UC-TTS-voice-speed`: Change Voice Speed<br>`UC-TTS-narrate-activities`: Narrate an Activity<br>`UC-TTS-play-in-selected-language`: Play in Selected Language |
 | DAT | Meteorite catalog | `UC-DAT-browse-database`: Browse the Meteorite Database<br>`UC-DAT-search-database`: Search the Meteorite Database<br>`UC-DAT-filter-database`: Filter the Meteorite Database<br>`UC-DAT-view-meteorite`: View a Meteorite<br>`UC-DAT-save-favorite`: Save a Favorite Meteorite<br>`UC-DAT-view-3d-model`: View a Meteorite's 3D Model<br>`UC-DAT-view-favorites`: View Favorite Meteorites<br>`UC-DAT-view-similar-meteorites`: View Similar Meteorites<br>`UC-DAT-view-on-display-items`: View Meteorites on Display |
 | TOUR | Gallery tour | `UC-TOUR-browse-gallery-section`: Browse a Gallery Section<br>`UC-TOUR-view-gallery-map`: View Gallery Map<br>`UC-TOUR-take-self-guided-tour`: Take a Self-Guided Tour<br>`UC-TOUR-view-exhibit`: View an Exhibit<br>`UC-TOUR-view-visitor-info`: View Visitor Information |
 | ADM | Content administration | `UC-ADM-log-in`: Log In as an Administrator<br>`UC-ADM-update-content`: Update Meteorite Content |
@@ -334,7 +335,7 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 - `UC-PREF-reset-preferences` _(in review)_: Returns every preference to its default from this screen.
 - `UC-PREF-toggle-captions` _(in review)_: Turns captions on or off from this screen.
 - `UC-TTS-voice-speed` _(in review)_: Sets the voice speed from this screen.
-- `UC-TTS-play-in-selected-language` _(in review)_: Uses the language chosen here for reading aloud.
+- `UC-TTS-play-in-selected-language`: Uses the language chosen here for reading aloud.
 
 **Assumptions:**
 
@@ -714,8 +715,8 @@ _Data fields (held in memory on the device for the screen that is reading; never
 
 - `UC-TTS-listen-to-content`: Listen to Content. Starts reading aloud. This use case controls reading that it started (PRE-1).
 - `UC-TTS-narrate-activities`: Narrate an Activity. Reads an activity's instructions and prompts aloud. This use case controls that narration too (PRE-1).
-- `UC-TTS-voice-speed` _(not yet written)_: Changes the reading speed.
-- `UC-TTS-play-in-selected-language` _(not yet written)_: Chooses the language of the voice.
+- `UC-TTS-voice-speed`: Change Voice Speed. Changes the reading speed.
+- `UC-TTS-play-in-selected-language`: Play in Selected Language. Picks the voice for the selected language.
 
 **Assumptions:**
 
@@ -840,6 +841,7 @@ _Content read (read-only to visitors, from the screen's own use case):_
 - `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. The gallery section screen, one of the screens Listen appears on.
 - `UC-TOUR-view-exhibit`: View an Exhibit. The exhibit screen, one of the screens Listen appears on.
 - `UC-TTS-voice-speed`: Change Voice Speed. Sets the speed this use case reads at.
+- `UC-TTS-play-in-selected-language`: Play in Selected Language. Picks the voice for the selected language (step 4, 4a).
 
 **Assumptions:**
 
@@ -937,7 +939,7 @@ _Data field (saved on the visitor's device only):_
 - `UC-TTS-listen-to-content`: Listen to Content. Starts reading at the speed set here (step 5).
 - `UC-TTS-control-playback`: Control Text-to-Speech Playback. Skip and Replay use the current speed.
 - `UC-PREF-customize-visual-preferences`: Customize Visual Preferences. The other part of Settings; whether the two share a confirm step is open (`OI-35`).
-- `UC-TTS-play-in-selected-language` _(not yet written)_: Chooses the language of the voice.
+- `UC-TTS-play-in-selected-language`: Play in Selected Language. Picks the voice for the selected language.
 
 **Assumptions:**
 
@@ -1014,7 +1016,7 @@ _Data field (saved on the visitor's device only):_
 
 **Business Rules:** `BR-accessibility-standard`
 
-**Associated Information:** Uses the text-to-speech engine in `SI-device-speech` (`DE-device-tts`). Pause, replay, and speed are covered by `UC-TTS-control-playback` and `UC-TTS-change-voice-speed`.
+**Associated Information:** Uses the text-to-speech engine in `SI-device-speech` (`DE-device-tts`). Pause, replay, and speed are covered by `UC-TTS-control-playback` and `UC-TTS-voice-speed`.
 
 **Related Use Cases:** `UC-TTS-listen-to-content`, `UC-TTS-control-playback`
 
@@ -1024,6 +1026,106 @@ _Data field (saved on the visitor's device only):_
 
 - Which activities will exist, and is narration on by default for them?
 - Does every piece of activity text need narration, or only instructions and prompts? Depends on the accessibility standard (`OI-3`).
+
+
+### UC-TTS-play-in-selected-language: Play in Selected Language
+
+**UC ID and Name:** `UC-TTS-play-in-selected-language`: Play in Selected Language
+
+**Created By:** Bradley Helmholz
+
+**Date Created:** November 13, 2026
+
+**Primary Actor:** Visitor
+
+**Secondary Actors:** The text-to-speech engine (`SI-device-speech`, `DE-device-tts`)
+
+**Trigger:** The visitor starts text-to-speech reading, for example by selecting Listen (`UC-TTS-listen-to-content`).
+
+**Description:** Text-to-speech always reads in the language the visitor chose for the app, English or Spanish (`FR-LANG-supported-languages`). There is no separate voice language setting. When reading starts, the system finds a voice for the selected language and reads in it. If there is no voice for that language, the system does not read in a different language (`SI-device-speech`). It tells the visitor that a voice is not available. Where the voices come from is not decided (`DE-device-tts`, `OI-26`), so this use case says only that the text-to-speech engine supplies them. Checking that the text exists in the selected language, starting and controlling playback, and changing the speed belong to other use cases.
+
+**Preconditions:**
+
+- PRE-1. A language is selected, either chosen in the setup survey or the English default (`UC-PREF-first-launch-survey`).
+- PRE-2. A use case that reads aloud is starting reading, and has already checked that the text to read exists in the selected language (`UC-TTS-listen-to-content` step 2).
+
+**Postconditions:**
+
+- POST-1. Reading has started in a voice for the selected language, or has not started and the visitor has been told why.
+- POST-2. Text is never read in a language other than the selected one.
+- POST-3. Nothing is saved. The voice chosen is not kept after the visitor leaves the screen (`FR-TTS-stop-on-leave`).
+
+**Main Success Scenario:**
+
+1. The visitor starts reading aloud.
+2. The system reads the selected language from the visitor's preferences.
+3. The system asks the text-to-speech engine for its voices for that language.
+4. The engine returns one or more voices.
+5. The system picks a voice and starts reading in it.
+6. Use case ends. Reading continues as `UC-TTS-listen-to-content` and `UC-TTS-control-playback` describe.
+
+**Extensions:**
+
+- **3a. The engine cannot supply its voices (an engine error, or the engine cannot be reached).**
+    - 3a1. The system does not read. It shows a message in the selected language saying reading could not start (`FR-DATA-load-failure`). The rest of the screen stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2. Otherwise use case ends.
+- **4a. The engine has no voice for the selected language.**
+    - 4a1. The system does not read, and does not read in a different language (`SI-device-speech`). It shows a message in the selected language saying a voice for this language is not available (`OI-26`, `OI-37`).
+    - 4a2. The reading control stays available, and the rest of the screen stays usable.
+    - 4a3. If the visitor tries again, flow rejoins at step 2. Otherwise use case ends.
+- **4b. The engine returns more than one voice.**
+    - 4b1. The system picks the voice the engine marks as its default for that language. If none is marked, it picks the first voice returned (`OI-36`).
+    - 4b2. Flow continues at step 5.
+- **4c. The only voice is a regional variant of the selected language, such as Spanish for Spain.**
+    - 4c1. The system uses it. It is still the selected language (`OI-36`).
+    - 4c2. Flow continues at step 5.
+- **5a. The voice cannot start, for example it became unavailable after step 4.**
+    - 5a1. Flow continues at 4a1.
+- **\*a. The visitor changes the app language in Settings.**
+    - \*a1. Reading has already stopped, because opening Settings leaves the screen (`FR-TTS-stop-on-leave`). Nothing from the old language carries over.
+    - \*a2. The next reading starts at step 1 and uses the new language. Reading is not restarted for the visitor.
+
+**Priority:** High
+
+**Frequency of Use:** Every time reading starts, so for visitors who use text-to-speech, many times a visit, in the gallery or remotely. Spanish-speaking visitors depend on it to hear any Spanish content aloud.
+
+**Business Rules:** `BR-accessibility-standard`
+
+**Associated Information:**
+
+_Data fields (held in memory on the device only; never saved):_
+
+| Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
+|---|---|---|---|---|
+| `language` | enum | Defined in `UC-PREF-first-launch-survey`. Read from the visitor's preferences; this use case never changes it. | Stored on the device only (`DI-preferences-on-device`) | — |
+| `availableVoices` | list of voices, each with a name and a language | Returned by the engine at step 4; may be empty (see 4a) | Memory only | — |
+| `chosenVoice` | one voice | Required to read; its language matches `language` | Memory only | — |
+
+- **Language.** The voice language and the text language are both the selected language. A missing translation is handled before this use case runs (`UC-TTS-listen-to-content` 2a), so the voice is never asked to read English text in a Spanish voice, or the reverse.
+- **Messages.** The messages in 3a and 4a are in the selected language (`FR-LANG-interface-text`), can be read by the device's screen reader (`USE-screen-reader`), and stay readable at every text size (`USE-text-scaling`).
+- **Systemic failure.** Nothing is saved, so a failure leaves nothing to undo (see 3a, 4a).
+
+**Related Use Cases:**
+
+- `UC-TTS-listen-to-content`: Listen to Content. Starts the reading this use case finds a voice for. Its 2a and 4a are the failure cases this use case matches.
+- `UC-TTS-narrate-activities`: Narrate an Activity. Also starts reading, and needs a voice the same way.
+- `UC-TTS-control-playback`: Control Text-to-Speech Playback. Skip and Replay use the voice chosen here.
+- `UC-TTS-voice-speed`: Change Voice Speed. The speed the chosen voice reads at.
+- `UC-PREF-first-launch-survey` and `UC-PREF-customize-visual-preferences`: where the visitor sets the language this use case follows.
+
+**Assumptions:**
+
+- There is no separate voice language setting. The voice follows the app language (decision for this draft; the other TTS drafts assume the same).
+- English and Spanish are the only languages in release 1.0 (`FR-LANG-supported-languages`).
+- Where the engine and its voices come from, whether the device's own or a paid service, is not decided (`DE-device-tts`, `OI-26`). Nothing here depends on the answer.
+- Names in the text, such as a meteorite's name, are read by the selected language's voice as it pronounces them.
+- Listen's 4a and this use case's 4a describe the same case. This draft keeps them the same so they cannot disagree, and the two authors can merge them.
+
+**Open Issues:**
+
+- `OI-26`: Do visitors' devices reliably have a Spanish voice, and if not, what should the app do?
+- `OI-36`: Which voice should the app prefer when the engine returns several for the selected language, and which Spanish (for example US or Mexican) fits a Texas audience?
+- `OI-37`: What should the "voice not available" message say, in each language, and should it tell the visitor how to get a voice once `OI-26` is decided?
 
 
 ## DAT: Meteorite database
