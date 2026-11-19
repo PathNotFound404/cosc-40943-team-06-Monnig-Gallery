@@ -96,3 +96,4 @@ _[Send the shortlist to your client the day before. A client who has seen the qu
 |---|---|---|---|---|---|
 | OI-0 | _[Example row, delete it]_ | _[What we were told]_ | _[Name]_ | _[YYYY-MM-DD]_ | _[`BO-grading-time`, or the glossary term, or the section]_ |
 | OI-18 | Is the default color mode Light or Dark? | Light for now. A future version may default to the device's own light or dark setting. | Team (Cody Pinkston) | 2026-11-11 | `UC-PREF-first-launch-survey` step 4 and Associated Information |
+| OI-25 | Is browsing gallery sections in release 1.0, given that `FEAT-section-screens` is listed as out of MVP scope? | Yes, it is in scope for 1.0. The vision and scope (§4.3) and SRS §1 still list `FEAT-section-screens` as out of scope and need updating. | Team | 2026-11-16 | `UC-TOUR-browse-gallery-section` |
