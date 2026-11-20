@@ -225,7 +225,7 @@ _**Every requirement here needs an oracle.** If you cannot say how a tester woul
 #### Visit planning
 
 - `FR-PLAN-contact-link`: The app shall provide a "Plan a visit" link that opens the gallery's contact page on monnigmuseum.tcu.edu (decision, minutes 2026-11-06; a booking flow inside the app is out of scope for 1.0).
-- `FR-PLAN-visitor-info`: The app shall show the gallery's address and public opening hours. **Proposed**; where the hours are kept so they stay current is part of `OI-11`.
+- `FR-PLAN-visitor-info`: The app shall show the gallery's address and public opening hours. **Proposed**; where the hours are kept so they stay current is `OI-51`.
 
 #### Visitor survey (pending)
 
