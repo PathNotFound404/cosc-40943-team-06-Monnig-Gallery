@@ -34,6 +34,7 @@ _Within one use case, `PRE-1`, `POST-1`, and the step numbers are local and may 
 | 11/3/26 | 2.0 | Redefining Use Cases | Bradley Helmholz |
 | 11/18/26 | 2.1 | Draft use cases for PREF, TTS, DAT, TOUR, and ADM | Cody Pinkston, Tanner Temple, Bradley Helmholz, Edwin Rodriguez, Koen Dolezar, Turner DeMott |
 | 11/18/26 | 2.2 | Add `UC-TTS-play-in-selected-language`, missed in the 2.1 merge | Bradley Helmholz, Cody Pinkston |
+| 11/20/26 | 2.3 | Resolve conflicts between use cases (team meeting 2026-11-20): favorites, reset, hidden meteorites, 3D model, Listen, captions, Settings confirm step, narration, room and section flow, tour, `onDisplay`; fix stale references and open-issue numbers | Cody Pinkston |
 
 ---
 
@@ -137,7 +138,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 **Preconditions:**
 
 - PRE-1. The app is installed and has been opened.
-- PRE-2. The device has no record of a completed setup survey (first launch, or the record was cleared by `UC-PREF-reset-preferences`).
+- PRE-2. The device has no record of a completed setup survey. This is true only on first launch, or after the record was lost (2b, 6a). `UC-PREF-reset-preferences` does not clear it.
 
 **Postconditions:**
 
@@ -194,7 +195,7 @@ _[One `###` heading per use case, grouped under a `##` heading per area. Worked 
 
 **Priority:** High
 
-**Frequency of Use:** Once per installation, on each visitor's own device. It runs again only after a reset (`UC-PREF-reset-preferences`) or a retake (`UC-PREF-retake-setup-survey`). If the gallery provides shared tablets (`OI-7`), staff reset each tablet between visitors with `UC-PREF-reset-preferences`, so it runs once per visitor. Every run stays on the device, so it adds no load to any server.
+**Frequency of Use:** Once per installation, on each visitor's own device. It is never shown again unless the visitor chooses to retake it (`UC-PREF-retake-setup-survey`). A reset (`UC-PREF-reset-preferences`) returns the preferences to their defaults but does not show the survey again (team decision, 2026-11-20). Every run stays on the device, so it adds no load to any server.
 
 **Business Rules:** `BR-accessibility-standard`, `BR-monnig-branding`
 
@@ -221,7 +222,7 @@ _Data fields (stored on the device only; no account, no server):_
 
 - `UC-PREF-customize-visual-preferences`: Changes the same preferences later, from Settings.
 - `UC-PREF-retake-setup-survey`: Runs this survey again from Settings, starting at step 2 with the current preferences preselected. Leaving it before step 6 keeps the existing preferences.
-- `UC-PREF-reset-preferences`: Clears the preferences and the survey-complete record, so this use case runs on the next launch (PRE-2).
+- `UC-PREF-reset-preferences`: Returns the preferences to their defaults. It keeps the survey-complete record, so this use case does not run again.
 
 **Assumptions:**
 
@@ -248,7 +249,7 @@ _Data fields (stored on the device only; no account, no server):_
 
 **Trigger:** The visitor selects Settings on the Home screen.
 
-**Description:** After setup, the visitor changes their display preferences one at a time in Settings: language, text size, and light or dark mode. Each change applies to every screen as soon as it is selected and is saved on the device, so there is no separate confirm step. The Settings screen also holds the controls that belong to other use cases: voice speed, captions, retaking the setup survey, and resetting preferences. This use case keeps its original identifier and name, but its content replaces the earlier draft to match later team decisions: Settings is a screen reached from Home, not a popup on every screen (minutes 2026-11-06, 2026-11-09); font style is not offered (minutes 2026-11-09); and text size has three choices.
+**Description:** After setup, the visitor changes their display preferences in Settings: language, text size, and light or dark mode. Each change is previewed on the Settings screen as soon as it is selected, and is saved and applied to every other screen only when the visitor selects Save (team decision, 2026-11-20). The Settings screen also holds the controls that belong to other use cases: voice speed and captions, which are saved by the same Save, and retaking the setup survey and resetting preferences. This use case keeps its original identifier and name, but its content replaces the earlier draft to match later team decisions: Settings is a screen reached from Home, not a popup on every screen (minutes 2026-11-06, 2026-11-09); font style is not offered (minutes 2026-11-09); and text size has three choices.
 
 **Preconditions:**
 
@@ -257,7 +258,7 @@ _Data fields (stored on the device only; no account, no server):_
 
 **Postconditions:**
 
-- POST-1. The language, text size, and color mode saved on the device are the values last selected in Settings.
+- POST-1. The language, text size, and color mode saved on the device are the values selected in Settings when the visitor last selected Save. Changes not saved were discarded.
 - POST-2. Every screen, including screens opened afterward, shows the saved preferences, without restarting the app (`FR-PREF-apply-everywhere`).
 - POST-3. On later launches the app restores these preferences (`FR-PREF-persist`, `DI-preferences-on-device`).
 - POST-4. No personal information was collected (`DI-no-personal-data`), and no content changed (`FR-CONTENT-visitor-read-only`).
@@ -269,42 +270,51 @@ _Data fields (stored on the device only; no account, no server):_
     - Language: English or Spanish, each named in its own language.
     - Text size: Small, Medium, or Large.
     - Color mode: Light or Dark.
-    - Voice speed (`UC-TTS-voice-speed`), Captions (`UC-PREF-toggle-captions`), Retake setup survey (`UC-PREF-retake-setup-survey`), and Reset preferences (`UC-PREF-reset-preferences`).
+    - Voice speed (`UC-TTS-voice-speed`) and Captions (`UC-PREF-toggle-captions`).
+    - Retake setup survey (`UC-PREF-retake-setup-survey`) and Reset preferences (`UC-PREF-reset-preferences`).
+    - A Save button at the bottom of the screen.
 3. The visitor selects a new value for one preference.
-4. The system applies the new value at once to the Settings screen and to every other screen, and saves it on the device.
+4. The system previews the new value on the Settings screen. Nothing is saved yet, and the rest of the app does not change.
 5. The visitor repeats steps 3 and 4 for any other preference, in any order.
-6. The visitor selects Home.
-7. The system shows the Home screen with the saved preferences applied.
-8. Use case ends.
+6. The visitor selects Save.
+7. The system saves every changed preference on the device together and applies them to every screen.
+8. The visitor selects Home.
+9. The system shows the Home screen with the saved preferences applied.
+10. Use case ends.
 
 **Extensions:**
 
 - **2a. The saved preferences cannot be read (missing or corrupt).**
-    - 2a1. The system shows the default for each preference that cannot be read (English, Medium, Light) and applies those defaults.
-    - 2a2. Flow continues at step 3. The defaults are saved only for a preference the visitor then changes.
+    - 2a1. The system shows the default for each preference that cannot be read (`OI-40`) and applies those defaults.
+    - 2a2. Flow continues at step 3. The defaults are saved only if the visitor then selects Save.
 - **3a. The visitor selects the value that is already selected.**
-    - 3a1. Nothing changes and nothing is saved.
+    - 3a1. Nothing changes.
     - 3a2. Flow rejoins at step 3.
 - **3b. The visitor selects a different language.**
-    - 3b1. The system switches all interface text, including the Settings screen itself, to the new language (`FR-LANG-interface-text`). Keyboard and screen-reader focus stay on the language control, so a screen-reader user is not sent back to the top of the screen.
-    - 3b2. Meteorite content with no translation in the new language shows in English, marked as not translated (`FR-LANG-content-fallback`).
-    - 3b3. Text-to-speech uses the new language the next time anything is read (`UC-TTS-play-in-selected-language`).
-    - 3b4. Flow continues at step 4.
-- **3c. The visitor selects a voice speed, captions, Retake setup survey, or Reset preferences.**
-    - 3c1. The matching use case handles it (`UC-TTS-voice-speed`, `UC-PREF-toggle-captions`, `UC-PREF-retake-setup-survey`, `UC-PREF-reset-preferences`).
-    - 3c2. If that use case returns the visitor to Settings, flow rejoins at step 3.
-- **4a. Saving the preference fails (for example, the device storage is full).**
-    - 4a1. The system keeps the new value applied for as long as the app stays open.
-    - 4a2. The system shows a non-blocking message, in the selected language, saying the change could not be saved and will be lost when the app closes.
-    - 4a3. The value saved on the device stays as it was.
-    - 4a4. Flow rejoins at step 3.
-- **6a. The visitor leaves Settings without changing anything.**
-    - 6a1. Nothing is saved, and the app looks as it did before.
-    - 6a2. Flow continues at step 7.
-- **6b. The visitor uses the device's Back action instead of Home.**
-    - 6b1. Flow continues at step 7. Every change made in steps 3 to 5 is already saved, so leaving by any route keeps it.
+    - 3b1. The system previews the new language on the Settings screen itself (`FR-LANG-interface-text`). Keyboard and screen-reader focus stay on the language control, so a screen-reader user is not sent back to the top of the screen.
+    - 3b2. After Save (step 7), all interface text switches to the new language. Meteorite content with no translation in the new language shows in English, marked as not translated (`FR-LANG-content-fallback`), and text-to-speech uses the new language the next time anything is read (`UC-TTS-play-in-selected-language`).
+    - 3b3. Flow continues at step 5.
+- **3c. The visitor changes the voice speed or the captions setting.**
+    - 3c1. The control is described by its own use case (`UC-TTS-voice-speed`, `UC-PREF-toggle-captions`). Its new value is held like any other preference and saved by the same Save.
+    - 3c2. Flow continues at step 5.
+- **3d. The visitor selects Retake setup survey or Reset preferences while there are unsaved changes.**
+    - 3d1. The system asks whether to discard the unsaved changes. If the visitor keeps them, flow rejoins at step 3.
+    - 3d2. Otherwise the system discards them, and the matching use case handles the selection (`UC-PREF-retake-setup-survey`, `UC-PREF-reset-preferences`). If that use case returns the visitor to Settings, flow rejoins at step 3.
+- **6a. The visitor selects Save with no changes.**
+    - 6a1. Nothing is saved. Flow continues at step 8.
+- **7a. Saving the preferences fails (for example, the device storage is full).**
+    - 7a1. The system applies the new values for as long as the app stays open.
+    - 7a2. The system shows a non-blocking message, in the selected language, saying the changes could not be saved and will be lost when the app closes.
+    - 7a3. The values saved on the device stay as they were.
+    - 7a4. Flow continues at step 8.
+- **8a. The visitor leaves Settings (Home, or the device's Back action) with unsaved changes.**
+    - 8a1. The system asks whether to discard the unsaved changes.
+    - 8a2. If the visitor discards them, nothing is saved, the app looks as it did before, and flow continues at step 9.
+    - 8a3. Otherwise flow rejoins at step 3.
+- **8b. The visitor leaves Settings with no unsaved changes, by Home or the device's Back action.**
+    - 8b1. Flow continues at step 9.
 - **\*a. The app is closed or killed by the operating system while Settings is open.**
-    - \*a1. Every change already selected was saved at step 4 (except under 4a). On the next launch the app restores the saved preferences and opens at Home.
+    - \*a1. Changes not yet saved are discarded. On the next launch the app restores the saved preferences and opens at Home.
 - **\*b. Text-to-speech was reading on the screen the visitor left to reach Home and Settings.**
     - \*b1. Reading has already stopped, because leaving a screen stops it (`FR-TTS-stop-on-leave`). It does not restart when the visitor returns.
 - **\*c. The device has no network connection.**
@@ -318,36 +328,37 @@ _Data fields (stored on the device only; no account, no server):_
 
 **Associated Information:**
 
-_Data fields:_ this use case writes the same stored fields as `UC-PREF-first-launch-survey` (`language`, `textSize`, `colorMode`), under the same validation rules and defaults; they are defined there and not repeated here. It does not write `setupSurveyCompleted`. Voice speed and captions are stored by their own use cases.
+_Data fields:_ this use case writes the same stored fields as `UC-PREF-first-launch-survey` (`language`, `textSize`, `colorMode`), under the same validation rules and defaults; they are defined there and not repeated here. It does not write `setupSurveyCompleted`. Voice speed (`voiceSpeed`) and captions (`captionsOn`) are defined by their own use cases and saved by the same Save.
 
-- **No confirm step.** Each change applies and saves as soon as it is selected (step 4). This matches voice speed (`UC-TTS-voice-speed`), so every control on the Settings screen behaves the same way. The visitor undoes a change by selecting the old value again. This is the author's decision; the earlier draft's confirm step (its POST-1 and step 9) is dropped.
-- **One save per change.** Each preference is saved on its own. A failure saving one never changes another (4a).
-- **Live preview.** The Settings screen is itself the preview: it redraws in the new language, text size, or color mode as soon as each is selected.
+- **Confirm step.** Settings has a Save button at the bottom. Changes are saved and applied to the rest of the app only when the visitor selects it (team decision, 2026-11-20, replacing the earlier no-confirm draft). Every value control on the Settings screen, including voice speed and captions, works this way.
+- **One save for all changes.** Save writes every changed preference together, or none of them (7a).
+- **Live preview.** The Settings screen is itself the preview: it redraws in the new language, text size, or color mode as soon as each is selected, before Save.
+- **Unsaved changes.** Leaving Settings, or starting Retake or Reset, with unsaved changes asks the visitor whether to discard them (3d, 8a).
 - **Reaching Settings.** Settings is reached from the Home screen, and Home is reachable from every screen (decision, minutes 2026-11-09). `FR-PREF-settings-reachable` in the SRS still says "one tap from every main screen" and is due to be reworded to match.
 - **Layout.** No text on the Settings screen is cut off or overlaps, at every text size in both languages (`USE-text-scaling`). Each control has a screen-reader label that includes its current value, such as "Text size, Medium" (`USE-screen-reader`). The screen follows `CO-monnig-branding`.
 - **Out of scope.** Font style is not offered unless an accessibility standard requires it (minutes 2026-11-09, `OI-19`). The first-launch language screen is not shown again; Retake setup survey does that.
 - **Systemic failure.** Settings only touches the device, so a network or server failure cannot affect it.
 
-**Related Use Cases:** `UC-PREF-first-launch-survey`
+**Related Use Cases:**
 
-- `UC-PREF-first-launch-survey` _(in review)_: Sets the same three preferences the first time the app opens.
-- `UC-PREF-retake-setup-survey` _(in review)_: Runs the setup survey again from this screen.
-- `UC-PREF-reset-preferences` _(in review)_: Returns every preference to its default from this screen.
-- `UC-PREF-toggle-captions` _(in review)_: Turns captions on or off from this screen.
-- `UC-TTS-voice-speed` _(in review)_: Sets the voice speed from this screen.
+- `UC-PREF-first-launch-survey`: Sets the same three preferences the first time the app opens.
+- `UC-PREF-retake-setup-survey`: Runs the setup survey again from this screen.
+- `UC-PREF-reset-preferences`: Returns every preference to its default from this screen.
+- `UC-PREF-toggle-captions`: Turns captions on or off from this screen.
+- `UC-TTS-voice-speed`: Sets the voice speed from this screen.
 - `UC-TTS-play-in-selected-language`: Uses the language chosen here for reading aloud.
 
 **Assumptions:**
 
 - Preferences belong to the device, not to a person (SRS §7.1, `VisitorPreferences`).
-- The defaults are those of `UC-PREF-first-launch-survey` (English, Medium, Light). If `OI-40` settles different defaults, 2a uses them.
+- The defaults are those of `UC-PREF-first-launch-survey` (English, Medium, Light) until `OI-40` settles the default for every preference.
 - An adult helps a child visitor who cannot read the Settings screen yet.
 
 **Open Issues:**
 
 - `OI-8`: The SRS and the use cases disagree on whether preferences persist. This use case follows the 2026-11-02 decision that they persist (`FR-PREF-persist`).
 - `OI-19`: Whether the accessibility standard requires more settings, such as font style or high contrast.
-- `OI-40`: The defaults a preference falls back to when it cannot be read (2a).
+- `OI-40`: The default for each preference, which a preference falls back to when it cannot be read (2a).
 
 
 ### UC-PREF-retake-setup-survey: Retake the Setup Survey
@@ -434,13 +445,12 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 
 - `UC-PREF-first-launch-survey`: Owns the survey screens and questions that this use case runs again.
 - `UC-PREF-customize-visual-preferences` (Change settings): Changes one preference at a time in Settings, without the survey.
-- `UC-PREF-reset-preferences` _(not yet written)_: Clears the preferences and the survey-complete record, so the first-launch survey runs with defaults on the next launch. The retake keeps the record and starts from the current values.
+- `UC-PREF-reset-preferences`: Returns every preference to its default without showing the survey. The retake asks every survey question again, starting from the current values.
 
 **Assumptions:**
 
 - Settings is reached from the Home screen (minutes, 2026-11-09), and the "Retake setup survey" control is in Settings. It starts the retake with no confirmation prompt, because nothing is lost until step 6.
 - "Current value" means the preference in effect when the retake starts. This is normally the saved value, or a session-only value after a failed save.
-- The ID `UC-PREF-reset-preferences` is the one `UC-PREF-first-launch-survey` already uses for a use case not yet written.
 
 **Open Issues:**
 
@@ -455,41 +465,42 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
-**Secondary Actors:** Museum Staff (on gallery-owned devices)
+**Secondary Actors:** Gallery staff (on gallery-owned devices)
 
-**Trigger:** The user chooses to reset the app in Settings.
+**Trigger:** The visitor chooses to reset preferences in Settings.
 
-**Description:** The user returns every preference on the device to its default, so the next person starts fresh. This is the one general reset agreed on 11/4 and 11/9; it also covers "reset for new visitor" on gallery tablets.
+**Description:** The visitor returns every preference on the device to its default: language, text size, color mode, voice speed, and captions. This is the one general reset agreed on 11/4 and 11/9; it also covers "reset for new visitor" on gallery tablets. Reset does not show the setup survey again and does not touch saved favorites (team decision, 2026-11-20).
 
 **Preconditions:**
 
-- PRE-1. The user is in Settings, reached from the home screen (`FR-PREF-settings-reachable`).
+- PRE-1. The visitor is in Settings, reached from the Home screen (`FR-PREF-settings-reachable`).
 
 **Postconditions:**
 
-- POST-1. Language, text size, and light/dark mode are back to their defaults.
-- POST-2. The app shows the first-launch setup (`UC-PREF-first-launch-survey`).
+- POST-1. Language, text size, color mode, voice speed, and captions are back to their defaults (`OI-40`), saved on the device, and applied to every screen (`FR-PREF-apply-everywhere`).
+- POST-2. The survey-complete record (`setupSurveyCompleted`) is unchanged, so the setup survey is not shown again.
+- POST-3. Saved favorites (`UC-DAT-save-favorite`) are unchanged.
 
 **Main Success Scenario:**
 
-1. The user chooses to reset the app.
-2. The system asks the user to confirm, and says what will be cleared.
-3. The user confirms.
+1. The visitor chooses to reset preferences.
+2. The system asks the visitor to confirm, and says which settings will return to their defaults and that favorites are kept.
+3. The visitor confirms.
 4. The system stops any text-to-speech playback.
-5. The system clears all stored preferences on the device.
-6. The system shows the first-launch setup.
+5. The system sets every preference back to its default, saves them on the device, and applies them to every screen.
+6. The system shows the Settings screen with the default values.
 7. Use case ends.
 
 **Extensions:**
 
-- **3a. The user cancels.**
+- **3a. The visitor cancels.**
     - 3a1. The system changes nothing and returns to Settings.
     - 3a2. Use case ends.
-- **5a. The system cannot clear the stored preferences.**
+- **5a. The system cannot save the default preferences.**
     - 5a1. The system keeps the preferences exactly as they were (no partial reset).
-    - 5a2. The system tells the user the reset did not complete and to try again.
+    - 5a2. The system tells the visitor the reset did not complete and to try again.
     - 5a3. Use case ends.
 
 **Priority:** Medium (High if the gallery provides tablets, `OI-7`)
@@ -500,14 +511,17 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 
 **Associated Information:** Preferences are stored on the device only (`DI-preferences-on-device`). Nothing is stored on a server, so there is nothing to clear there.
 
-**Related Use Cases:** `UC-PREF-first-launch-survey`, `UC-PREF-customize-visual-preferences`, `UC-DAT-view-favorites`
+- **What is reset.** `language`, `textSize`, `colorMode` (`UC-PREF-first-launch-survey`), `voiceSpeed` (`UC-TTS-voice-speed`), and `captionsOn` (`UC-PREF-toggle-captions`). The exact default values are `OI-40`.
+- **What is kept.** `setupSurveyCompleted` and `favorites`. Reset is not a way to run the survey again; that is `UC-PREF-retake-setup-survey`.
+- **Atomic save.** Every preference is reset together, or none is (5a).
+
+**Related Use Cases:** `UC-PREF-first-launch-survey`, `UC-PREF-customize-visual-preferences`, `UC-PREF-retake-setup-survey`, `UC-PREF-toggle-captions`, `UC-TTS-voice-speed`, `UC-DAT-save-favorite`
 
 **Assumptions:** A visitor on their own phone may also reset; the confirmation in step 2 prevents doing it by accident.
 
 **Open Issues:**
 
-- Does reset also clear saved favorites (`UC-DAT-view-favorites`)? On a shared tablet it probably should; on a personal phone it may surprise the user (`OI-41`).
-- What are the default settings that reset returns to (`OI-40`)?
+- `OI-40`: What is the default for each preference that reset returns to?
 - Should the reset on gallery tablets be protected so a visitor cannot trigger it mid-tour? Depends on `OI-7`.
 
 
@@ -525,7 +539,7 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 
 **Trigger:** The visitor selects the Captions switch in Settings.
 
-**Description:** The visitor turns captions on or off for everything the app plays aloud. The setting is saved on the device and applies to every screen. In release 1.0 the only audio the app plays is text-to-speech, so with captions on, the system highlights the sentence being read on screen and keeps it in view, so the visitor can follow along without hearing it. When the app later plays gallery videos or recorded narration (`FEAT-videos-games`, the audio tour idea in minutes 2026-11-04), the same switch shows their captions. Captions are off by default. Proposed by two team members as a new idea (minutes 2026-11-09).
+**Description:** The visitor turns captions on or off for everything the app reads aloud. The setting is saved on the device with the other Settings changes and applies to every screen. Text-to-speech is the only audio the app plays, so with captions on, the system highlights the sentence being read on screen and keeps it in view, so the visitor can follow along without hearing it. Captions are off by default. Narration videos, if the app later has them, will not come with caption files of their own (team decision, 2026-11-20). Proposed by two team members as a new idea (minutes 2026-11-09); planned for a release after 1.0 (1.1 to 1.3).
 
 **Preconditions:**
 
@@ -540,8 +554,8 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 **Main Success Scenario:**
 
 1. The system shows the Captions switch on the Settings screen with its current value (Off on a new device).
-2. The visitor turns captions on.
-3. The system saves the setting on the device and updates the switch.
+2. The visitor turns captions on and selects Save (`UC-PREF-customize-visual-preferences` step 6).
+3. The system saves the setting on the device and shows the switch on.
 4. The visitor later has content read aloud on another screen (`UC-TTS-listen-to-content`).
 5. While reading, the system highlights the sentence being read.
 6. Reading ends or stops.
@@ -550,9 +564,12 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 
 **Extensions:**
 
-- **2a. The visitor turns captions off.**
+- **2a. The visitor turns captions off and selects Save.**
     - 2a1. The system saves the setting. Text that is read aloud is no longer highlighted.
     - 2a2. Use case ends.
+- **2b. The visitor leaves Settings without selecting Save.**
+    - 2b1. `UC-PREF-customize-visual-preferences` 8a handles it. If the change is discarded, the setting stays as it was.
+    - 2b2. Use case ends.
 - **3a. Saving the setting fails (for example, the device storage is full).**
     - 3a1. The system keeps the new setting for as long as the app stays open.
     - 3a2. The system shows a non-blocking message, in the selected language, saying the setting could not be saved and will be lost when the app closes.
@@ -566,12 +583,12 @@ _Data fields:_ this use case writes the same stored fields as `UC-PREF-first-lau
 - **5b. The speech engine does not report which sentence it is reading.**
     - 5b1. The system highlights the whole passage being read, and still removes the highlight when reading ends.
     - 5b2. Flow continues at step 6.
-- **\*a. Media with no captions is played (a later release, when videos or recorded narration exist).**
-    - \*a1. The system plays it and shows, once, in the selected language, that captions are not available for it.
+- **\*a. A narration video is played (a later release, if videos exist).**
+    - \*a1. Narration videos do not come with caption files (team decision, 2026-11-20). The system plays it and shows, once, in the selected language, that captions are not available for it.
 - **\*b. The device has no network connection.**
     - \*b1. No change. The setting and the highlighting need no network (`ROB-offline`).
 
-**Priority:** Low
+**Priority:** Low. Probably not in release 1.0; planned for 1.1 to 1.3 (team decision, 2026-11-20).
 
 **Frequency of Use:** Rare to change; most visitors who want captions turn them on once. Highlighting runs every time content is read aloud while captions are on. Everything stays on the device, so it adds no load to any server.
 
@@ -585,29 +602,31 @@ _Data fields (stored on the device only; no account, no server):_
 |---|---|---|---|---|
 | `captionsOn` | boolean | Required. Default `false`. | Device-local; not personal data | — |
 
-- **Default.** Off, because in release 1.0 the text being read is already on screen. This is the author's decision; the reviewer or the accessibility standard may change it (`OI-42`).
+- **What captions are.** Highlighting the sentence being read aloud, which the visitor can turn on or off (team decision, 2026-11-20, resolving `OI-42`).
+- **Default.** Off (team decision, 2026-11-20), because the text being read is already on screen. The accessibility standard may still change it (`OI-3`).
+- **Saving.** The switch is saved by the Settings screen's Save, like every other preference (`UC-PREF-customize-visual-preferences`).
 - **Not in the setup survey.** Captions is not asked at first launch (`UC-PREF-first-launch-survey` asks only language, text size, and color mode). If the accessibility standard requires asking, that is `OI-19`.
-- **Reset.** `UC-PREF-reset-preferences` returns this setting to Off along with the other preferences.
+- **Reset.** `UC-PREF-reset-preferences` returns this setting to its default along with the other preferences.
 - **Highlight style.** The highlight must not rely on color alone and must stay readable in light and dark mode at every text size (`USE-text-scaling`); its exact look is left to the design.
 - **Screen readers.** The switch's screen-reader label says its state, such as "Captions, off" (`USE-screen-reader`). Highlighting must not move screen-reader focus while the visitor's screen reader is speaking.
-- **Language.** Captions are in the language being read, which is the selected language unless the content fell back to English (`FR-LANG-content-fallback`).
+- **Language.** Captions are the text being read, so they are in the language being read. Whether English fallback text (`FR-LANG-content-fallback`) can be read aloud at all is not decided (`OI-52`); until it is, only text in the selected language is read (`UC-TTS-listen-to-content` 2a).
 - **SRS.** `VisitorPreferences` in SRS §7.2 has no captions field yet; add `captionsOn` when this use case is accepted.
 
 **Related Use Cases:**
 
 - `UC-PREF-customize-visual-preferences`: Customize Visual Preferences. The Captions switch is on its screen.
-- `UC-TTS-listen-to-content` _(in review)_: Reads content aloud. Highlighting runs while it reads.
-- `UC-TTS-control-playback` _(in review)_: Pause, replay, and skip move the highlight (5b).
-- `UC-PREF-reset-preferences` _(in review)_: Returns captions to Off.
+- `UC-TTS-listen-to-content`: Reads content aloud. Highlighting runs while it reads.
+- `UC-TTS-control-playback`: Pause, replay, and skip move the highlight (5a).
+- `UC-PREF-reset-preferences`: Returns captions to their default.
 
 **Assumptions:**
 
-- Release 1.0 has no videos and no recorded audio; text-to-speech is the only thing the app plays aloud (SRS §1.2, `FEAT-videos-games` out of MVP).
-- The device's speech engine can report its progress through the text on both iOS and Android. Where it cannot, 5c applies.
+- The app has no videos and no recorded audio when this use case is built; text-to-speech is the only thing the app plays aloud (SRS §1.2, `FEAT-videos-games` out of MVP).
+- The device's speech engine can report its progress through the text on both iOS and Android. Where it cannot, 5b applies.
 
 **Open Issues:**
 
-- `OI-42`: Is highlighting the sentence being read what the gallery means by captions for release 1.0, and should captions default to on? When gallery videos or recorded narration are added, will they come with caption files?
+- `OI-52`: Can text that fell back to English be read aloud, and so captioned, when the selected language is Spanish?
 - `OI-3`: Which accessibility standard applies; it may require captions for any future video.
 
 
@@ -746,13 +765,13 @@ _Data fields (held in memory on the device for the screen that is reading; never
 
 **Secondary Actors:** The device's text-to-speech engine, or a paid speech service (`SI-device-speech`, `DE-device-tts`)
 
-**Trigger:** On a screen that shows a meteorite, a gallery section, or an exhibit, the visitor selects Listen.
+**Trigger:** On a screen that shows a meteorite or an exhibit, the visitor selects Listen.
 
 **Description:** A visitor who cannot or would rather not read the screen has the app read the content aloud. The app reads the item's description, in the selected language, from start to finish. Once reading starts, the visitor can pause, resume, replay, or skip by paragraph (`UC-TTS-control-playback`). There is no separate Stop control: Pause silences reading, and leaving the screen ends it (`FR-TTS-stop-on-leave`). Changing the reading speed belongs to `UC-TTS-voice-speed`. The voice always uses the language selected in preferences.
 
 **Preconditions:**
 
-- PRE-1. The visitor is viewing a meteorite view (`UC-DAT-view-meteorite`), a gallery section screen (`UC-TOUR-browse-gallery-section`), or an exhibit screen (`UC-TOUR-view-exhibit`), and its content has loaded.
+- PRE-1. The visitor is viewing a meteorite view (`UC-DAT-view-meteorite`) or an exhibit screen (`UC-TOUR-view-exhibit`), and its content has loaded.
 - PRE-2. The content shown has a description. It is not missing or shown as "[NOT INDICATED]".
 - PRE-3. Text-to-speech is not already reading or paused on this screen.
 
@@ -776,7 +795,7 @@ _Data fields (held in memory on the device for the screen that is reading; never
 **Extensions:**
 
 - **2a. The description has no translation in the selected language (the screen shows the English text marked as not translated, `FR-LANG-content-fallback`).**
-    - 2a1. The system does not read. It shows a message in the selected language saying this description is not available in that language, so it cannot be read aloud. It does not read the English text (`SI-device-speech`).
+    - 2a1. The system does not read. It shows a message in the selected language saying this description is not available in that language, so it cannot be read aloud. It does not read the English text (`SI-device-speech`). Whether English fallback text should be read aloud instead is not decided (`OI-52`); this is the behavior until it is.
     - 2a2. Listen stays available, and the rest of the screen stays usable.
     - 2a3. Use case ends.
 - **3a. The description has no paragraph breaks.**
@@ -827,9 +846,9 @@ _Content read (read-only to visitors, from the screen's own use case):_
 |---|---|---|---|---|
 | `description` | long text, per language | Required (PRE-2); must exist in the selected language (2a) | Read-only to visitors | — |
 
-- **Where Listen appears.** One Listen control on each meteorite detail, gallery section, and exhibit screen, shown only when PRE-2 holds. While reading is active, paused, or finished, the playback controls take its place (`UC-TTS-control-playback`). Listen returns only when the visitor leaves the screen and comes back. Placement is left to the design.
+- **Where Listen appears.** One Listen control on each meteorite view and exhibit screen, where the descriptions are, shown only when PRE-2 holds. The gallery map, room, and section screens have no Listen (team decision, 2026-11-20). A small speaker icon next to section or meteorite names was discussed but not committed to. While reading is active, paused, or finished, the playback controls take its place (`UC-TTS-control-playback`). Listen returns only when the visitor leaves the screen and comes back. Placement is left to the design.
 - **Controls.** Listen has a label that the device's screen reader reads (`USE-screen-reader`), is labeled in the selected language (`FR-LANG-interface-text`), and stays usable at every text size (`USE-text-scaling`). Messages in 2a, 4a, and 5a are also in the selected language and can be read by the screen reader.
-- **Language.** The voice is always the selected language. Text with no translation in the selected language is never read, even though the screen shows it in English (2a).
+- **Language.** The voice is always the selected language. Text with no translation in the selected language is not read, even though the screen shows it in English (2a, pending `OI-52`).
 - **Speed.** Reading uses the voice speed in effect when step 5 starts (`UC-TTS-voice-speed`). This use case does not change it.
 - **One reader at a time.** Only the screen the visitor is viewing can be reading, because leaving a screen stops reading (\*a).
 - **Systemic failure.** This use case makes no durable change, so a failure leaves nothing to roll back (see 4a, 5a, \*b).
@@ -838,7 +857,6 @@ _Content read (read-only to visitors, from the screen's own use case):_
 
 - `UC-TTS-control-playback`: Control Text-to-Speech Playback. Pause, Resume, Replay, and Skip for the reading this use case starts (6a, 7a, \*b).
 - `UC-DAT-view-meteorite`: View a Meteorite. One of the screens Listen appears on.
-- `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. The gallery section screen, one of the screens Listen appears on.
 - `UC-TOUR-view-exhibit`: View an Exhibit. The exhibit screen, one of the screens Listen appears on.
 - `UC-TTS-voice-speed`: Change Voice Speed. Sets the speed this use case reads at.
 - `UC-TTS-play-in-selected-language`: Play in Selected Language. Picks the voice for the selected language (step 4, 4a).
@@ -856,7 +874,7 @@ _Content read (read-only to visitors, from the screen's own use case):_
 - `OI-3`: Which accessibility standard applies, and what else it requires to be readable.
 - `OI-20`: What the accessibility standard requires when the screen reader and the app's text-to-speech both speak.
 - `OI-21`: Does the text being read come with paragraph breaks?
-- `OI-25`: Is the gallery section screen in release 1.0? If not, Listen appears only on the meteorite detail screen (and the exhibit screen, if that is in 1.0).
+- `OI-52`: Can text that fell back to English be read aloud when the selected language is Spanish?
 - `OI-26`: Do visitors' devices reliably have a Spanish voice installed, and if not, should the app tell them how to add one?
 
 
@@ -874,7 +892,7 @@ _Content read (read-only to visitors, from the screen's own use case):_
 
 **Trigger:** The visitor opens Settings and changes the voice speed.
 
-**Description:** The visitor sets how fast text-to-speech reads aloud, from half speed (0.5x) to double speed (2x), with a slider or by typing a number. The slider and the number box always show the same value. The new speed is used the next time anything is read aloud, and is kept on the device. Starting and controlling reading (`UC-TTS-listen-to-content`, `UC-TTS-control-playback`) and choosing the voice language belong to other use cases.
+**Description:** The visitor sets how fast text-to-speech reads aloud, from half speed (0.5x) to double speed (2x), with a slider or by typing a number. The slider and the number box always show the same value. The new speed is saved on the device when the visitor confirms with the Settings screen's Save, and is used the next time anything is read aloud (team decision, 2026-11-20). Starting and controlling reading (`UC-TTS-listen-to-content`, `UC-TTS-control-playback`) and choosing the voice language belong to other use cases.
 
 **Preconditions:**
 
@@ -882,7 +900,7 @@ _Content read (read-only to visitors, from the screen's own use case):_
 
 **Postconditions:**
 
-- POST-1. The voice speed is the value the visitor set, between 0.5x and 2x, or it is unchanged if the visitor did not set one.
+- POST-1. The voice speed is the value the visitor set and saved, between 0.5x and 2x, or it is unchanged if the visitor did not set one or did not save it.
 - POST-2. The speed is saved on the device and used for all later reading, until the visitor changes it (`FR-PREF-persist`, `DI-preferences-on-device`).
 - POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
 
@@ -891,9 +909,11 @@ _Content read (read-only to visitors, from the screen's own use case):_
 1. The visitor opens Settings.
 2. The system shows the text-to-speech section with the current voice speed on a slider and in a number box. A new device starts at 1x.
 3. The visitor moves the slider to a new speed.
-4. The system updates the number box to match and saves the new speed.
-5. The visitor leaves Settings.
-6. Use case ends. The next reading, started by Listen, uses the new speed.
+4. The system updates the number box to match. Nothing is saved yet.
+5. The visitor selects Save (`UC-PREF-customize-visual-preferences` step 6).
+6. The system saves the new speed on the device.
+7. The visitor leaves Settings.
+8. Use case ends. The next reading, started by Listen, uses the new speed.
 
 **Extensions:**
 
@@ -907,12 +927,15 @@ _Content read (read-only to visitors, from the screen's own use case):_
     - 3c1. The system treats it as 3b.
 - **3d. The visitor sets the speed back to 1x.**
     - 3d1. Flow continues at step 4. The system saves 1x like any other value.
-- **4a. The speed cannot be saved on the device.**
-    - 4a1. The system keeps the new speed for as long as the app stays open and shows a message saying it could not be saved. It will not be there after the app closes.
-    - 4a2. Flow continues at step 5.
-- **4b. The speech engine cannot read at the chosen speed.**
-    - 4b1. The system uses the closest speed the engine supports when it next reads, and keeps the visitor's chosen value on screen (`OI-33`).
-    - 4b2. Flow continues at step 5.
+- **5a. The visitor leaves Settings without selecting Save.**
+    - 5a1. `UC-PREF-customize-visual-preferences` 8a handles it. If the change is discarded, the speed stays as it was.
+    - 5a2. Use case ends.
+- **6a. The speed cannot be saved on the device.**
+    - 6a1. The system keeps the new speed for as long as the app stays open and shows a message saying it could not be saved. It will not be there after the app closes.
+    - 6a2. Flow continues at step 7.
+- **6b. The speech engine cannot read at the chosen speed.**
+    - 6b1. The system uses the closest speed the engine supports when it next reads, and keeps the visitor's chosen value on screen (`OI-33`).
+    - 6b2. Flow continues at step 7.
 - **\*a. The visitor opens Settings while text-to-speech is reading.**
     - \*a1. Reading has already stopped, because leaving the screen stops it (`FR-TTS-stop-on-leave`). Flow continues at step 1. Reading is not restarted when the visitor goes back.
 
@@ -932,30 +955,30 @@ _Data field (saved on the visitor's device only):_
 
 - **Controls.** The slider and the number box each have a label the device's screen reader reads, including the current value (`USE-screen-reader`), are labeled in the selected language (`FR-LANG-interface-text`), and stay usable at every text size (`USE-text-scaling`). Placement within Settings is left to the design.
 - **When it applies.** The speed is read by Listen when reading starts, so a change takes effect on the next reading, not on one in progress (`UC-TTS-listen-to-content` step 5). Skip and Replay in `UC-TTS-control-playback` also use the current speed.
-- **Systemic failure.** The only change is one saved number, so a failure leaves the old speed (see 4a).
+- **Saving.** The speed is saved by the Settings screen's Save, together with any other changed preference (`UC-PREF-customize-visual-preferences`, team decision 2026-11-20).
+- **Systemic failure.** The only change is one saved number, so a failure leaves the old speed (see 6a).
 
 **Related Use Cases:**
 
 - `UC-TTS-listen-to-content`: Listen to Content. Starts reading at the speed set here (step 5).
 - `UC-TTS-control-playback`: Control Text-to-Speech Playback. Skip and Replay use the current speed.
-- `UC-PREF-customize-visual-preferences`: Customize Visual Preferences. The other part of Settings; whether the two share a confirm step is open (`OI-35`).
+- `UC-PREF-customize-visual-preferences`: Customize Visual Preferences. The other part of Settings; its Save confirms the voice speed too.
+- `UC-PREF-reset-preferences`: Reset Preferences. Returns the voice speed to its default.
 - `UC-TTS-play-in-selected-language`: Play in Selected Language. Picks the voice for the selected language.
 
 **Assumptions:**
 
 - The range is 0.5x to 2x, from the 11-09 minutes ("about 0.5x to 2x") and the team's choice of a slider and a typed value.
 - 1x is normal speed, and is the default.
-- The speed is saved the moment it is set, with no separate confirm step (`OI-35`).
+- The speed applies only after the visitor confirms with Save (team decision, 2026-11-20, resolving `OI-35`).
 - The speed applies to every voice and language the same way.
-- There is no sample or "test voice" button; the visitor hears the speed the next time they use Listen.
-- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
-- `UC-TTS-voice-speed` is the ID the `UC-TTS-listen-to-content` and `UC-TTS-control-playback` drafts already use for this use case. Those two are on unmerged branches, and this draft was written against them as they stand there.
+- There is no sample or "test voice" button; the visitor hears the speed the next time they use Listen (`OI-53`).
 
 **Open Issues:**
 
 - `OI-33`: Can the device's speech engine, or a paid speech service (`DE-device-tts`), read at every speed from 0.5x to 2x? If not, what should the app do?
 - `OI-34`: Is a step of 0.1x right for the slider and the number box?
-- `OI-35`: Should the voice speed apply as soon as it is set, or only after a confirm step like `UC-PREF-customize-visual-preferences`, and should it also have a sample to listen to?
+- `OI-53`: Should voice speed have a sample voice the visitor can listen to before saving?
 
 
 ### UC-TTS-narrate-activities: Narrate an Activity
@@ -966,65 +989,69 @@ _Data field (saved on the visitor's device only):_
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor (especially child visitors and pre-readers)
+**Primary Actor:** Visitor (especially child visitors and pre-readers)
 
-**Secondary Actors:** Museum Staff, teachers and chaperones
+**Secondary Actors:** Gallery staff, teachers and chaperones
 
-**Trigger:** The user starts an interactive activity (for example a scavenger hunt or quiz) with narration turned on.
+**Trigger:** In an interactive activity (for example a scavenger hunt or quiz), the visitor taps the speaker icon next to the activity's instructions or a step's prompt.
 
-**Description:** The system reads each step of an activity aloud, in the selected language, so visitors who cannot read yet, or who prefer listening, can take part. The client said pre-readers (Kinder to 2nd) need picture- and sound-based activities (interview, §5).
+**Description:** The visitor has the instructions and prompts of an activity read aloud, in the selected language, so visitors who cannot read yet, or who prefer listening, can take part. It works like listening to a description (`UC-TTS-listen-to-content`): there is no narration setting, and the visitor taps a speaker icon to hear the text (team decision, 2026-11-20). The client said pre-readers (Kinder to 2nd) need picture- and sound-based activities (interview, §5). This use case is to be reshaped when the interactive features are designed.
 
 **Preconditions:**
 
-- PRE-1. The user has opened an interactive activity.
-- PRE-2. Narration is turned on for the user.
+- PRE-1. The visitor has opened an interactive activity.
+- PRE-2. The text next to the speaker icon exists in the selected language.
 
 **Postconditions:**
 
-- POST-1. Every instruction and prompt in the activity has been read aloud to the user, or the user chose to stop narration.
+- POST-1. The instructions or prompt the visitor chose have been read aloud, or the visitor paused or left.
+- POST-2. Nothing is saved.
 
 **Main Success Scenario:**
 
-1. The user starts the activity.
-2. The system reads the activity's instructions aloud in the selected language.
-3. The system reads the first step's prompt aloud.
-4. The user completes the step.
-5. The system reads the result of the step and the next step's prompt aloud.
-6. Steps 4 and 5 repeat until the last step.
-7. The system reads the activity's closing message aloud.
-8. Use case ends.
+1. The visitor starts the activity.
+2. The system shows the activity's instructions, with a speaker icon.
+3. The visitor taps the speaker icon.
+4. The system reads the instructions aloud in the selected language (`UC-TTS-play-in-selected-language`).
+5. The system shows the first step's prompt, with a speaker icon.
+6. The visitor taps the speaker icon, and the system reads the prompt aloud.
+7. The visitor completes the step.
+8. The system shows the result of the step and the next step's prompt, each with a speaker icon. Steps 6 to 8 repeat until the last step.
+9. The system shows the activity's closing message, with a speaker icon.
+10. Use case ends.
 
 **Extensions:**
 
-- **2a. The device has no voice for the selected language.**
-    - 2a1. The system tells the user that narration is not available in that language.
-    - 2a2. The activity continues with text only.
-    - 2a3. Use case ends.
-- **3a. The user asks to hear the prompt again.**
-    - 3a1. The system reads the current prompt again.
-    - 3a2. Rejoin at step 4.
-- **4a. The user turns narration off.**
-    - 4a1. The system stops reading and the activity continues with text only.
-    - 4a2. Use case ends.
-- **\*a. The user leaves the activity at any step.**
+- **3a. The visitor does not tap the speaker icon.**
+    - 3a1. Nothing is read. The activity continues with text only.
+- **4a. The device has no voice for the selected language.**
+    - 4a1. `UC-TTS-play-in-selected-language` 4a handles it: the system says a voice for this language is not available, and the activity continues with text only.
+- **6a. The visitor taps the speaker icon again to hear the prompt again.**
+    - 6a1. The system reads the current prompt again from the start.
+    - 6a2. Flow rejoins at step 7.
+- **6b. The visitor pauses, resumes, or replays while text is being read.**
+    - 6b1. `UC-TTS-control-playback` handles it.
+- **7a. The visitor moves on before reading finishes.**
+    - 7a1. The system stops reading the old prompt. Flow continues at step 8.
+- **\*a. The visitor leaves the activity at any step.**
     - \*a1. The system stops reading (`FR-TTS-stop-on-leave`).
     - \*a2. Use case ends.
 
 **Priority:** Low for release 1.0; interactive features come after the core app (`FEAT-scavenger-hunt`, `FEAT-quizzes` are out of MVP scope).
 
-**Frequency of Use:** Every time a narrated activity is played.
+**Frequency of Use:** Whenever a visitor taps a speaker icon in an activity.
 
 **Business Rules:** `BR-accessibility-standard`
 
-**Associated Information:** Uses the text-to-speech engine in `SI-device-speech` (`DE-device-tts`). Pause, replay, and speed are covered by `UC-TTS-control-playback` and `UC-TTS-voice-speed`.
+**Associated Information:** Uses the text-to-speech engine in `SI-device-speech` (`DE-device-tts`). Pause, replay, and speed are covered by `UC-TTS-control-playback` and `UC-TTS-voice-speed`. There is no narration on/off setting in Settings (team decision, 2026-11-20). The speaker icon has a screen-reader label in the selected language (`USE-screen-reader`, `FR-LANG-interface-text`).
 
-**Related Use Cases:** `UC-TTS-listen-to-content`, `UC-TTS-control-playback`
+**Related Use Cases:** `UC-TTS-listen-to-content`, `UC-TTS-control-playback`, `UC-TTS-play-in-selected-language`
 
-**Assumptions:** Interactive activities exist in a later release; this use case is written now so it is ready when they do (minutes, 2026-11-02, versioned use cases).
+**Assumptions:** Interactive activities exist in a later release; this use case is written now so it is ready when they do (minutes, 2026-11-02, versioned use cases), and will be reshaped when the activities are designed.
 
 **Open Issues:**
 
-- Which activities will exist, and is narration on by default for them?
+- Which activities will exist?
 - Does every piece of activity text need narration, or only instructions and prompts? Depends on the accessibility standard (`OI-3`).
 
 
@@ -1227,11 +1254,11 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 **Related Use Cases:**
 
-- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 7.
-- `UC-DAT-search-database` _(in review)_: Search the Meteorite Database. Reached from this list (\*a).
-- `UC-DAT-filter-database` _(in review)_: Filter the Meteorite Database. Reached from this list (\*a).
-- `UC-DAT-view-on-display-items` _(in review)_: View Meteorites on Display. Lists only the meteorites on display.
-- `UC-DAT-save-favorite` _(in review)_: Save a Favorite Meteorite. Saving a favorite happens there, not from this list.
+- `UC-DAT-view-meteorite`: View a Meteorite. Opens the meteorite selected at step 7.
+- `UC-DAT-search-database`: Search the Meteorite Database. Reached from this list (\*a).
+- `UC-DAT-filter-database`: Filter the Meteorite Database. Reached from this list (\*a).
+- `UC-DAT-view-on-display-items`: View Meteorites on Display. Lists only the meteorites on display.
+- `UC-DAT-save-favorite`: Save a Favorite Meteorite. Saving a favorite happens there, not from this list.
 - `UC-DAT-display-database`: Replaced by this use case and removed.
 
 **Assumptions:**
@@ -1352,10 +1379,10 @@ _Data fields:_
 
 **Related Use Cases:**
 
-- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. The search box is on its screen.
+- `UC-DAT-browse-database`: Browse the Meteorite Database. The search box is on its screen.
 - `UC-DAT-filter-database`: Filter the Meteorite Database. Search and filters combine.
-- `UC-DAT-view-on-display-items` _(in review)_: View on-display items. The same search box searches only items on display there.
-- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 7.
+- `UC-DAT-view-on-display-items`: View on-display items. The same search box searches only items on display there.
+- `UC-DAT-view-meteorite`: View a Meteorite. Opens the meteorite selected at step 7.
 
 **Assumptions:**
 
@@ -1471,7 +1498,7 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 | `composition` | text | Filter: any of the values the catalog holds. Allowed values TBD (`OI-4`). Shown as stored. | Read-only to visitors | — |
 | `country` | text | Filter: any of the countries the catalog holds. Shown as stored. | Read-only to visitors | Country |
 | `dateFound` | date or year | Filter: by year only, from and to inclusive. From is not after To; neither is in the future. Precision TBD (`OI-4`). | Read-only to visitors | — |
-| `onDisplay` | boolean | Filter: when the switch is on, only `true`. | Read-only to visitors | — |
+| `onDisplay` | boolean | Filter: when the switch is on, only `true`. A field in the database, kept current by gallery administrators (`UC-ADM-update-content`). | Read-only to visitors | — |
 
 - **How filters combine.** Within one filter, selected values are joined by OR (Iron or Stony-iron). Across filters, and with the search text, they are joined by AND.
 - **Changes from the 2022 draft.** Location filters by country only; `locationFound` is free text and too varied to filter, but it is still shown in View meteorite. Closing the panel without applying keeps the filters already applied, rather than resetting them all (old 7a). The old 2a is covered by 4a.
@@ -1483,10 +1510,10 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 **Related Use Cases:**
 
-- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. The Filter control is on its screen. It supersedes `UC-DAT-display-database`.
-- `UC-DAT-search-database` _(in review)_: Search the Meteorite Database. Search and filters combine.
-- `UC-DAT-view-on-display-items` _(in review)_: View on-display items. Filters there work the same, with On display only fixed on.
-- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 8.
+- `UC-DAT-browse-database`: Browse the Meteorite Database. The Filter control is on its screen. It supersedes `UC-DAT-display-database`.
+- `UC-DAT-search-database`: Search the Meteorite Database. Search and filters combine.
+- `UC-DAT-view-on-display-items`: View on-display items. Filters there work the same, with On display only fixed on.
+- `UC-DAT-view-meteorite`: View a Meteorite. Opens the meteorite selected at step 8.
 
 **Assumptions:**
 
@@ -1497,7 +1524,6 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 - `OI-4`: Which fields the catalog holds, the allowed composition values, and how precise the find dates are.
 - `OI-13`: The response-time threshold for `PER-filter-response`.
-- `OI-44`: Where "on display" comes from and who keeps it current (shared with `UC-DAT-view-on-display-items`).
 
 
 ### UC-DAT-view-meteorite: View a Meteorite
@@ -1512,9 +1538,9 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 **Secondary Actors:** The Monnig catalog, or the data source that replaces it (`SI-monnig-catalog`, `OI-4`)
 
-**Trigger:** The visitor selects a meteorite in any list that shows meteorites: the Meteorite Database list, search or filter results, favorites, on-display items, an exhibit, or similar meteorites.
+**Trigger:** The visitor selects a meteorite in any list that shows meteorites: the Meteorite Database list, search or filter results, favorites, on-display items, a gallery section, an exhibit, or similar meteorites.
 
-**Description:** The visitor opens one meteorite to see what the gallery knows about it: its name, its classification (class, group, composition), where and when it was found and whether its fall was observed, its description, and its pictures. If the gallery has a 3D scan of the meteorite, the 3D model takes the place of the main picture. The visitor can swipe through the photos and open any of them full screen. From this view the visitor can also have the description read aloud, save the meteorite as a favorite, open similar meteorites, or turn the 3D model; each of those is its own use case. Whether the view is a full screen or a popup over the list is left to the design. This use case replaces `UC-DAT-display-meteorite`, which has been removed.
+**Description:** The visitor opens one meteorite to see what the gallery knows about it: its name, its classification (class, group, composition), where and when it was found and whether its fall was observed, its description, and its pictures. If the gallery has a 3D scan of the meteorite, the 3D model takes the place of the main picture, and the visitor can still look at the photos. There is no separate 3D screen (team decision, 2026-11-20). The visitor can swipe through the photos and open any of them full screen. From this view the visitor can also have the description read aloud, save the meteorite as a favorite, open similar meteorites, or turn the 3D model; each of those is its own use case. Whether the view is a full screen or a popup over the list is left to the design. This use case replaces `UC-DAT-display-meteorite`, which has been removed.
 
 **Preconditions:**
 
@@ -1539,7 +1565,7 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
     - its classification: class, group, and composition;
     - its find details: country, location found, date found, and whether its fall was observed;
     - its description;
-    - a swipeable gallery of its photos, starting with the hero;
+    - a swipeable gallery starting with the hero, followed by its photos (when the hero is the 3D model, every photo follows it);
     - the Listen, Save favorite, and View similar controls.
 5. The visitor swipes through the photos.
 6. The system shows the next or previous photo, and indicates which photo of how many is showing.
@@ -1558,8 +1584,8 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
     - 3a1. The system shows, in the view, a message saying the meteorite's details could not be loaded, with a way to try again (`FR-DATA-load-failure`). The view can still be closed, and the rest of the app stays usable.
     - 3a2. If the visitor tries again, flow rejoins at step 2.
     - 3a3. Otherwise flow continues at step 7.
-- **3b. The catalog has no record for this `monnigNumber` (for example, it was removed after the list was loaded).**
-    - 3b1. The system shows a message saying this meteorite is no longer available, instead of the details.
+- **3b. The catalog has no visible record for this `monnigNumber` (it was hidden by an administrator after the list was loaded, `UC-ADM-update-content` 1b).**
+    - 3b1. The system shows a message saying this meteorite is no longer available, instead of the details. This happens only for a list loaded before the meteorite was hidden; once lists reload, a hidden meteorite does not appear in any of them.
     - 3b2. Flow continues at step 7.
 - **3c. The record is missing a field the view shows, or a field cannot be read.**
     - 3c1. The system shows "[NOT INDICATED]" in place of that field's value and shows every field that has a value (`FR-DATA-missing-field`). A field that cannot be read is treated as missing, and the app does not crash (`ROB-no-crash-on-bad-data`).
@@ -1630,7 +1656,7 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 - **Not shown.** The Monnig # and whether the meteorite is on display are not shown in this view (author's decision, 2026-11-12).
 - **Missing values.** How "[NOT INDICATED]" is styled is left to the design. It must not rely on color alone (`USE-accessibility-standard`).
-- **Hero.** The 3D model, when there is one, replaces the main picture; it does not add a second hero. Turning and zooming the model belong to `UC-DAT-view-3d-model`.
+- **Hero.** The 3D model, when there is one, replaces the main picture; it does not add a second hero, and it is not opened on a separate screen (team decision, 2026-11-20). The photos stay in the gallery after it. Turning and zooming the model in place belong to `UC-DAT-view-3d-model`.
 - **Photo gallery.** Swipeable, starting at the hero, with an indicator of which photo of how many is showing. Selecting a photo shows it full screen in the platform's default image view (5b).
 - **Accessibility.** Every photo, the 3D model, and every control has a screen-reader label (`USE-screen-reader`); a photo with no caption is labeled with the meteorite's name and its position, such as "photo 2 of 4". Every field stays readable at every text size, in both languages (`USE-text-scaling`). Swiping has a non-gesture alternative, such as next and previous buttons, so it works with a screen reader.
 - **Performance.** The details must be complete within `PER-detail-load` (threshold TBD, `OI-13`). The name and text fields should not wait for photos or the 3D model to load (4b, 4c).
@@ -1641,13 +1667,14 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 - `UC-DAT-browse-database`: Browse the Meteorite Database. Opens a meteorite here at its step 7.
 - `UC-DAT-search-database`: Search database. Its results open a meteorite here.
-- `UC-DAT-filter-database`: Organize Meteorite Catalog Based on Filters. Its results open a meteorite here.
+- `UC-DAT-filter-database`: Filter the Meteorite Database. Its results open a meteorite here.
 - `UC-DAT-view-favorites`: View favorites. Opens a saved meteorite here.
 - `UC-DAT-view-on-display-items`: View on-display items. Opens a meteorite here.
+- `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. Opens a meteorite listed in the section here.
 - `UC-TOUR-view-exhibit`: View exhibit. Opens a meteorite in the display here.
 - `UC-DAT-view-similar-meteorites`: View similar meteorites. Reached from this view (5f), and opens a meteorite here.
 - `UC-DAT-save-favorite`: Save favorite. Reached from this view (5e).
-- `UC-DAT-view-3d-model`: View 3D model. Turning and zooming the hero 3D model (5c).
+- `UC-DAT-view-3d-model`: View 3D model. Turning and zooming the hero 3D model in place (5c).
 - `UC-TTS-listen-to-content`: Listen to Content. Reads the description aloud (5d).
 - `UC-DAT-display-meteorite`: Replaced by this use case and removed.
 
@@ -1656,7 +1683,7 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 - One view per catalog record. If the catalog holds several samples of the same meteorite, each opens its own view (see `OI-4` on meteorite versus sample).
 - Class, group, and the fall value are a fixed list, so they are shown in the selected language. Free-text values (composition, country, location found) are shown as the catalog stores them, untranslated.
 - Opening a meteorite from a meteorite view (5f) stacks views: closing returns to the previous meteorite, not to the original list.
-- If a 3D model cannot load, the first photo takes its place (4b). The visitor is not told a 3D model exists until it loads.
+- If a 3D model cannot load, the first photo takes its place (4b). The visitor is not told a 3D model exists until it loads. `UC-DAT-view-3d-model` follows the same rule.
 
 **Open Issues:**
 
@@ -1730,17 +1757,18 @@ _Data fields (stored on the device only; no account, no server):_
 
 | Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
 |---|---|---|---|---|
-| `favorites` | list of `monnigNumber` | Starts empty. Each `monnigNumber` appears at most once. No limit on the number of favorites (author's decision, 2026-11-13). Only the `monnigNumber` is stored; anything View favorites shows about a meteorite comes from the catalog (author's decision, 2026-11-13). | Device-local. Never sent off the device (`DI-no-personal-data`). | Monnig # |
+| `favorites` | list of `monnigNumber` | Starts empty. Each `monnigNumber` appears at most once. No limit on the number of favorites (team decision, 2026-11-20). Only the `monnigNumber` is stored; anything View favorites shows about a meteorite (name, photos, description) comes from the database (team decision, 2026-11-20). | Device-local. Never sent off the device (`DI-no-personal-data`). | Monnig # |
 
-- **Persistence.** Favorites are kept across app launches. In v1.0, only uninstalling the app clears them; the one general reset (`UC-PREF-reset-preferences`, minutes 2026-11-09) does not, since v1.0 assumes visitors' own phones (`AS-visitor-own-device`). Whether the reset should clear favorites on shared gallery tablets is open (`OI-7`, `OI-41`). `DI-preferences-on-device` mentions only preferences, so the SRS needs to add favorites to it.
+- **Persistence.** Favorites are kept across app launches. Only uninstalling the app clears them; the one general reset (`UC-PREF-reset-preferences`) returns only preferences and settings to their defaults and leaves favorites untouched (team decision, 2026-11-20, resolving `OI-41`). `DI-preferences-on-device` mentions only preferences, so the SRS needs to add favorites to it.
+- **Hidden meteorites.** If an administrator hides a favorited meteorite (`UC-ADM-update-content` 1b), its `monnigNumber` stays in the list, but View favorites does not show it. If it is restored, it shows again.
 - **Control.** The Save favorite control is a star icon with no visible text on or around it: filled when the meteorite is a favorite, outlined when it is not (author's decision, 2026-11-15). The filled-versus-outlined shape shows the state without relying on color alone (`USE-accessibility-standard`). The star has a screen-reader label that is never shown on screen, "Save favorite" or "Remove favorite" in the selected language (`USE-screen-reader`, `FR-LANG-interface-text`). Its placement is left to the design.
 
 **Related Use Cases:**
 
 - `UC-DAT-view-meteorite`: View a Meteorite. Holds the Save favorite control and invokes this use case at 5e.
-- `UC-DAT-view-favorites`: View Favorite Meteorites. Lists the saved meteorites, opens each in `UC-DAT-view-meteorite`, and can remove a favorite from the same device list (its 5a).
+- `UC-DAT-view-favorites`: View Favorite Meteorites. Lists the saved meteorites (except hidden ones), opens each in `UC-DAT-view-meteorite`, and can remove a favorite from the same device list (its 5a).
 - `UC-DAT-browse-database`: Browse the Meteorite Database. Its list items have no favorite control.
-- `UC-PREF-reset-preferences`: Reset preferences. Does not clear favorites in v1.0 (`OI-41`).
+- `UC-PREF-reset-preferences`: Reset preferences. Does not clear favorites.
 
 **Assumptions:**
 
@@ -1750,7 +1778,6 @@ _Data fields (stored on the device only; no account, no server):_
 **Open Issues:**
 
 - `OI-7`: Whether the gallery provides shared tablets.
-- `OI-41`: Whether the reset clears favorites, for example on shared tablets.
 - `OI-4`: Whether the catalog distinguishes a meteorite from its samples, which decides what one favorite refers to.
 
 
@@ -1762,48 +1789,46 @@ _Data fields (stored on the device only; no account, no server):_
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
 **Secondary Actors:** None
 
-**Trigger:** While viewing a meteorite, the user chooses to view its 3D model.
+**Trigger:** In the meteorite view, the visitor touches the 3D model shown in place of the main picture (`UC-DAT-view-meteorite` 5c).
 
-**Description:** The user turns and zooms a 3D model of a meteorite to see it from every side, including meteorites that are not on display. Depends on 3D scans of meteorites being made (minutes, 2026-11-04).
+**Description:** The visitor turns and zooms a 3D model of a meteorite to see it from every side, including meteorites that are not on display. The model sits in place of the main picture inside the meteorite view; there is no separate 3D screen, and the visitor can still swipe to the meteorite's photos (team decision, 2026-11-20). Depends on 3D scans of meteorites being made (minutes, 2026-11-04).
 
 **Preconditions:**
 
-- PRE-1. The user is viewing a single meteorite (`UC-DAT-view-meteorite`).
-- PRE-2. That meteorite has a 3D model. If it has none, the option is not offered.
+- PRE-1. The visitor is viewing a single meteorite (`UC-DAT-view-meteorite`).
+- PRE-2. That meteorite has a 3D model, and it has loaded and is showing as the hero (`UC-DAT-view-meteorite` step 4). If the meteorite has none, or it has not loaded, the first photo is the hero and this use case does not apply.
 
 **Postconditions:**
 
-- POST-1. The user has viewed the model and is returned to the meteorite's details.
+- POST-1. The model is shown at the angle and zoom the visitor left it at, in the meteorite view.
+- POST-2. Nothing is saved. The model returns to its default position the next time the meteorite is opened.
 
 **Main Success Scenario:**
 
-1. The user chooses to view the 3D model.
-2. The system loads the model.
-3. The system shows the model in its default position.
-4. The user rotates the model.
-5. The system turns the model to match.
-6. The user zooms in or out.
-7. The system zooms the model, within set limits.
-8. The user closes the model.
-9. The system returns to the meteorite's details.
-10. Use case ends.
+1. The visitor drags on the model.
+2. The system turns the model to match.
+3. The visitor pinches to zoom in or out.
+4. The system zooms the model, within set limits.
+5. The visitor swipes to the next item in the gallery, or keeps scrolling the meteorite view.
+6. The rest of the meteorite view is unchanged. Flow returns to `UC-DAT-view-meteorite` step 5.
+7. Use case ends.
 
 **Extensions:**
 
-- **2a. The model cannot be loaded.**
-    - 2a1. The system shows a message and offers to try again (`FR-DATA-load-failure`).
-    - 2a2. The meteorite's details stay available.
-    - 2a3. Use case ends.
-- **3a. The device cannot display 3D models.**
-    - 3a1. The system says so and shows the meteorite's photos instead.
-    - 3a2. Use case ends.
-- **7a. The user asks to reset the view.**
-    - 7a1. The system returns the model to its default position.
-    - 7a2. Rejoin at step 4.
+- **1a. The model fails to load, or the device cannot display 3D models.**
+    - 1a1. `UC-DAT-view-meteorite` 4b applies: the first photo is shown as the hero, and the visitor is not told a model exists. This use case does not start.
+- **1b. The visitor uses a screen reader, or cannot use drag gestures.**
+    - 1b1. The model offers buttons to turn it left and right and to zoom in and out, and its screen-reader label is the model's text description (`USE-screen-reader`, `OI-38`).
+    - 1b2. Flow continues at step 2.
+- **4a. The visitor asks to reset the view.**
+    - 4a1. The system returns the model to its default position.
+    - 4a2. Flow rejoins at step 1.
+- **\*a. Turning the model and swiping the gallery use the same gesture.**
+    - \*a1. Dragging on the model turns it; the gallery's next and previous buttons, or swiping outside the model, move to the photos. The exact gesture split is left to the design.
 
 **Priority:** Low (depends on 3D scans existing)
 
@@ -1811,7 +1836,7 @@ _Data fields (stored on the device only; no account, no server):_
 
 **Business Rules:**
 
-**Associated Information:** A 3D model cannot be read by a screen reader, so every model needs a text description as well (`USE-screen-reader`). Models may be large; loading over cellular data in the gallery affects `PER-detail-load`.
+**Associated Information:** A 3D model cannot be read by a screen reader, so every model needs a text description as well (`USE-screen-reader`). Models may be large; loading over cellular data in the gallery affects `PER-detail-load`. Loading the model and falling back to a photo are part of `UC-DAT-view-meteorite` (4b).
 
 **Related Use Cases:** `UC-DAT-view-meteorite`
 
@@ -1832,43 +1857,43 @@ _Data fields (stored on the device only; no account, no server):_
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
-**Secondary Actors:** None
+**Secondary Actors:** The content database, which supplies each favorite's name and picture
 
-**Trigger:** The user chooses to view their favorites.
+**Trigger:** The visitor chooses to view their favorites.
 
-**Description:** The user sees the list of meteorites they saved as favorites on this device, and can open or remove any of them. Favorites are saved on the device only for now (minutes, 2026-11-09).
+**Description:** The visitor sees the list of meteorites they saved as favorites on this device, and can open or remove any of them. Favorites are saved on the device only for now (minutes, 2026-11-09). The device stores only each favorite's `monnigNumber`; the name, picture, and everything else come from the database (team decision, 2026-11-20).
 
 **Preconditions:**
 
-- PRE-1. The user has opened the application and passed the home screen.
+- PRE-1. The visitor has opened the application and passed the Home screen.
 
 **Postconditions:**
 
-- POST-1. The system shows every meteorite the user saved as a favorite on this device.
+- POST-1. The system shows every meteorite the visitor saved as a favorite on this device, except any an administrator has hidden.
 
 **Main Success Scenario:**
 
-1. The user chooses to view favorites.
-2. The system reads the saved favorites from the device.
-3. The system retrieves the current information for each favorite from the database.
+1. The visitor chooses to view favorites.
+2. The system reads the saved `monnigNumber` list from the device.
+3. The system retrieves the current name and picture for each favorite from the database.
 4. The system shows the favorites, each with its name and picture if one exists.
-5. The user selects a favorite to see it in detail (`UC-DAT-view-meteorite`).
+5. The visitor selects a favorite to see it in detail (`UC-DAT-view-meteorite`).
 6. Use case ends.
 
 **Extensions:**
 
-- **2a. The user has no saved favorites.**
+- **2a. The visitor has no saved favorites.**
     - 2a1. The system says there are no favorites yet and explains how to save one.
     - 2a2. Use case ends.
 - **3a. The system cannot reach the database.**
-    - 3a1. The system shows the saved names it already has on the device and a message that details could not be loaded (`FR-DATA-load-failure`, `ROB-offline`).
-    - 3a2. Use case ends.
-- **3b. A saved favorite no longer exists in the database.**
-    - 3b1. The system shows that favorite as no longer available and offers to remove it.
-    - 3b2. Rejoin at step 4.
-- **5a. The user removes a favorite.**
+    - 3a1. The system shows the favorites whose details the app already has from earlier loads (`ROB-offline`), and a message that the rest could not be loaded, with a way to try again (`FR-DATA-load-failure`).
+    - 3a2. If the visitor tries again, flow rejoins at step 3. Otherwise use case ends.
+- **3b. A saved favorite has been hidden by an administrator (`UC-ADM-update-content` 1b).**
+    - 3b1. The system leaves it out of the list, with no placeholder (team decision, 2026-11-20). Its `monnigNumber` stays on the device, so it shows again if the meteorite is restored.
+    - 3b2. Flow continues at step 4.
+- **5a. The visitor removes a favorite.**
     - 5a1. The system removes it from the device and updates the list.
     - 5a2. Rejoin at step 4.
 
@@ -1882,19 +1907,17 @@ _Data fields (stored on the device only; no account, no server):_
 
 | Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
 |---|---|---|---|---|
-| Monnig number | text | Required; must match a meteorite in the database when saved | Stored on the device only | Monnig # |
-| Meteorite name | text | Required; kept so the list can show without a network | Stored on the device only | Meteorite Name |
+| `favorites` | list of `monnigNumber` | Defined in `UC-DAT-save-favorite`. Only the `monnigNumber` is stored; no limit on the number of favorites (team decision, 2026-11-20). | Stored on the device only | Monnig # |
+| `meteoriteName`, `images` | text, list of Image | Read from the database at step 3, not stored with the favorite. | Read-only to visitors | Meteorite Name |
 
-No personal data is stored (`DI-no-personal-data`).
+No personal data is stored (`DI-no-personal-data`). Resetting preferences does not clear favorites (`UC-PREF-reset-preferences`).
 
-**Related Use Cases:** `UC-DAT-view-meteorite`, `UC-PREF-reset-preferences`, the "Save favorite" use case (another pair)
+**Related Use Cases:** `UC-DAT-view-meteorite`, `UC-DAT-save-favorite`, `UC-PREF-reset-preferences`, `UC-ADM-update-content`
 
-**Assumptions:** Saving a favorite is a separate use case. Favorites are not shared between devices; that needs a back end and is a later feature.
+**Assumptions:** Saving a favorite is a separate use case (`UC-DAT-save-favorite`). Favorites are not shared between devices; that needs a back end and is a later feature.
 
 **Open Issues:**
 
-- Does `UC-PREF-reset-preferences` clear favorites (`OI-41`)?
-- Is there a maximum number of favorites?
 - Favorites are saved on the device only for now. Keeping them across devices needs a back end and is a later issue (`OI-39`).
 
 
@@ -1906,17 +1929,17 @@ No personal data is stored (`DI-no-personal-data`).
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
 **Secondary Actors:** None
 
-**Trigger:** While viewing a meteorite, the user chooses to see similar meteorites.
+**Trigger:** While viewing a meteorite, the visitor chooses to see similar meteorites.
 
-**Description:** Like "related products" when shopping, the system suggests other meteorites in the collection that share key traits with the one being viewed, so the user can keep exploring (minutes, 2026-11-09).
+**Description:** Like "related products" when shopping, the system suggests other meteorites in the collection that share key traits with the one being viewed, so the visitor can keep exploring (minutes, 2026-11-09).
 
 **Preconditions:**
 
-- PRE-1. The user is viewing a single meteorite (`UC-DAT-view-meteorite`).
+- PRE-1. The visitor is viewing a single meteorite (`UC-DAT-view-meteorite`).
 
 **Postconditions:**
 
@@ -1924,10 +1947,10 @@ No personal data is stored (`DI-no-personal-data`).
 
 **Main Success Scenario:**
 
-1. The user chooses to see similar meteorites.
+1. The visitor chooses to see similar meteorites.
 2. The system finds meteorites in the database that share traits with the current one, using the similarity rule.
 3. The system shows the similar meteorites, each with its name, picture if one exists, and the trait it shares (for example, the same class).
-4. The user selects one.
+4. The visitor selects one.
 5. The system shows that meteorite in detail (`UC-DAT-view-meteorite`).
 6. Use case ends.
 
@@ -2039,36 +2062,35 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 | Property name | Data type | Validation rule | Security or access concerns | Glossary reference |
 |---|---|---|---|---|
-| `onDisplay` | boolean | Required, default `false` (SRS §7.2). Only `true` records are listed. Not shown on each item, since every item is on display. | Read-only to visitors; set only by an administrator (`UC-ADM-update-content`) | Display |
+| `onDisplay` | boolean | Required, default `false` (SRS §7.2). A field in the database; it becomes `true` by default when an administrator assigns the meteorite to a display in a section or room (team decision, 2026-11-20). Only `true` records are listed. Not shown on each item, since every item is on display. | Read-only to visitors; set only by an administrator (`UC-ADM-update-content`) | Display |
 | `monnigNumber` | text | Required and unique. Not shown. Identifies the meteorite handed to View meteorite and breaks ties in the sort. | Read-only to visitors | Monnig # |
 | `meteoriteName` | text | Required. Shown, and is the sort key. If missing, "[NOT INDICATED]" (`FR-DATA-missing-field`). | Read-only to visitors | Meteorite Name |
 | `images` | list of Image | Optional. Only the first image is shown, or a placeholder. | Read-only to visitors; image rights are open (`OI-15`) | — |
 
 - **Same list, one fixed filter.** Sorting, batching, missing-data handling, and accessibility are those of `UC-DAT-browse-database`. This use case adds only the fixed `onDisplay = true` condition, the title, and the total count.
 - **Why its own entry on Home.** Visitors in the gallery mostly look for what is in front of them, and the full list of about 3,000 is mostly items not on view (`SCA-full-collection`). The author chose a Home entry over relying on the filter alone; the reviewer may prefer to drop this screen and use the filter instead.
-- **Freshness.** What is on display changes rarely (`BR-permanent-exhibit`), but the Texas map changes with each new find. The list is only as current as the `onDisplay` values (`OI-44`, `MNT-content-update`).
-- **Not by room.** Grouping by room or display case is left to the Tour use cases (`UC-TOUR-view-gallery-map`, `UC-TOUR-browse-gallery-section`), which need location data this use case does not.
+- **Freshness.** What is on display changes rarely (`BR-permanent-exhibit`), but the Texas map changes with each new find. The list is only as current as the `onDisplay` values, which gallery administrators keep current (`UC-ADM-update-content`, `MNT-content-update`).
+- **Not by room.** Grouping by room, section, or display is left to the Tour use cases (`UC-TOUR-view-gallery-map`, `UC-TOUR-browse-gallery-section`), which need location data this use case does not.
 - **Accessibility.** The screen title and the total count are read by the screen reader when the list loads (`USE-screen-reader`).
 - **Data source.** If the app keeps its own copy of the catalog (`OI-4`), steps 2 and 3 read from that copy.
 - **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
 
 **Related Use Cases:**
 
-- `UC-DAT-browse-database` _(in review)_: Browse the Meteorite Database. This screen is the same list with "On display only" fixed on.
-- `UC-DAT-search-database` _(in review)_: Search, within this list (5a).
+- `UC-DAT-browse-database`: Browse the Meteorite Database. This screen is the same list with "On display only" fixed on.
+- `UC-DAT-search-database`: Search, within this list (5a).
 - `UC-DAT-filter-database`: Filter, within this list (5b).
-- `UC-DAT-view-meteorite` _(in review)_: View a Meteorite. Opens the meteorite selected at step 6.
-- `UC-ADM-update-content` _(not yet written; another pair)_: Where an administrator marks a meteorite on or off display.
-- `UC-TOUR-view-gallery-map` _(in review)_, `UC-TOUR-browse-gallery-section` _(in review)_: Find meteorites by where they are in the gallery.
+- `UC-DAT-view-meteorite`: View a Meteorite. Opens the meteorite selected at step 6.
+- `UC-ADM-update-content`: Where an administrator marks a meteorite on or off display.
+- `UC-TOUR-view-gallery-map`, `UC-TOUR-browse-gallery-section`: Find meteorites by where they are in the gallery.
 
 **Assumptions:**
 
-- The catalog, or the app's own copy of it, records for each meteorite whether it is on display (`onDisplay`, SRS §7.2). If it does not, this use case cannot be built until `OI-44` is settled.
+- The database records for each meteorite whether it is on display (`onDisplay`, SRS §7.2), and gallery administrators keep it current (team decision, 2026-11-20, resolving `OI-44`).
 - One list item per catalog record. If two samples of the same meteorite are on display, its name appears twice (`OI-4`).
 
 **Open Issues:**
 
-- `OI-44`: Where does "on display" come from: a field in the catalog, or the gallery's separate list of items on display (interview §10)? Who keeps it current when a display changes?
 - `OI-4`: Where the meteorite data comes from.
 - `OI-13`: The load-time threshold for `PER-database-list`, which applies to this list as well.
 
@@ -2087,70 +2109,59 @@ _Data fields (read from the catalog; visitors cannot change them). Definitions a
 
 **Secondary Actors:** The source of gallery section content (`OI-24`)
 
-**Trigger:** The visitor selects Gallery on the Home screen, or View gallery map hands off a room or a section the visitor chose.
+**Trigger:** The visitor selects a section on a room screen (`UC-TOUR-view-gallery-map` step 7), or the self-guided tour moves to a section (`UC-TOUR-take-self-guided-tour`).
 
-**Description:** The gallery has three rooms, and each room holds sections. What exactly counts as a section is still open (see Open Issues). The visitor picks a room, sees the sections in it, and opens one to see its name, its description, and the displays in it. Displays are mostly meteorites but can be other things. Selecting a display opens it in View exhibit. The gallery map, a single exhibit's details, the self-guided tour, and visitor information are separate use cases.
+**Description:** The gallery is organized as rooms, then sections, then displays (team decision, 2026-11-20). The visitor reaches a section from Home → Gallery Map → room → section (`UC-TOUR-view-gallery-map`). This use case is the section screen: the section's name, its room, its description, and the displays in it, with the meteorites each display holds. From here, and only from here, the visitor opens a display in View exhibit or a meteorite in View a Meteorite. What exactly counts as a section is still open (see Open Issues). The gallery map and room screens, a single exhibit's details, the self-guided tour, and visitor information are separate use cases.
 
 **Preconditions:**
 
-- PRE-1. The setup survey has been completed or skipped on this device, so the Home screen is reachable.
+- PRE-1. The visitor has selected a section on a room screen (`UC-TOUR-view-gallery-map`), or the self-guided tour has moved to a section.
 
 **Postconditions:**
 
-- POST-1. The visitor has seen the rooms, the sections in the room they chose, and, if they chose a section, its details and displays.
-- POST-2. If the visitor selected a display, View exhibit has opened with that display.
+- POST-1. The visitor has seen the section's details and the displays and meteorites in it.
+- POST-2. If the visitor selected a display, View exhibit has opened with that display. If they selected a meteorite, View a Meteorite has opened with it.
 - POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
 
 **Main Success Scenario:**
 
-1. The visitor selects Gallery on the Home screen.
-2. The system requests the gallery's rooms and their sections.
-3. The content source returns the rooms and sections.
-4. The system shows the three rooms, in the order a visitor walks the gallery.
-5. The visitor selects a room.
-6. The system shows the sections in that room, in the order a visitor walks them.
-7. The visitor selects a section.
-8. The system requests the section's details.
-9. The content source returns the section's details.
-10. The system shows the section screen: the section's name, its room, its description, and the list of displays in it by name.
-11. The visitor selects a display.
-12. The system opens the selected display in View exhibit.
-13. Use case ends.
+1. The visitor selects a section on a room screen.
+2. The system requests the section's details.
+3. The content source returns the section's details.
+4. The system shows the section screen: the section's name, its room, its description, and the list of displays in it, in the order a visitor walks them. Each display shows its name and the meteorites it holds, by name.
+5. The visitor selects a display.
+6. The system opens the selected display in View exhibit (`UC-TOUR-view-exhibit`).
+7. Use case ends.
 
 **Extensions:**
 
-- **1a. The visitor arrives from View gallery map with a room chosen.**
-    - 1a1. The system requests the rooms and sections, as in steps 2 and 3.
-    - 1a2. Flow continues at step 6 with the chosen room.
-- **1b. The visitor arrives from View gallery map with a section chosen.**
-    - 1b1. Flow continues at step 8.
 - **2a. The device has no network connection (`ROB-offline`).**
-    - 2a1. If the app has loaded the rooms and sections before, the system shows what it already has, and flow continues at step 4.
+    - 2a1. If the app has loaded this section before, the system shows what it already has, and flow continues at step 4.
     - 2a2. If it has not, flow continues at 3a.
-- **3a. The rooms and sections cannot be loaded.**
-    - 3a1. The system shows a message saying the gallery could not be loaded, with a way to try again (`FR-DATA-load-failure`, applied here to any content). The rest of the app stays usable.
-    - 3a2. If the visitor tries again, flow rejoins at step 2. Otherwise use case ends.
-- **3b. No sections are defined.**
-    - 3b1. The system shows a message saying gallery sections are not available, instead of an empty list.
-    - 3b2. Use case ends.
-- **6a. The selected room has no sections.**
-    - 6a1. The system shows a message saying no sections are listed for this room.
-    - 6a2. The visitor goes back, and flow rejoins at step 4.
-- **6b. The visitor goes back from the section list.**
-    - 6b1. Flow rejoins at step 4.
-- **9a. The section's details cannot be loaded.**
-    - 9a1. The system shows a message on the section screen saying the section could not be loaded, with a way to try again (`FR-DATA-load-failure`, applied here to any content).
-    - 9a2. If the visitor tries again, flow rejoins at step 8. If the visitor goes back, flow rejoins at step 6.
-- **10a. The section has no description.**
-    - 10a1. The system shows "[NOT INDICATED]" in its place (`FR-DATA-missing-field`, applied here to any content).
-    - 10a2. Flow continues at step 11.
-- **10b. The section has no displays.**
-    - 10b1. The system shows the section's name, room, and description, with a message saying no displays are listed for this section.
-    - 10b2. The visitor goes back, and flow rejoins at step 6.
-- **10c. The visitor goes back from the section screen.**
-    - 10c1. Flow rejoins at step 6, listing the sections in the same room.
-- **\*a. The visitor leaves for the Home screen.**
-    - \*a1. Use case ends.
+- **3a. The section's details cannot be loaded.**
+    - 3a1. The system shows a message on the section screen saying the section could not be loaded, with a way to try again (`FR-DATA-load-failure`, applied here to any content). The rest of the app stays usable.
+    - 3a2. If the visitor tries again, flow rejoins at step 2. If the visitor goes back, they return to the room screen (`UC-TOUR-view-gallery-map` step 6), and use case ends.
+- **4a. The section has no description.**
+    - 4a1. The system shows "[NOT INDICATED]" in its place (`FR-DATA-missing-field`, applied here to any content).
+    - 4a2. Flow continues at step 5.
+- **4b. The section has no displays.**
+    - 4b1. The system shows the section's name, room, and description, with a message saying no displays are listed for this section.
+    - 4b2. The visitor goes back, and use case ends.
+- **4c. A display holds no meteorites (for example, the theater area).**
+    - 4c1. The system lists the display by name with no meteorites under it. It can still be selected.
+- **4d. A meteorite listed in a display is hidden, or is not in the database.**
+    - 4d1. A hidden meteorite is not listed (`UC-ADM-update-content`). A meteorite not in the database is listed by name but cannot be selected.
+- **5a. The visitor selects a meteorite instead of a display.**
+    - 5a1. The system opens it in View a Meteorite (`UC-DAT-view-meteorite`).
+    - 5a2. Use case ends.
+- **6a. The visitor comes back from View exhibit or View a Meteorite.**
+    - 6a1. The system shows the section screen at the same place, without reloading it.
+    - 6a2. Flow rejoins at step 5.
+- **\*a. The visitor goes back from the section screen.**
+    - \*a1. The system shows the room screen this section is in (`UC-TOUR-view-gallery-map` step 6), or, during a tour, the tour handles it.
+    - \*a2. Use case ends.
+- **\*b. The visitor leaves for the Home screen.**
+    - \*b1. Use case ends.
 
 **Priority:** Medium
 
@@ -2168,37 +2179,35 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery �
 | `room` | reference to a Room | Required; one of the gallery's three rooms. Everything in the gallery is in a room. | Read-only to visitors | Room |
 | `order` | integer | Required. The section's place in the order a visitor walks its room. | Read-only to visitors | — |
 | `description` | long text | Optional; see 10a | Read-only to visitors | — |
-| `displays` | ordered list of Display | Optional; may be empty (see 10b) | Read-only to visitors | Display |
+| `displays` | ordered list of Display, each with its list of meteorites (`monnigNumber`) | Optional; may be empty (see 4b). A display's meteorites may be empty (4c). | Read-only to visitors | Display |
 
-- **Order.** Rooms and sections are shown in walking order (see Assumptions).
+- **Order.** Displays are shown in walking order (see Assumptions).
 - **Language.** Interface text follows `FR-LANG-interface-text`. Translating section content is out of scope for this use case.
-- **Accessibility.** Every section and display in the lists has a screen-reader label (`USE-screen-reader`) and stays readable at every text size (`USE-text-scaling`).
+- **No Listen.** The section screen has no Listen control. Listen belongs on the meteorite view and the exhibit screen, where the descriptions are (`UC-TTS-listen-to-content`, team decision 2026-11-20).
+- **Accessibility.** Every display and meteorite in the list has a screen-reader label (`USE-screen-reader`) and stays readable at every text size (`USE-text-scaling`).
 - **Systemic failure.** This use case only reads, so a failure leaves nothing partly changed.
 
 **Related Use Cases:**
 
-- `UC-TOUR-view-gallery-map` _(not yet written)_: View gallery map. Can hand off a chosen room or section (1a, 1b).
-- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. Opens the display selected at step 11.
-- `UC-TOUR-self-guided-tour` _(not yet written)_: Self-guided tour. Moves the visitor through the sections in order, including any next and previous section controls.
-- `UC-TOUR-visitor-info` _(not yet written)_: Visitor info. Hours and location; not shown here.
+- `UC-TOUR-view-gallery-map`: View Gallery Map. Its room screen lists the sections and opens the one selected here (step 1).
+- `UC-TOUR-view-exhibit`: View an Exhibit. Opens the display selected at step 5.
+- `UC-DAT-view-meteorite`: View a Meteorite. Opens a meteorite selected at 5a.
+- `UC-TOUR-take-self-guided-tour`: Take a Self-Guided Tour. Moves the visitor through the sections in order, showing each with this screen.
+- `UC-TOUR-view-visitor-info`: View Visitor Information. Hours and location; not shown here.
 
 **Assumptions:**
 
 - Everything in the gallery is in a room. Each section is in exactly one room, and each display is in exactly one section.
-- Rooms are shown in the order a visitor walks the gallery, and the sections in a room in the order a visitor walks that room. The actual order is part of `OI-23`.
-- The rooms are shown as a simple list. A map graphic belongs to View gallery map.
+- Displays in a section are shown in the order a visitor walks the section. The actual order is part of `OI-23`.
 - Displays are mostly meteorites but can be other things. The section screen lists them all the same way, and View exhibit shows what each one holds.
+- A meteorite or exhibit is opened only from the section screen, never directly from the map or a room screen (team decision, 2026-11-20).
 - Translating section names and descriptions is out of scope for this use case.
-- "Gallery" is a working label for the Home screen entry. The design names it.
-- Reading a section's description aloud is not part of this use case. `FR-TTS-read-description` covers meteorite descriptions only.
-- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
 
 **Open Issues:**
 
 - `OI-23`: What are the gallery's sections, which room is each in, in what order, and which displays does each hold?
 - `OI-24`: Where do section names, descriptions, and display lists come from, and who keeps them current?
 - `OI-47`: What is a gallery section, and how does it differ from a room, a display, and an exhibit? Which areas of the gallery are sections?
-- `OI-48`: For group discussion: the browse flow Rooms → Sections → Displays → View, and what it changes in `UC-TOUR-view-gallery-map`, `UC-TOUR-view-exhibit`, `UC-DAT-view-meteorite`, and `UC-TOUR-take-self-guided-tour`.
 
 
 ### UC-TOUR-view-gallery-map: View Gallery Map
@@ -2215,7 +2224,7 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery �
 
 **Trigger:** The visitor selects Gallery Map on the Home screen, or goes back to the map from a room screen.
 
-**Description:** The visitor sees a graphic map of the gallery divided into its three rooms (`UI-room-selection`). They tap a room to open a detail screen for it: its name, a short description, the sections it holds, and the meteorites housed in it. From there the visitor can open a section in Browse a Gallery Section, or open a meteorite or display in View exhibit. This works the same for visitors in the gallery and remote visitors (`OE-remote-use`). When the app cannot load the map graphic, it instead falls back on a list of the room names, which can be selected to bring up the associated information with that room. The map does not show the visitor's position, because release 1.0 uses no Bluetooth, camera, or location services. A section's own details, a single exhibit's details, the guided order of a self-guided tour, and visitor information are separate use cases.
+**Description:** The visitor sees a graphic map of the gallery divided into its three rooms (`UI-room-selection`). They tap a room to open a room screen: its name, a short description, and the sections it holds. The room screen lists sections only, not meteorites; meteorites and exhibits are opened from the section screen (team decision, 2026-11-20). From the room screen the visitor opens a section in Browse a Gallery Section. This works the same for visitors in the gallery and remote visitors (`OE-remote-use`). When the app cannot load the map graphic, it instead falls back on a list of the room names, which can be selected to bring up the associated information with that room. The map does not show the visitor's position, because release 1.0 uses no Bluetooth, camera, or location services. A section's own details, a single exhibit's details, the guided order of a self-guided tour, and visitor information are separate use cases.
 
 **Preconditions:**
 
@@ -2224,7 +2233,7 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery �
 **Postconditions:**
 
 - POST-1. The visitor has seen the gallery map or room list and, if they chose one, a room's details.
-- POST-2. If the visitor chose a section, a meteorite, or a display, the matching use case has opened with it.
+- POST-2. If the visitor chose a section, Browse a Gallery Section has opened with it.
 - POST-3. No content has changed (`FR-CONTENT-visitor-read-only`).
 
 **Main Success Scenario:**
@@ -2234,7 +2243,7 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery �
 3. The content source returns them.
 4. The system shows the map graphic with the three rooms drawn, each labeled with its name and tappable.
 5. The visitor taps a room.
-6. The system shows the room screen: the room's name, its description, the list of its sections, and the list of meteorites housed in it, each by name.
+6. The system shows the room screen: the room's name, its description, and the list of its sections by name, in the order a visitor walks them.
 7. The visitor selects a section.
 8. The system opens the selected section in Browse a Gallery Section.
 9. Use case ends.
@@ -2267,8 +2276,8 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery �
     - 6a1. With no description at all, the system shows "[NOT INDICATED]" in its place (`FR-DATA-missing-field`).
     - 6a2. With an English description only, the system shows the English text, marked as not translated (`FR-LANG-content-fallback`, Proposed).
     - 6a3. Flow continues at step 7.
-- **6b. The room has no sections, no meteorites, or neither.**
-    - 6b1. The system shows the room's name and description, with a message saying nothing is listed for this room.
+- **6b. The room has no sections.**
+    - 6b1. The system shows the room's name and description, with a message saying no sections are listed for this room.
     - 6b2. The visitor goes back, and flow rejoins at step 5 (6d).
 - **6c. The room's details cannot be loaded.**
     - 6c1. The system shows a message on the room screen saying the room could not be loaded, with a way to try again (`FR-DATA-load-failure`).
@@ -2276,9 +2285,8 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) goes Gallery �
 - **6d. The visitor goes back from the room screen.**
     - 6d1. The system shows the map as it was.
     - 6d2. Flow rejoins at step 5.
-- **7a. The visitor selects a meteorite or display instead of a section.**
-    - 7a1. The system opens it in View exhibit.
-    - 7a2. Use case ends.
+- **8a. The visitor comes back from the section screen.**
+    - 8a1. The system shows the same room screen, and flow rejoins at step 7.
 - **\*a. The visitor leaves for the Home screen.**
     - \*a1. Use case ends.
 
@@ -2300,7 +2308,6 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 | `order` | integer | Required; unique; the room's place in the order a visitor walks the gallery | Read-only to visitors | — |
 | `roomDescription` | long text, per language | Optional; see 6a | Read-only to visitors | — |
 | `sections` | ordered list of Section | Optional; may be empty (see 6b) | Read-only to visitors | _Section (not yet in the glossary)_ |
-| `meteorites` | list of Sample or Display | Optional; may be empty (see 6b) | Read-only to visitors | Display, Sample |
 
 - **Rooms.** There are three, as in the old app's room-selection view. The map is the existing gallery floor plan, not a new drawing (minutes 2026-11-04).
 - **Language.** Room names and descriptions are shown in the selected language, falling back to English per `FR-LANG-content-fallback`. Interface text follows `FR-LANG-interface-text`.
@@ -2309,26 +2316,23 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Related Use Cases:**
 
-- `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. Opens the section selected at step 7. It can also be reached from this map with a room chosen (its 1a, 1b).
-- `UC-TOUR-view-exhibit` _(not yet written)_: View exhibit. Opens the meteorite or display selected at 7a.
-- `UC-DAT-view-meteorite`: View a Meteorite. May be where a selected meteorite lands, depending on the View exhibit design.
-- `UC-TOUR-self-guided-tour` _(not yet written)_: Self-guided tour. Walks the visitor through rooms in order; not shown here.
-- `UC-TOUR-visitor-info` _(not yet written)_: Visitor info. Hours and location; not shown here.
+- `UC-TOUR-browse-gallery-section`: Browse a Gallery Section. The section screen, opened from the room screen at step 7. Displays and meteorites are opened from there.
+- `UC-DAT-view-on-display-items`: View Meteorites on Display. Lists on-display meteorites, which is why the room screen does not.
+- `UC-TOUR-take-self-guided-tour`: Take a Self-Guided Tour. Walks the visitor through the same rooms and sections in order; not shown here.
+- `UC-TOUR-view-visitor-info`: View Visitor Information. Hours and location; not shown here.
 
 **Assumptions:**
 
 - The map is a picture with tappable room regions. Whether it also zooms or pans is open (`OI-30`).
-- When the map picture graphic cannot be loaded a labeled room list will be displayed to the user to be interacted with in place of the graphic.
+- When the map picture graphic cannot be loaded a labeled room list will be displayed to the visitor to be interacted with in place of the graphic.
 - Each section is in exactly one room, and each display is in exactly one section.
-- "Gallery Map" is a working label for the Home screen entry. The design names it.
-- The IDs of use cases not yet written are coined from their names, following `UC-<AREA>-<slug>`. Their authors may choose different ones.
-- Other teammates' use cases are on branches not yet merged. This draft was written against Browse a Gallery Section as it stands on its branch, and should be rechecked after that merges.
+- "Gallery Map" is the Home screen entry for the gallery (team decision, 2026-11-20). The design names it.
+- A meteorite or exhibit cannot be opened from the map or the room screen; the visitor goes map, room, then section (team decision, 2026-11-20).
 
 **Open Issues:**
 
 - `OI-29`: Where does the map graphic come from, and who supplies it and the room outlines? The client interview (§ floor plan) requested a floor plan, and receipt is not recorded.
 - `OI-30`: Is the map a fixed picture, or can the visitor zoom and pan? Are sections tappable on the map, or only rooms?
-- `OI-31`: What should a room screen list: sections, displays, meteorites, or all three? `UI-room-selection` and Browse a Gallery Section overlap here.
 - `OI-32`: Is this use case in release 1.0? `UI-room-selection` is Proposed, and `FEAT-section-screens` is out of MVP scope (see `OI-1`, `OI-25`).
 
 
@@ -2340,49 +2344,50 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
-**Secondary Actors:** Museum Staff
+**Secondary Actors:** Gallery staff
 
-**Trigger:** The user chooses to start the self-guided tour from the home screen.
+**Trigger:** The visitor chooses to start the self-guided tour from the Home screen.
 
-**Description:** The system walks the user through the gallery one stop at a time, in the order the gallery is laid out, so they can explore at their own pace without a guide. The client's order: asteroid belt, theater, history of meteorites, entry through the atmosphere, types of meteorites, collisions, terrestrial rocks, new acquisitions, and the Texas room (interview, §2).
+**Description:** The system walks the visitor through the gallery one section at a time, room by room, in the order the gallery is laid out, so they can explore at their own pace without a guide. The tour uses the same room, section, and display structure as the gallery map (`UC-TOUR-view-gallery-map`, `UC-TOUR-browse-gallery-section`); there are no separate tour "stops" (team decision, 2026-11-20). The client's walking order of the gallery's areas is: asteroid belt, theater, history of meteorites, entry through the atmosphere, types of meteorites, collisions, terrestrial rocks, new acquisitions, and the Texas room (interview, §2). Which of these are rooms and which are sections is `OI-23` and `OI-47`.
 
 **Preconditions:**
 
-- PRE-1. The user has opened the application and passed the home screen.
+- PRE-1. The visitor has opened the application and passed the Home screen.
 
 **Postconditions:**
 
-- POST-1. The user has reached the end of the tour, or left it.
+- POST-1. The visitor has reached the end of the tour, or left it.
 
 **Main Success Scenario:**
 
-1. The user chooses to start the tour.
-2. The system shows the first stop: its name, the room it is in, and its description.
-3. The user reads the stop, or listens to it (`UC-TTS-listen-to-content`).
-4. The user moves to the next stop.
-5. The system shows the next stop.
-6. Steps 3 to 5 repeat until the last stop.
-7. The system shows that the tour is complete and offers to return home.
-8. Use case ends.
+1. The visitor chooses to start the tour.
+2. The system loads the gallery's rooms and sections in walking order.
+3. The system shows the first section with the section screen (`UC-TOUR-browse-gallery-section`): its name, its room, its description, and its displays and meteorites, with Next and Previous controls and the visitor's place in the tour (for example, "Room 1, section 2 of 4").
+4. The visitor reads the section and, if they want, opens a display or meteorite from it.
+5. The visitor selects Next.
+6. The system shows the next section in walking order. When the next section is in a new room, the system says which room the visitor is entering.
+7. Steps 4 to 6 repeat until the last section of the last room.
+8. The system shows that the tour is complete and offers to return Home.
+9. Use case ends.
 
 **Extensions:**
 
 - **2a. The tour content cannot be loaded.**
     - 2a1. The system shows a message and offers to try again (`FR-DATA-load-failure`).
     - 2a2. Use case ends.
-- **4a. The user goes back to the previous stop.**
-    - 4a1. The system shows the previous stop.
-    - 4a2. Rejoin at step 3.
-- **4b. The user jumps to a different stop from the list of stops.**
-    - 4b1. The system shows the chosen stop.
-    - 4b2. Rejoin at step 3.
-- **4c. The user selects an exhibit at the stop.**
-    - 4c1. The system shows the exhibit (`UC-TOUR-view-exhibit`).
-    - 4c2. When the user returns, rejoin at step 3.
-- **\*a. The user leaves the tour.**
-    - \*a1. The system remembers the last stop viewed during this session and offers to resume from it next time the tour is started.
+- **4a. The visitor opens a display or a meteorite in the section.**
+    - 4a1. `UC-TOUR-browse-gallery-section` 5 and 5a handle it (`UC-TOUR-view-exhibit`, `UC-DAT-view-meteorite`).
+    - 4a2. When the visitor returns, flow rejoins at step 4.
+- **5a. The visitor selects Previous.**
+    - 5a1. The system shows the previous section in walking order, or, at the first section, keeps it.
+    - 5a2. Rejoin at step 4.
+- **5b. The visitor jumps to a different section from the tour's list of rooms and sections.**
+    - 5b1. The system shows the chosen section.
+    - 5b2. Rejoin at step 4.
+- **\*a. The visitor leaves the tour.**
+    - \*a1. The system remembers the last section viewed during this session and offers to resume from it next time the tour is started.
     - \*a2. Use case ends.
 
 **Priority:** High (`BO-tour`)
@@ -2391,15 +2396,16 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Business Rules:** `BR-permanent-exhibit`
 
-**Associated Information:** No location detection is used; the user moves through the stops themselves (minutes, 2026-11-02). Gallery text is used word for word (minutes, 2026-11-09). The tour works the same for remote visitors (`OE-remote-use`).
+**Associated Information:** No location detection is used; the visitor moves through the sections themselves (minutes, 2026-11-02). Gallery text is used word for word (minutes, 2026-11-09). The tour works the same for remote visitors (`OE-remote-use`). The section screen has no Listen control; descriptions are read aloud from the exhibit screen and the meteorite view (`UC-TTS-listen-to-content`).
 
-**Related Use Cases:** `UC-TOUR-view-exhibit`, `UC-TTS-listen-to-content`
+**Related Use Cases:** `UC-TOUR-browse-gallery-section`, `UC-TOUR-view-gallery-map`, `UC-TOUR-view-exhibit`, `UC-DAT-view-meteorite`
 
-**Assumptions:** The gallery provides the list of stops and their text.
+**Assumptions:** The gallery provides its rooms, sections, and their text (`OI-23`, `OI-24`).
 
 **Open Issues:**
 
-- Who writes each stop's text, and is it the same as the gallery's wall text?
+- `OI-23`, `OI-47`: Which of the gallery's areas are rooms and which are sections, and in what order.
+- Who writes each section's text, and is it the same as the gallery's wall text?
 - Should the tour differ by age range (interview, §5)?
 
 
@@ -2411,29 +2417,29 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
 **Secondary Actors:** None
 
-**Trigger:** The user selects an exhibit, from a gallery room or a tour stop.
+**Trigger:** The visitor selects a display on a gallery section screen (`UC-TOUR-browse-gallery-section` step 5), including during the self-guided tour.
 
-**Description:** The user sees one exhibit (a display, interactive sample, or audiovisual learning aid, per the glossary): what it is about, which room it is in, and the meteorites it holds.
+**Description:** The visitor sees one exhibit (a display, interactive sample, or audiovisual learning aid, per the glossary): what it is about, which room and section it is in, and the meteorites it holds. An exhibit is opened only from the section screen, not from the map or a room screen (team decision, 2026-11-20).
 
 **Preconditions:**
 
-- PRE-1. The user is viewing a gallery section (`UC-TOUR-browse-gallery-section`) or a tour stop (`UC-TOUR-take-self-guided-tour`).
+- PRE-1. The visitor is viewing a gallery section screen (`UC-TOUR-browse-gallery-section`), on its own or during the self-guided tour (`UC-TOUR-take-self-guided-tour`).
 
 **Postconditions:**
 
-- POST-1. The system shows the exhibit's name, room, description, and the meteorites in it.
+- POST-1. The system shows the exhibit's name, room, section, description, and the meteorites in it.
 
 **Main Success Scenario:**
 
-1. The user selects an exhibit.
+1. The visitor selects an exhibit.
 2. The system retrieves the exhibit's information.
-3. The system shows the exhibit's name, the room it is in, and its description.
+3. The system shows the exhibit's name, the room and section it is in, and its description.
 4. The system lists the meteorites in the exhibit, each with its name and picture if one exists.
-5. The user selects a meteorite.
+5. The visitor selects a meteorite.
 6. The system shows that meteorite in detail (`UC-DAT-view-meteorite`).
 7. Use case ends.
 
@@ -2448,7 +2454,9 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 - **4b. A meteorite in the exhibit is not in the database.**
     - 4b1. The system lists it by name but does not offer its details.
     - 4b2. Rejoin at step 5.
-- **5a. The user asks to hear the description.**
+- **4c. A meteorite in the exhibit has been hidden by an administrator.**
+    - 4c1. The system does not list it (`UC-ADM-update-content`).
+- **5a. The visitor selects Listen to hear the description.**
     - 5a1. The system reads it aloud (`UC-TTS-listen-to-content`).
     - 5a2. Rejoin at step 5.
 
@@ -2460,7 +2468,7 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Associated Information:** Exhibit description is the gallery's text, used word for word. Fields missing from the data are shown per `FR-DATA-missing-field`.
 
-**Related Use Cases:** `UC-TOUR-take-self-guided-tour`, `UC-DAT-view-meteorite`, `UC-TOUR-browse-gallery-section`, `UC-TOUR-view-gallery-map`
+**Related Use Cases:** `UC-TOUR-browse-gallery-section`, `UC-TOUR-take-self-guided-tour`, `UC-DAT-view-meteorite`, `UC-TTS-listen-to-content`
 
 **Assumptions:** The gallery can provide which meteorites are in each exhibit.
 
@@ -2477,17 +2485,17 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Date Created:** November 11, 2026
 
-**Primary Actor:** Monnig Gallery Visitor
+**Primary Actor:** Visitor
 
 **Secondary Actors:** None
 
-**Trigger:** The user chooses Visitor Info from the home screen.
+**Trigger:** The visitor chooses Visitor Info from the Home screen.
 
-**Description:** The user sees what they need to plan a visit: where the gallery is, when it is open, that admission is free, and how to contact the gallery. The client mentioned visitors wish the gallery were easier to find on campus (interview, §3).
+**Description:** The visitor sees what they need to plan a visit: where the gallery is, when it is open, that admission is free, and how to contact the gallery. The client mentioned visitors wish the gallery were easier to find on campus (interview, §3).
 
 **Preconditions:**
 
-- PRE-1. The user has opened the application and passed the home screen.
+- PRE-1. The visitor has opened the application and passed the Home screen.
 
 **Postconditions:**
 
@@ -2495,9 +2503,9 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Main Success Scenario:**
 
-1. The user chooses Visitor Info.
+1. The visitor chooses Visitor Info.
 2. The system shows the gallery's address and building, public hours, holiday closures, and admission.
-3. The user chooses to plan a visit.
+3. The visitor chooses to plan a visit.
 4. The system opens the gallery's contact page in the device's browser (`FR-PLAN-contact-link`, `SI-gallery-website`).
 5. Use case ends.
 
@@ -2506,11 +2514,11 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 - **2a. The device has no network connection.**
     - 2a1. The system shows the visitor information it already has, with a note that it may be out of date.
     - 2a2. Rejoin at step 3.
-- **3a. The user chooses directions instead.**
+- **3a. The visitor chooses directions instead.**
     - 3a1. The system opens the gallery's address in the device's maps app.
     - 3a2. Use case ends.
 - **4a. The browser cannot be opened.**
-    - 4a1. The system shows the contact page address so the user can copy it.
+    - 4a1. The system shows the contact page address so the visitor can copy it.
     - 4a2. Use case ends.
 
 **Priority:** High (`FR-PLAN-visitor-info`)
@@ -2527,7 +2535,7 @@ _Data fields. All are **Proposed**: the SRS domain model (§7.1) gives Room only
 
 **Open Issues:**
 
-- Where are the hours kept so they stay current when they change (`OI-11`)?
+- `OI-51`: Where are the hours kept so they stay current when they change?
 
 
 ## ADM: Content administration
@@ -2631,7 +2639,7 @@ _Data fields:_
 
 **Related Use Cases:**
 
-- `UC-ADM-update-content` _(not yet written; another pair)_: Update Meteorite Content. Starts from the content list this use case ends on, and requires a session.
+- `UC-ADM-update-content`: Update Meteorite Content. Starts from the content list this use case ends on, and requires a session.
 
 **Assumptions:**
 
@@ -2659,7 +2667,7 @@ _Data fields:_
 
 **Trigger:** In the admin portal, the signed-in administrator chooses Add meteorite, or selects an existing meteorite in the portal's meteorite list to edit, hide, or restore it.
 
-**Description:** A gallery administrator keeps the app's meteorite content current without a developer and without a new app-store release (`MNT-content-update`). From a browser-based admin portal (minutes, 2026-11-09), the administrator adds a new meteorite, edits an existing one, hides one so visitors no longer see it, or restores a hidden one. A meteorite's content is its record fields (SRS §7.2), its description in English and Spanish, its photos, and the gallery display it is in. Saved changes go live right away: visitors see them the next time their app loads content. Hiding keeps the record so it can be restored, which is how this use case "removes" a meteorite. Signing in is its own use case (`UC-ADM-log-in`).
+**Description:** A gallery administrator keeps the app's meteorite content current without a developer and without a new app-store release (`MNT-content-update`). From a browser-based admin portal (minutes, 2026-11-09), the administrator adds a new meteorite, edits an existing one, hides one so visitors no longer see it, or restores a hidden one. A meteorite's content is its record fields (SRS §7.2), its description in English and Spanish, its photos, and the gallery display it is in. Saved changes go live right away: visitors see them the next time their app loads content. Administrators never truly delete a meteorite: "remove" moves it to hidden, so the record is archived and can be restored (team decision, 2026-11-20). Signing in is its own use case (`UC-ADM-log-in`).
 
 **Preconditions:**
 
@@ -2678,10 +2686,10 @@ _Data fields:_
 
 1. In the portal's meteorite list, the administrator chooses Add meteorite.
 2. The system shows an empty meteorite form: the record fields, an English and a Spanish description, a photo area, and a display picker listing the gallery's existing displays grouped by room.
-3. The administrator fills in the fields, writes the description, uploads photos (with optional captions, in the order they should appear), and optionally picks the display the meteorite is in.
+3. The administrator fills in the fields, writes the description, uploads photos (with optional captions, in the order they should appear), and optionally picks the display the meteorite is in. Picking a display sets On display to on; the administrator can change it.
 4. The administrator saves.
 5. The system checks that the session is still valid (`SEC-admin-authenticated`) and validates the form: required fields are present, the `monnigNumber` is not used by any other record (hidden ones included), and every field meets its rule in Associated Information.
-6. The system saves the record and its photos together, and sets `onDisplay` from the placement (on display if a display was picked).
+6. The system saves the record, its photos, and its `onDisplay` value together.
 7. The system confirms that the meteorite was added and shows the meteorite list with the new meteorite in it.
 8. Use case ends.
 
@@ -2689,13 +2697,13 @@ _Data fields:_
 
 - **1a. The administrator selects an existing meteorite to edit.**
     - 1a1. The system loads the record and shows the form filled with its current values, photos, and display. The `monnigNumber` is shown but cannot be changed.
-    - 1a2. The administrator changes any of the other fields, adds, removes, or reorders photos, edits captions, or changes or clears the display.
+    - 1a2. The administrator changes any of the other fields, adds, removes, or reorders photos, edits captions, changes or clears the display, or turns On display on or off.
     - 1a3. Flow rejoins at step 4.
 - **1a1a. The record cannot be loaded (the database cannot be reached, or the record no longer exists).**
     - 1a1a1. The system shows a message saying the meteorite could not be opened, and stays on the meteorite list.
     - 1a1a2. Use case ends.
 - **1b. The administrator chooses Hide for a meteorite.**
-    - 1b1. The system asks the administrator to confirm. The prompt names the meteorite and says that visitors will no longer see it, that visitors who saved it as a favorite will see it as no longer available, and that it can be restored later.
+    - 1b1. The system asks the administrator to confirm. The prompt names the meteorite and says that visitors will no longer see it anywhere, including in their favorites, and that it can be restored later.
     - 1b2. The administrator confirms.
     - 1b3. The system checks the session (as in step 5) and marks the record hidden. The record and its photos are kept.
     - 1b4. The system confirms that the meteorite is hidden. In the meteorite list it is marked hidden and has a Restore control.
@@ -2752,22 +2760,24 @@ _Data fields (set by the administrator in the portal; visitors only read them, `
 | `description` (Spanish) | long text | Optional, even when the English one is filled in (author's decision, 2026-11-15). If it is empty, visitors using Spanish see the English text marked as not translated (`FR-LANG-content-fallback`). | Administrator only | — |
 | `images` | list of Image | Optional. Each has an optional caption. The order set here is the order visitors see; the first is the hero in `UC-DAT-view-meteorite`. Accepted types and size limit are left to the design. | Administrator only. Image rights are open (`OI-15`). | — |
 | `display` | reference to an existing Display | Optional. Chosen from the gallery's existing displays, grouped by room. The room comes from the display. This use case cannot add or rename displays or rooms (author's decision, 2026-11-15; `BR-permanent-exhibit`). | Administrator only | Display, Room |
-| `onDisplay` | boolean | Not entered. Set by the system: true if a display is assigned, false if not, so the two never disagree (author's decision, 2026-11-15). | Set by the system | — |
+| `onDisplay` | boolean | Required, default false. A field in the database that the administrator sets. When a display (and so a section and room) is assigned, it becomes true by default; the administrator can change it, and keeps it current when a display changes (team decision, 2026-11-20, resolving `OI-44`). | Administrator only | — |
 | `hidden` | boolean | Default false. Set by Hide (1b) and Restore (1c), not by the form. | Administrator only. A hidden record is never sent to visitors. | — |
 
 - **Going live.** A saved change is live right away, with no draft or approval step (author's decision, 2026-11-15). How and when the visitor app picks up changes (on launch, or more often; caching or not) is left to the design (minutes, 2026-11-06).
-- **What visitors see of a hidden meteorite.** It does not appear in any list (browse, search, filter, favorites, exhibits, similar meteorites). If a visitor opens it from a favorite or from a list loaded before it was hidden, `UC-DAT-view-meteorite` 3b shows that it is no longer available.
+- **What visitors see of a hidden meteorite.** Nothing: it does not appear anywhere, favorites included (browse, search, filter, on display, favorites, gallery sections, exhibits, similar meteorites), with no "no longer available" placeholder (team decision, 2026-11-20). The only exception is a list a visitor loaded before it was hidden; opening it from there shows `UC-DAT-view-meteorite` 3b.
 - **Security.** Every save, hide, and restore is checked against the session on the server, not only in the browser (`SEC-admin-authenticated`). Every portal account is an administrator account, so a valid session is all the check needs; there are no roles or permission levels to check (author's decision, 2026-11-15). All traffic uses HTTPS (minutes, 2026-11-09).
 - **Systemic failure.** Every change is all or nothing (6a). A record is never left saved without its photos, or with only some of its changes.
 - **Not in this use case:** adding or renaming rooms and displays; 3D models (`OI-27`); visitor information such as hours (`UC-TOUR-view-visitor-info`); creating administrator accounts; loading the full collection at the start (`OI-4`).
-- **SRS changes needed.** SRS §7.2 needs the `hidden` and `display` fields, and needs to show that `onDisplay` is derived from `display`. SRS §2 says it is open whether a back end exists at all (`OI-4`). This use case assumes one does.
+- **SRS changes needed.** SRS §7.2 needs the `hidden` and `display` fields, and needs to show that `onDisplay` defaults to true when a display is assigned. SRS §2 says it is open whether a back end exists at all (`OI-4`). This use case assumes one does.
 
 **Related Use Cases:**
 
 - `UC-ADM-log-in`: Log In as an Administrator. Signs the administrator in (PRE-1) and signs them back in at 5c.
 - `UC-DAT-view-meteorite`: View a Meteorite. Shows what this use case saves. Its 3b covers a meteorite that has been hidden.
 - `UC-DAT-browse-database`: Browse the Meteorite Database. Lists only meteorites that are not hidden.
-- `UC-DAT-filter-database`: Organize Meteorite Catalog Based on Filters. Its on-display filter uses the `onDisplay` this use case sets.
+- `UC-DAT-filter-database`: Filter the Meteorite Database. Its on-display filter uses the `onDisplay` this use case sets.
+- `UC-DAT-view-on-display-items`: View Meteorites on Display. Lists the meteorites whose `onDisplay` is set here.
+- `UC-DAT-view-favorites`: View Favorite Meteorites. Leaves hidden meteorites out of the list.
 - `UC-DAT-save-favorite`: Save a Favorite Meteorite. Stores the `monnigNumber`, which is why it is locked here.
 - `UC-TOUR-view-exhibit` and `UC-TOUR-browse-gallery-section`: Show the meteorites placed in a display or room here.
 
